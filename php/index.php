@@ -128,7 +128,7 @@
         </div><!-- second-content -->
     </div>  <!--- container --->
 
-    <script src="js/app.js"></script>
+    <script src="../js/app.js"></script>
 </body>
 </html>
 
