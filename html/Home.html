@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Shakers</title>
+    <link rel="stylesheet" href="../css/tela.css">
+    <script src="https://kit.fontawesome.com/dfc8dc048e.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <!-- Cabeçalho -->
+    <header class="header">
+        <h1>Game Shakers</h1>
+        <div class="profile-settings">
+            <a href="#perfil" class="menu-link"> <i class="fa-solid fa-user"></i> </a>
+            <a href="#configuracoes" class="menu-link"> <i class="fa-solid fa-gear"></i> </a>
+        </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+
+    <div class="container">
+        <!-- Menu Lateral Esquerdo -->
+        <aside class="menu-left">
+            
+            <nav>
+                <ul class="menu">
+                    <li>
+                        <button class="dropdown-btn">Matérias </button>
+                        <ul class="dropdown-content">
+                            <li><a href="#matematica">Matemática</a></li>
+                            <li><a href="#portugues">Português</a></li>
+                            <li><a href="#geografia">Geografia</a></li>
+                            <li><a href="#ciencias">Ciências</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Área Central -->
+        <main class="main-content">
+            <!-- Barra de Pesquisa -->
+            <div class="search-bar">
+                <input type="text" id="search" placeholder="Pesquise por um jogo...">
+                <button id="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+
+            <div class="carousel-container">
+        <div class="carousel">
+            <img src="" alt="">
+            <img src="" alt="">
+            <img src="" alt="">
+        </div>
+        <div class="dots">
+            <span class="dot" data-index="0"></span>
+            <span class="dot" data-index="1"></span>
+            <span class="dot" data-index="2"></span>
+        </div>
+    </div>
+
+            <!-- Lista de Jogos -->
+            <section id="jogos" class="games">
+               
+                <div class="game-list" id="game-list">
+                    <!-- Os jogos serão carregados dinamicamente aqui -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/tela.js"></script>
+</body>
+</html>
