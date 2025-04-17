@@ -24,27 +24,27 @@ class Aluno {
     }
 
     public function conferirCadAluno() {
-        // Implementação do método
+        
     }
 
     public function verJogos() {
-        // Implementação do método
+        
     }
 
     public function jogar() {
-        // Implementação do método
+        
     }
 
     public function conferirProgresso() {
-        // Implementação do método
+        
     }
 
     public function alterarConfig() {
-        // Implementação do método
+    
     }
 
     public function verAtvSugeridas() {
-        // Implementação do método
+        
     }
 }
 ?>
