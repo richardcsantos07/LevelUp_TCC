@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . '/Instituicao.class.php';
-
 class Crianca
 {
     private $id;
