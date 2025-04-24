@@ -10,7 +10,7 @@ class Aluno
     private $serie;
     private $dataNasc;
     private $nivelAcesso;
-    private $instituicao;
+    private $id_inst;
     private $pdo;
 
 
@@ -81,14 +81,14 @@ class Aluno
         $this->nivelAcesso = $nivelAcesso;
     }
 
-    public function getInst()
+    public function getIdInst()
     {
-        return $this->instituicao;
+        return $this->id_inst;
     }
 
-    public function setInst($instituicao)
+    public function setIdInst($id_inst)
     {
-        $this->instituicao = $instituicao;
+        $this->id_inst = $id_inst;
     }
 
     // métodos específicos do Aluno
@@ -139,17 +139,18 @@ class Aluno
 
     }
 
-    public function inserirCadAluno($nome, $email, $senha, $serie, $turma, $dataNasc, $instituicao)
+    public function inserirCadAluno($id, $nome, $email, $senha, $serie, $turma, $dataNasc, $id_inst)
     {
-        $sql = "INSERT INTO aluno (nome, email, senha, serie, turma, data_nasc, instituicao) VALUES (:n, :e, :s, :ser, :tur, :d, :i)";
+        $sql = "INSERT INTO aluno (ra, nome, email, senha, serie, turma, dataNasc, id_inst) VALUES (:ra, :n, :e, :s, :ser, :tur, :d, :ii)";
         $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':ra', $id);
         $stmt->bindValue(':n', $nome);
         $stmt->bindValue(':e', $email);
         $stmt->bindValue(':s', $senha);
         $stmt->bindValue(':ser', $serie);
         $stmt->bindValue(':tur', $turma);
         $stmt->bindValue(':d', $dataNasc);
-        $stmt->bindValue(':i', $instituicao);
+        $stmt->bindValue(':ii', $id_inst);
         return $stmt->execute();
 
     }
