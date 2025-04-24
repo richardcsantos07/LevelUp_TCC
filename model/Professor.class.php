@@ -11,6 +11,7 @@ class Professor
     private $data_nasc;
     private $nivelAcesso;
     private $telefone;
+    private $id_inst;
     private $pdo;
 
     public function getId()
@@ -20,6 +21,12 @@ class Professor
     public function setId($id)
     {
         $this->id = $id;
+    }
+    public function getIdInst(){
+        return $this->id_inst;
+    }
+    public function setIdInst($id_inst){
+        $this->id_inst = $id_inst;
     }
     public function getNome()
     {
@@ -98,19 +105,19 @@ class Professor
         }
     }
 
-    public function criarCadastroProf($nome, $email, $senha, $materia, $data_nasc, $nivelAcesso, $telefone)
+    public function criarCadastroProf($nome, $email, $senha, $materia, $data_nasc, $telefone, $id_inst)
     {
-        $sql = "INSERT INTO professor SET nome = :n, email = :e, senha = :s, materia = :m, dataNasc = :d, nivelAcesso = :na, telefone = :t";
+        $sql = "INSERT INTO professor SET nome = :n, email = :e, senha = :s, materia = :m, dataNasc = :d, telefone = :t, id_inst = :ii";
 
         $stmt = $this->pdo->prepare($sql);
 
-        $stmt->bindValue(' :n', $nome);
-        $stmt->bindValue(' :e', $email);
-        $stmt->bindValue(' :s', $senha);
-        $stmt->bindValue(' :m', $materia);
-        $stmt->bindValue(' :d', $data_nasc);
-        $stmt->bindValue(' :na', $nivelAcesso);
-        $stmt->bindValue(' :t', $telefone);
+        $stmt->bindValue(':n', $nome);
+        $stmt->bindValue(':e', $email);
+        $stmt->bindValue(':s', $senha);
+        $stmt->bindValue(':m', $materia);
+        $stmt->bindValue(':d', $data_nasc);
+        $stmt->bindValue(':t', $telefone);
+        $stmt->bindValue(':ii', $id_inst);
 
         return $stmt->execute();
     }
