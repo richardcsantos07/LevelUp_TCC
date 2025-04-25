@@ -1,35 +1,51 @@
 # LevelUp_TCC
 
-## Descrição
-LevelUp_TCC é uma aplicação web projetada para usuários institucionais se registrarem e fazerem login para acessar diversos jogos educacionais. A aplicação permite que os usuários criem contas, gerenciem seus perfis e interajam com ferramentas de aprendizado interativas.
+## Visão Geral do Projeto
+LevelUp_TCC é uma aplicação web educacional destinada a usuários institucionais, permitindo o registro, login e acesso a diversos jogos educacionais interativos. O objetivo é proporcionar uma plataforma de aprendizado divertida e acessível para crianças e educadores.
 
 ## Funcionalidades
-- Funcionalidade de registro e login de usuários
-- Formulário de registro institucional
-- Integração com banco de dados para gerenciamento de dados de usuários
-- Design responsivo para diversos dispositivos
+- Registro e login de usuários institucionais
+- Formulário de registro para instituições
+- Integração com banco de dados MySQL para gerenciamento de usuários e dados dos jogos
+- Interface responsiva, compatível com dispositivos móveis e desktops
+- Jogos educacionais interativos para diferentes faixas etárias
+
+## Tecnologias Utilizadas
+- PHP para backend e gerenciamento de usuários
+- MySQL para banco de dados
+- HTML, CSS e JavaScript para frontend e jogos interativos
+- Estrutura MVC para organização do código
 
 ## Instalação
+
 1. Clone o repositório:
    ```bash
    git clone <repository-url>
    ```
-2. Navegue até o diretório do projeto:
+2. Acesse o diretório do projeto:
    ```bash
    cd LevelUp_TCC
    ```
-3. Configure o banco de dados:
-   - Crie um banco de dados MySQL chamado `level_up`.
-   - Importe os scripts SQL necessários para criar as tabelas requeridas.
+3. Configure o banco de dados MySQL:
+   - Crie um banco de dados chamado `level_up`.
+   - Importe o arquivo SQL localizado em `data/leveluptest.sql` para criar as tabelas necessárias.
+4. Atualize o arquivo `php/config.php` com suas credenciais do banco de dados.
 
-4. Atualize o arquivo `php/config.php` com suas credenciais de banco de dados.
-
-## Uso
-- Abra `php/index.php` em seu navegador para acessar a página de login.
-- Use o formulário de registro para criar uma nova conta ou faça login com credenciais existentes.
+## Como Usar
+- Abra o arquivo `php/index.php` em seu navegador para acessar a página de login.
+- Utilize o formulário para registrar uma nova conta institucional ou faça login com credenciais existentes.
+- Navegue pelos jogos disponíveis na plataforma após o login.
 
 ## Contribuições
-Contribuições são bem-vindas! Por favor, envie um pull request ou abra uma issue para quaisquer melhorias ou correções de bugs.
+Contribuições são bem-vindas! Para contribuir:
+- Faça um fork do projeto
+- Crie uma branch para sua feature (`git checkout -b feature/nome-da-feature`)
+- Faça commit das suas alterações (`git commit -m 'Adiciona nova feature'`)
+- Envie para o repositório remoto (`git push origin feature/nome-da-feature`)
+- Abra um Pull Request para revisão
 
 ## Licença
-Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
+Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
+## Contato
+Para dúvidas ou sugestões, entre em contato pelo email: suporte@levelup.com.br
