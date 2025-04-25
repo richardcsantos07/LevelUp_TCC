@@ -23,65 +23,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Login</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../view/css/style.css">
     <script src="https://kit.fontawesome.com/dfc8dc048e.js" crossorigin="anonymous"></script>
 
 </head>
 
 <body>
-    <!---tela de cadastro --->
+    <!---tela de cadastro r--->
     <div class="container">
         <div class="content first-content">
 
             <div class="first-column">
-                <h2 class="title title-primary"> Game Shakers</h2>
+                <h2 class="title title-primary"> LevelUp</h2>
                 <p class="description description-primary">Entrar com E-mail institucional</p>
                 <a class="description description-primary" href="formulario.html" target="_blank">Formulário Institucional</a>
                 <br>
                 <br>
                 <p class="description description-primary">Já tenho conta:</p>
                 <button id="signin" class="btn btn-primary">Entrar</button>
-            </div> <!--- first-column --->
+            </div> <!--- first-column  não mexer--->
 
             <div class="second-column">
-                <h2 class="title title-second">Cadastre-se</h2>
+    <h2 class="title title-second">Selecione uma opção</h2>
 
-                    <!--- redes sociais --->
-                    <div class="social-media">
-                        <ul class="list-social-media">
-                            <a class="link-social-media" href="#"> <li class="item-social-media" >  <i class="fa-brands fa-instagram"></i>  </li> </a>
-                            <a class="link-social-media" href="#"> <li class="item-social-media" > <i class="fa-brands fa-facebook-f"></i> </li> </a>
-                            <a class="link-social-media" href="#"> <li class="item-social-media" > <i class="fa-brands fa-whatsapp"></i>  </li> </a>
-                        </ul>
-                    </div><!--- social media --->
+    <!--- redes sociais --->
+    <div class="social-media">
+        <ul class="list-social-media">
+            <a class="link-social-media" href="#"> <li class="item-social-media" >  <i class="fa-brands fa-instagram"></i>  </li> </a>
+            <a class="link-social-media" href="#"> <li class="item-social-media" > <i class="fa-brands fa-facebook-f"></i> </li> </a>
+            <a class="link-social-media" href="#"> <li class="item-social-media" > <i class="fa-brands fa-whatsapp"></i>  </li> </a>
+        </ul>
+    </div><!--- social media --->
 
-                <p class="description description-second">Use seu e-mail para cadastro:</p>
-                <form class="form" method="POST">
-                    <label class="label-input" for="">
-                        <i class="far fa-user icon-modify"></i>
-                        <input name="name" type="text" placeholder="Name">
-                    </label>
-
-                    <label class="label-input" for="">
-                        <i class="fa-solid fa-calendar-days icon-modify"></i>
-                        <input name="data_nasc" type="date" placeholder="Data de Nascimento">
-                    </label>
-
-                    <label class="label-input" for="">
-                        <i class="far fa-envelope icon-modify"></i>
-                        <input name="email" type="email" placeholder="Email">
-                    </label>
-
-                    <label class="label-input" for="">
-                        <i class="fas fa-lock icon-modify"></i>
-                        <input name="senha" type="password" placeholder="Senha">
-                    </label>
-
-
-                    <input type="submit" name="submit" id="submit" value="Entrar"></input>
-                </form>
-            </div><!-- second column -->
-        </div><!-- first content -->
+    <p class="description description-second">Selecione o seu perfil:</p>
+    
+    <div class="button-container">
+        <button class="profile-button" onclick="location.href='#pais';">
+            <i class="fa-solid fa-users icon-modify"></i>
+            Pais
+        </button>
+        
+        <button class="profile-button" onclick="location.href='#professores';">
+            <i class="fa-solid fa-chalkboard-teacher icon-modify"></i>
+            Professores
+        </button>
+        
+        <button class="profile-button" onclick="location.href='#lideres-escolares';">
+            <i class="fa-solid fa-user-tie icon-modify"></i>
+            Líderes Escolares
+        </button>
+        
+        <button class="profile-button" onclick="location.href='#alunos';">
+            <i class="fa-solid fa-graduation-cap icon-modify"></i>
+            Alunos
+        </button>
+    </div>
+</div><!-- second column -->
 
          <!---tela de login --->
         <div class="content second-content">
@@ -128,7 +125,6 @@
         </div><!-- second-content -->
     </div>  <!--- container --->
 
-    <script src="../js/app.js"></script>
+    <script src="../view/js/app.js"></script>
 </body>
 </html>
-

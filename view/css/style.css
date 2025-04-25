@@ -26,12 +26,11 @@ body {
 .content::before {
     content: "";
     position: absolute;
-    background-color: #f87d8f;
+    background-color: #340069;
     width: 40%;
     height: 100%;
     border-top-left-radius: 15px;
     border-bottom-left-radius: 15px;
-
     left: 0;
 }
 .title {
@@ -43,7 +42,7 @@ body {
     color: #fff;
 }
 .title-second {
-    color: #f87d8f;
+    color: #340069;
 }
 .description {
     font-size: 14px;
@@ -69,24 +68,24 @@ body {
     border: none;
     margin-top: 10px;
 }
-.btn-primary {
-    background-color: transparent;
+.btn-primary {            
+    background-color:#340069;
     border: 1px solid #fff;
     transition: background-color .5s;
 }
 .btn-primary:hover {
     background-color: #fff;
-    color: #f87d8f;
+    color: #340069;
 }
 .btn-second {
-    background-color: #f87d8f;
-    border: 1px solid #f87d8f;
+    background-color: #340069;
+    border: 1px solid #340069;
     transition: background-color .5s;
 }
 .btn-second:hover {
     background-color: #fff;
-    border: 1px solid #f87d8f;
-    color: #f87d8f;
+    border: 1px solid #340069;
+    color: #340069;
 }
 #submit{
     border-radius: 15px;
@@ -102,14 +101,14 @@ body {
     margin-top: 1rem;
 }
 #submit {
-    background-color: #f87d8f;
-    border: 1px solid #f87d8f;
+    background-color: #340069;
+    border: 1px solid #340069;
     transition: background-color .5s;
 }
 #submit:hover {
     background-color: #fff;
-    border: 1px solid #f87d8f;
-    color: #f87d8f;
+    border: 1px solid #340069;
+    color: #340069;
 }
 .first-content {
     display: flex;
@@ -138,9 +137,9 @@ body {
     transition: background-color .5s;
 }
 .link-social-media:hover .item-social-media{
-    background-color: #f87d8f;
+    background-color: #340069;
     color: #fff;
-    border-color: #f87d8f;
+    border-color: #340069;
 }
 .list-social-media {
     display: flex;
@@ -166,8 +165,7 @@ body {
     border: none;
     background-color: #ecf0f1;
 }
-input:-webkit-autofill 
-{    
+input:-webkit-autofill {    
     -webkit-box-shadow: 0 0 0px 1000px #ecf0f1 inset !important;
     -webkit-text-fill-color: #000 !important;
 }
@@ -182,12 +180,50 @@ input:-webkit-autofill
     padding: 0 5px;
 }
 
-/* second content*/
+/* Estilos para os novos botões de perfil */
+.button-container {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin: 20px 0;
+}
 
+.profile-button {
+    margin: 8px 0;
+    padding: 15px;
+    border-radius: 10px;
+    background-color: #340069;
+    color: #fff;
+    border: 1px solid #340069;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color .5s, transform .3s;
+}
+
+.profile-button:hover {
+    background-color: #fff;
+    color: #340069;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.profile-button i {
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+/* second content*/
 .second-content {
     position: absolute;
     display: flex;
+    /* Adicionada visibilidade escondida por padrão */
+    visibility: hidden;
 }
+
+/* Corrigindo a organização do second-content */
 .second-content .first-column {
     order: 2;
     z-index: -1;
@@ -206,7 +242,14 @@ input:-webkit-autofill
     text-transform: capitalize;
 }
 
+/* Interações com JavaScript - ajustes para garantir transições corretas */
+.sign-in-js .first-content {
+    visibility: hidden;
+}
 
+.sign-in-js .second-content {
+    visibility: visible;
+}
 
 .sign-in-js .first-content .first-column {
     z-index: -1;
@@ -226,14 +269,20 @@ input:-webkit-autofill
     border-top-right-radius: 15px;
     border-bottom-right-radius: 15px;
     animation: slidein 0.7s; 
-
     z-index: 12;
 }
 
 .sign-up-js .content::before {
     animation: slideout 0.3s; 
-
     z-index: 12;
+}
+
+.sign-up-js .second-content {
+    visibility: hidden;
+}
+
+.sign-up-js .first-content {
+    visibility: visible;
 }
 
 .sign-up-js .second-content .first-column,
@@ -249,10 +298,8 @@ input:-webkit-autofill
     z-index: 13;    
 }
 
-
 /* DESLOCAMENTO CONTEÚDO ATRÁS DO CONTENT:BEFORE*/
 .sign-in-js .first-content .second-column {
-
     z-index: -1;
     position: relative;
     animation: deslocamentoEsq 0.7s; 
@@ -264,26 +311,22 @@ input:-webkit-autofill
     animation: deslocamentoDir 0.7s; 
 }
 
-/*ANIMAÇÃOO CSS PARA O CONTEÚDO*/
+
 
 @keyframes deslocamentoEsq {
-
     from {
         left: 0;
         opacity: 1;
         z-index: 12;
     }
-
     25% {
         left: -80px;
         opacity: .5;
     }
-
     50% {
         left: -100px;
         opacity: .2;
     }
-
     to {
         left: -110px;
         opacity: 0;
@@ -291,22 +334,17 @@ input:-webkit-autofill
     }
 }
 
-
 @keyframes deslocamentoDir {
-
     from {
         left: 0;
         z-index: 12;
     }
-
     25% {
         left: 80px;
     }
-
     50% {
         left: 100px;
     }
-
     to {
         left: 110px;
         z-index: -1;
@@ -314,30 +352,24 @@ input:-webkit-autofill
 }
 
 
-/*ANIMAÇÃO CSS*/
 
 @keyframes slidein {
-
     from {
         left: 0;
         width: 40%;
     }
-
     25% {
         left: 5%;
         width: 50%;
     }
-
     50% {
         left: 25%;
         width: 60%;
     }
-
     75% {
         left: 45%;
         width: 50%;
     }
-
     to {
         left: 60%;
         width: 40%;
@@ -345,34 +377,29 @@ input:-webkit-autofill
 }
 
 @keyframes slideout {
-
     from {
         left: 60%;
         width: 40%;
     }
-
     25% {
         left: 45%;
         width: 50%;
     }
-
     50% {
         left: 25%;
         width: 60%;
     }
-
     75% {
         left: 5%;
         width: 50%;
     }
-
     to {
         left: 0;
         width: 40%;
     }
 }
 
-/*VERSÃO MOBILE*/
+
 @media screen and (max-width: 1040px) {
     .content {
         width: 100%;
@@ -398,33 +425,33 @@ input:-webkit-autofill
         top: 60%;
         left: 0;
         border-radius: 0;
-
     }
 
     .form {
         width: 90%;
     }
     
+    /* Ajustes para os botões de perfil na versão mobile */
+    .button-container {
+        width: 90%;
+    }
+    
     /* ANIMAÇÃO MOBILE CSS*/
 
     @keyframes deslocamentoEsq {
-
         from {
             top: 0;
             opacity: 1;
             z-index: 12;
         }
-    
         25% {
             top: -80px;
             opacity: .5;
         }
-    
         50% {
             top: -100px;
             opacity: .2;
         }
-    
         to {
             top: -110px;
             opacity: 0;
@@ -432,52 +459,40 @@ input:-webkit-autofill
         }
     }
     
-    
     @keyframes deslocamentoDir {
-    
         from {
             top: 0;
             z-index: 12;
         }
-    
         25% {
             top: 80px;
         }
-    
         50% {
             top: 100px;
         }
-    
         to {
             top: 110px;
             z-index: -1;
         }
     }
     
-    
-    
     @keyframes slidein {
-    
         from {
             top: 0;
             height: 40%;
         }
-    
         25% {
             top: 5%;
             height: 50%;
         }
-    
         50% {
             top: 25%;
             height: 60%;
         }
-    
         75% {
             top: 45%;
             height: 50%;
         }
-    
         to {
             top: 60%;
             height: 40%;
@@ -485,43 +500,51 @@ input:-webkit-autofill
     }
     
     @keyframes slideout {
-    
         from {
             top: 60%;
             height: 40%;
         }
-    
         25% {
             top: 45%;
             height: 50%;
         }
-    
         50% {
             top: 25%;
             height: 60%;
         }
-    
         75% {
             top: 5%;
             height: 50%;
         }
-    
         to {
             top: 0;
             height: 40%;
         }
     }
-   
 }
 
 @media screen and (max-width: 740px) {
     .form {
         width: 50%;
     }
+    
+    .profile-button {
+        padding: 12px;
+        font-size: 14px;
+    }
 }
 
 @media screen and (max-width: 425px) {
     .form {
         width: 100%;
+    }
+    
+    .button-container {
+        width: 100%;
+    }
+    
+    .profile-button {
+        padding: 10px;
+        font-size: 14px;
     }
 }

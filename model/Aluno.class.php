@@ -155,9 +155,20 @@ class Aluno
 
     }
 
-    public function conferirCadAluno()
+    public function conferirCadAluno($id)
     {
-        return $this->instituicao->conferirCadInstituicao();
+       
+        $sql = "SELECT * FROM aluno WHERE id = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':id', $id);
+        $stmt->execute();
+
+        if($stmt->rowCount() > 0){
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } else {
+            return null;
+        }
+        
     }
 
     public function verJogos()
