@@ -17,7 +17,8 @@ body {
 .content {
     background-color: #fff;
     border-radius: 15px;
-    width: 960px;
+    width: 80%; /* Reduzido para 80% */
+    max-width: 800px; /* Adiciona um limite máximo */
     height: 70%;
     justify-content: space-between;
     align-items: center;
@@ -112,6 +113,7 @@ body {
 }
 .first-content {
     display: flex;
+    visibility: visible; /* Garantir visibilidade por padrão */
 }
 .first-content .second-column {
     z-index: 11;
@@ -219,8 +221,8 @@ input:-webkit-autofill {
 .second-content {
     position: absolute;
     display: flex;
-    /* Adicionada visibilidade escondida por padrão */
-    visibility: hidden;
+    width: 100%;
+    visibility: hidden; /* Ocultar por padrão */
 }
 
 /* Corrigindo a organização do second-content */
@@ -249,6 +251,7 @@ input:-webkit-autofill {
 
 .sign-in-js .second-content {
     visibility: visible;
+    z-index: 12; /* Garantir que apareça na frente */
 }
 
 .sign-in-js .first-content .first-column {
@@ -257,7 +260,9 @@ input:-webkit-autofill {
 
 .sign-in-js .second-content .second-column {
     z-index: 11;
+    position: relative;
 }
+
 .sign-in-js .second-content .first-column {
     z-index: 13;
 }
@@ -270,6 +275,13 @@ input:-webkit-autofill {
     border-bottom-right-radius: 15px;
     animation: slidein 0.7s; 
     z-index: 12;
+}
+
+/* Garantir que o formulário de login seja sempre visível quando necessário */
+.sign-in-js .second-content .form {
+    display: flex;
+    visibility: visible;
+    z-index: 15;
 }
 
 .sign-up-js .content::before {
@@ -311,8 +323,6 @@ input:-webkit-autofill {
     animation: deslocamentoDir 0.7s; 
 }
 
-
-
 @keyframes deslocamentoEsq {
     from {
         left: 0;
@@ -350,8 +360,6 @@ input:-webkit-autofill {
         z-index: -1;
     }
 }
-
-
 
 @keyframes slidein {
     from {
@@ -399,7 +407,6 @@ input:-webkit-autofill {
     }
 }
 
-
 @media screen and (max-width: 1040px) {
     .content {
         width: 100%;
@@ -436,8 +443,7 @@ input:-webkit-autofill {
         width: 90%;
     }
     
-    /* ANIMAÇÃO MOBILE CSS*/
-
+    /* ANIMAÇÃO MOBILE CSS */
     @keyframes deslocamentoEsq {
         from {
             top: 0;
@@ -520,6 +526,21 @@ input:-webkit-autofill {
             top: 0;
             height: 40%;
         }
+    }
+
+    /* Ajustes específicos para garantir visibilidade na versão mobile */
+    .sign-in-js .second-content .second-column {
+        z-index: 11;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .sign-in-js .second-content .first-column {
+        z-index: 13;
+        width: 100%;
+        margin-top: 35%;
     }
 }
 

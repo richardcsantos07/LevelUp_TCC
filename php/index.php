@@ -1,18 +1,42 @@
 <?php
+// Processamento do cadastro
+if (isset($_POST['submit'])) {
+    include_once('config.php');
 
-    if(isset($_POST['submit']))
-    {
-        include_once('config.php');
+    $name = $_POST['name'];
+    $data_nasc = $_POST['data_nasc'];
+    $email = $_POST['email'];
+    $senha = $_POST['senha'];
 
-        $name = $_POST['name'];
-        $data_nasc = $_POST['data_nasc'];
-        $email = $_POST['email'];
-        $senha = $_POST['senha'];
+    $result = mysqli_query($conexao, "INSERT INTO alunos(nome, data_nasc, email, senha) VALUES ('$name', '$data_nasc', '$email', '$senha')");
 
-        $result = mysqli_query($conexao, "INSERT INTO alunos(nome, data_nasc, email, senha) VALUES ('$name', '$data_nasc', '$email', '$senha')");
+    header('Location: ../html/Home.html');
+}
 
-        header('Location: ../html/Home.html ');
+// Processamento do login
+if (isset($_POST['login'])) {
+    include_once('config.php');
+
+    $email = $_POST['email'];
+    $senha = $_POST['senha'];
+
+    // Consulta para verificar se o usuário existe
+    $sql = "SELECT * FROM alunos WHERE email = '$email' AND senha = '$senha'";
+    $result = mysqli_query($conexao, $sql);
+
+    // Verifica se encontrou um usuário
+    if (mysqli_num_rows($result) > 0) {
+        // Login bem-sucedido
+        // Inicie a sessão e redirecione
+        session_start();
+        $_SESSION['email'] = $email;
+        header('Location: ../html/Home.html');
+    } else {
+        // Login falhou
+        // Você pode adicionar uma mensagem de erro aqui
+        $login_error = "Email ou senha incorretos!";
     }
+}
 ?>
 
 <!DOCTYPE html>
@@ -36,7 +60,8 @@
             <div class="first-column">
                 <h2 class="title title-primary"> LevelUp</h2>
                 <p class="description description-primary">Entrar com E-mail institucional</p>
-                <a class="description description-primary" href="formulario.html" target="_blank">Formulário Institucional</a>
+                <a class="description description-primary" href="formulario.html" target="_blank">Formulário
+                    Institucional</a>
                 <br>
                 <br>
                 <p class="description description-primary">Já tenho conta:</p>
@@ -44,87 +69,121 @@
             </div> <!--- first-column  não mexer--->
 
             <div class="second-column">
-    <h2 class="title title-second">Selecione uma opção</h2>
+                <h2 class="title title-second">Selecione uma opção</h2>
 
-    <!--- redes sociais --->
-    <div class="social-media">
-        <ul class="list-social-media">
-            <a class="link-social-media" href="#"> <li class="item-social-media" >  <i class="fa-brands fa-instagram"></i>  </li> </a>
-            <a class="link-social-media" href="#"> <li class="item-social-media" > <i class="fa-brands fa-facebook-f"></i> </li> </a>
-            <a class="link-social-media" href="#"> <li class="item-social-media" > <i class="fa-brands fa-whatsapp"></i>  </li> </a>
-        </ul>
-    </div><!--- social media --->
+                <!--- redes sociais --->
+                <div class="social-media">
+                    <ul class="list-social-media">
+                        <a class="link-social-media" href="#">
+                            <li class="item-social-media"> <i class="fa-brands fa-instagram"></i> </li>
+                        </a>
+                        <a class="link-social-media" href="#">
+                            <li class="item-social-media"> <i class="fa-brands fa-facebook-f"></i> </li>
+                        </a>
+                        <a class="link-social-media" href="#">
+                            <li class="item-social-media"> <i class="fa-brands fa-whatsapp"></i> </li>
+                        </a>
+                    </ul>
+                </div><!--- social media --->
 
-    <p class="description description-second">Selecione o seu perfil:</p>
-    
-    <div class="button-container">
-        <button class="profile-button" onclick="location.href='#pais';">
-            <i class="fa-solid fa-users icon-modify"></i>
-            Pais
-        </button>
-        
-        <button class="profile-button" onclick="location.href='#professores';">
-            <i class="fa-solid fa-chalkboard-teacher icon-modify"></i>
-            Professores
-        </button>
-        
-        <button class="profile-button" onclick="location.href='#lideres-escolares';">
-            <i class="fa-solid fa-user-tie icon-modify"></i>
-            Líderes Escolares
-        </button>
-        
-        <button class="profile-button" onclick="location.href='#alunos';">
-            <i class="fa-solid fa-graduation-cap icon-modify"></i>
-            Alunos
-        </button>
-    </div>
-</div><!-- second column -->
+                <p class="description description-second">Selecione o seu perfil:</p>
 
-         <!---tela de login --->
+                <div class="button-container">
+                    <button class="profile-button" onclick="location.href='#pais';">
+                        <i class="fa-solid fa-users icon-modify"></i>
+                        Pais
+                    </button>
+
+                    <button class="profile-button" onclick="location.href='#professores';">
+                        <i class="fa-solid fa-chalkboard-teacher icon-modify"></i>
+                        Professores
+                    </button>
+
+                    <button class="profile-button" onclick="location.href='#lideres-escolares';">
+                        <i class="fa-solid fa-user-tie icon-modify"></i>
+                        Líderes Escolares
+                    </button>
+
+                    <button class="profile-button" onclick="location.href='#alunos';">
+                        <i class="fa-solid fa-graduation-cap icon-modify"></i>
+                        Alunos
+                    </button>
+                </div>
+            </div><!-- second column -->
+        </div>
+
+        <!---tela de login --->
         <div class="content second-content">
 
             <div class="first-column">
                 <h2 class="title title-primary">Game Shakers!</h2>
                 <p class="description description-primary">Entrar com E-mail institucional</p>
-                <a class="description description-primary" href="formulario.html" target="_blank">Formulário Institucional</a>
+                <a class="description description-primary" href="formulario.html" target="_blank">Formulário
+                    Institucional</a>
                 <br>
                 <br>
                 <p class="description description-primary">Não tenho conta ainda</p>
                 <button id="signup" class="btn btn-primary">Cadastre-se</button>
-            </div>  <!--- first-column --->
+            </div> <!--- first-column --->
 
             <div class="second-column">
                 <h2 class="title title-second">Login</h2>
 
-               <!--- redes sociais --->
+                <!--- redes sociais --->
                 <div class="social-media">
                     <ul class="list-social-media">
-                        <a class="link-social-media" href="#"> <li class="item-social-media" >  <i class="fa-brands fa-instagram"></i>  </li> </a>
-                        <a class="link-social-media" href="#"> <li class="item-social-media" > <i class="fa-brands fa-facebook-f"></i> </li> </a>
-                        <a class="link-social-media" href="#"> <li class="item-social-media" > <i class="fa-brands fa-whatsapp"></i>  </li> </a>
+                        <a class="link-social-media" href="#">
+                            <li class="item-social-media"> <i class="fa-brands fa-instagram"></i> </li>
+                        </a>
+                        <a class="link-social-media" href="#">
+                            <li class="item-social-media"> <i class="fa-brands fa-facebook-f"></i> </li>
+                        </a>
+                        <a class="link-social-media" href="#">
+                            <li class="item-social-media"> <i class="fa-brands fa-whatsapp"></i> </li>
+                        </a>
                     </ul>
                 </div><!--- social media --->
 
-                <p class="description description-second">or use your email account:</p>
-                <form class="form">
+                <p class="description description-second">ou use sua conta de email:</p>
 
-                    <label class="label-input" for="">
+                <!-- Formulário de login corrigido para usar método POST -->
+                <form class="form" method="POST" action="">
+                    <!-- Exibir mensagem de erro se houver -->
+                    <?php if (isset($login_error)): ?>
+                        <p style="color: red; text-align: center;"><?php echo $login_error; ?></p>
+                    <?php endif; ?>
+
+                    <label class="label-input" for="email">
                         <i class="far fa-envelope icon-modify"></i>
-                        <input type="email" placeholder="Email">
+                        <input type="email" name="email" placeholder="Email" required>
                     </label>
 
-                    <label class="label-input" for="">
+                    <label class="label-input" for="senha">
                         <i class="fas fa-lock icon-modify"></i>
-                        <input type="password" placeholder="Senha">
+                        <input type="password" name="senha" placeholder="Senha" required>
+                    </label>
+
+                    <label class="label-input" for="tipo_usuario">
+                        <i class="fas fa-user-tag icon-modify"></i>
+                        <select name="tipo_usuario" id="tipo_usuario" required
+                            style="width: 100%; height: 30px; background-color: #ecf0f1; border: none; outline: none; padding-left: 5px;">
+                            <option value="" disabled selected>Selecione seu perfil</option>
+                            <option value="instituicao">Instituição</option>
+                            <option value="aluno">Aluno</option>
+                            <option value="professor">Professor</option>
+                            <option value="responsavel">Responsável</option>
+                            <option value="crianca">Criança</option>
+                        </select>
                     </label>
 
                     <a class="password" href="#">Esqueceu sua senha?</a>
-                    <button class="btn btn-second">Entrar</button>
+                    <button type="submit" name="login" class="btn btn-second">Entrar</button>
                 </form>
             </div><!-- second column -->
         </div><!-- second-content -->
-    </div>  <!--- container --->
+    </div> <!--- container --->
 
     <script src="../view/js/app.js"></script>
 </body>
+
 </html>
