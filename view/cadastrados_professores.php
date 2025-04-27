@@ -3,7 +3,7 @@
     require '../model/Professor.class.php';
 
   
-    $aluno = new Professor();
+    $professor = new Professor();
     
     $pdo = $professor->getPdo(); 
     
