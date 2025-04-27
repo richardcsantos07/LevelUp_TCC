@@ -91,6 +91,12 @@ class Professor
         $this->telefone = $telefone;
     }
 
+    public function getPdo()
+    {
+        return $this->pdo;
+    }
+
+
     function __construct()
     {
         $dns = "mysql:dbname=leveluptest;host=localhost";
@@ -152,6 +158,19 @@ class Professor
             return array();
         }
 
+    }
+
+    public function listarTodosProfessores()
+    {
+        $sql = "SELECT * FROM professor ORDER BY id DESC";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+
+        if($stmt->rowCount() > 0){
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            return array(); // Retorna array vazio em vez de null para facilitar o loop
+        }
     }
 
 
