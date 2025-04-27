@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações</title>
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="../css/configuracoes.css">
+    <script src="https://kit.fontawesome.com/dfc8dc048e.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="sidebar">
+        <h1> <div class="arrow-container">
+            <a href="#" class="back-link" id="backLink">
+                <i class="fa-solid fa-chevron-left"></i>   Configurações  
+            </a>
+        </div> </h1>
+        <div class="menu-item active" data-content="settings">
+            <i class="fa-solid fa-gear"></i>
+            <span>Configurações</span>
+        </div>
+        <div class="menu-item" data-content="security">
+            <i class="fas fa-lock icon-modify"></i>
+            <span>Segurança e Privacidade</span>
+        </div>
+    </div>
+
+    <div class="content-area">
+        <div class="content-container">
+            <div class="content active" id="settings">
+                <h2>Configurações Gerais</h2>
+                
+                <div class="form-group">
+                    <label class="label-input" for="language">Idioma</label>
+                    <select id="language">
+                        <option value="pt-BR">Português (Brasil)</option>
+                        <option value="en">English</option>
+                        <option value="es">Español</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="label-input" for="theme">Tema</label>
+                    <select id="theme">
+                        <option value="light">Claro</option>
+                        <option value="dark">Escuro</option>
+                        <option value="system">Sistema</option>
+                    </select>
+                </div>
+
+                <div class="toggle-group">
+                    <div>
+                        <h3>Notificações por Email</h3>
+                        <p>Receber atualizações por email</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="toggle-group">
+                    <div>
+                        <h3>Notificações Push</h3>
+                        <p>Receber notificações no navegador</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Segurança e Privacidade -->
+            <div class="content" id="security">
+                <h2>Segurança e Privacidade</h2>
+
+                <label class="label-input" for="current-password">
+                    <i class="fas fa-lock icon-modify"></i>
+                    <input id="current-password" name="senha" type="password" placeholder="Senha Atual" required>
+                </label>
+
+                
+                <label class="label-input" for="new-password">
+                    <i class="fas fa-lock icon-modify"></i>
+                    <input id="new-password" name="senha" type="password" placeholder="Nova Senha" required>
+                </label>
+
+            
+                <label class="label-input" for="confirm-password">
+                    <i class="fas fa-lock icon-modify"></i>
+                    <input id="confirm-password" name="senha" type="password" placeholder="Confirmar Nova Senha" required>
+                </label>
+                
+                <button class="button">Alterar Senha</button>
+
+                <div class="toggle-group" style="margin-top: 30px;">
+                    <div>
+                        <h3>Autenticação em Duas Etapas</h3>
+                        <p>Adicione uma camada extra de segurança</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="toggle-group">
+                    <div>
+                        <h3>Perfil Público</h3>
+                        <p>Tornar seu perfil visível para todos</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/configuracoes.js"></script>
+</body>
+</html>

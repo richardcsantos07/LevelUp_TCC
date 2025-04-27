@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LevelUp - Menu Aluno</title>
+    <link rel="stylesheet" href="css/MenuAluno.css">
+    <link rel="stylesheet" href="../css/MenuAluno.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="logo">
+                <h2>LevelUp</h2>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="Home.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="#"><i class="fas fa-book"></i> Matérias</a></li>
+                    <li><a href="#"><i class="fas fa-user"></i> Perfil</a></li>
+                    <li><a href="#"><i class="fas fa-tasks"></i> Tarefas</a></li>
+                    <li><a href="configuracoes.html"><i class="fas fa-cog"></i> Configurações</a></li>
+                    <li><a href="#" class="logout"><i class="fas fa-sign-out-alt"></i> Sair da conta</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <p>&copy; 2025 LevelUp</p>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="main">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="greeting">
+                    <h2>Olá, Aluno!</h2>
+                    <p>Bem-vindo de volta</p>
+                </div>
+                <div class="search-container">
+                    <input type="text" placeholder="Pesquisar..." class="search-input">
+                    <button class="search-btn"><i class="fas fa-search"></i></button>
+                </div>
+                <div class="user-info">
+                    <div class="notifications">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </div>
+                    <div class="user-profile">
+                        <div class="user-avatar">A</div>
+                        <div class="user-name">Aluno</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content">
+                <div class="section-header">
+                    <h3>Jogos Disponíveis</h3>
+                    <div class="more-actions">
+                        <span class="dots">•••</span>
+                        <div class="dropdown-content">
+                            <a href="#">Ver todos</a>
+                            <a href="#">Ordernar por</a>
+                            <a href="#">Filtrar</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="games-container">
+                    <div class="games-grid">
+                        <div class="game-card">
+                            <div class="game-icon"><i class="fas fa-gamepad"></i></div>
+                            <div class="game-title">Matemática Divertida</div>
+                            <div class="game-difficulty">Fácil</div>
+                        </div>
+                        <div class="game-card">
+                            <div class="game-icon"><i class="fas fa-puzzle-piece"></i></div>
+                            <div class="game-title">Desafio de Lógica</div>
+                            <div class="game-difficulty">Médio</div>
+                        </div>
+                        <div class="game-card">
+                            <div class="game-icon"><i class="fas fa-brain"></i></div>
+                            <div class="game-title">Quiz de Ciências</div>
+                            <div class="game-difficulty">Difícil</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-header">
+                    <h3>Progresso</h3>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-card">
+                        <div class="progress-title">Matemática</div>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 75%"></div>
+                        </div>
+                        <div class="progress-info">75% Completo</div>
+                    </div>
+                    <div class="progress-card">
+                        <div class="progress-title">Português</div>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 45%"></div>
+                        </div>
+                        <div class="progress-info">45% Completo</div>
+                    </div>
+                    <div class="progress-card">
+                        <div class="progress-title">Ciências</div>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 60%"></div>
+                        </div>
+                        <div class="progress-info">60% Completo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/MenuAluno.js"></script>
+</body>
+</html>
