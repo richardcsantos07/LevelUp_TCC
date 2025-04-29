@@ -1,4 +1,66 @@
+/* Tema escuro */
+body.dark-mode {
+    background-color: #340069;
+}
+
+body.dark-mode .content-container {
+    background-color: #1e1e1e;
+    color: black;
+}
+
+body.dark-mode h2 {
+    color: white;
+}
+
+body.dark-mode h4 {
+    color: white;
+}
+
+body.dark-mode p {
+    color: white;
+}
+
+body.dark-mode .label-input input,
+body.dark-mode select {
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+}
+
+body.dark-mode .sidebar {
+    background-color: #1e1e1e;
+}
+
+body.dark-mode .menu-item {
+    color: white;
+}
+
+body.dark-mode .menu-item.active {
+    background-color: #c4c3c3;
+    color: #340069;
+}
+
+body.dark-mode .menu-item:hover {
+    background-color: #c4c3c3;
+}
+
+body.dark-mode .label-input{
+    background-color: #c4c3c3;
+}
+
+.user-data {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+.user-data li {
+    padding: 8px 0;
+    border-bottom: 1px solid #1e1e1e;
+}
+
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,700&display=swap');
+
+  
 * {
     margin: 0;
     padding: 0;
@@ -7,18 +69,19 @@
 }
 
 body {
-    background-color: #fdc0c9;
+    background-color: #340069;
     display: flex;
     min-height: 100vh;
 }
- 
+
 .arrow-container {
     text-align: center;
+    margin-bottom: 20px;
 }
 
 .back-link {
     text-decoration: none;
-    color: #333;
+    color: #340069;
     font-size: 18px;
     display: flex;
     align-items: center;
@@ -26,60 +89,47 @@ body {
 }
 
 .back-link:hover {
-    color: #fa9797; /* Muda a cor ao passar o mouse */
+    color: #340069;
 }
 
-.fa-chevron-left::before {
-   
-    margin-right: 18px; /* Espaçamento entre a seta e o texto */
+.fa-chevron-left {
+    margin-right: 10px;
     font-size: 18px;
+    color: #340069;
 }
 
-/* Menu Lateral */
 .sidebar {
     width: 250px;
-    background-color: #ffffff;
+    background-color: white;
     padding: 20px;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-}
-
-.sidebar h1 {
-    font-size: 24px;
-    color: #1a1a1a;
-    margin-bottom: 30px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #eee;
-}
-
-.fa-chevron-left:houver{
-color: #f87d8f;
 }
 
 .menu-item {
     display: flex;
     align-items: center;
     padding: 12px 15px;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     cursor: pointer;
     border-radius: 8px;
-    transition: all 0.3s ease;
+    transition: background-color 0.3s;
 }
 
 .menu-item i {
     margin-right: 10px;
     font-size: 20px;
-}
-
-.menu-item:hover {
-    background-color: #ffffff;
+    color: #340069;
 }
 
 .menu-item.active {
     background-color: #fdecee;
-    color: #f87d8f;
+    color: #340069;
 }
 
-/* Área de Conteúdo */
+.menu-item:hover {
+    background-color: #f4f4f4;
+}
+
 .content-area {
     flex: 1;
     padding: 40px;
@@ -112,34 +162,46 @@ color: #f87d8f;
     border-bottom: 1px solid #eee;
 }
 
-/* Formulários e Inputs */
 .label-input {
     display: flex;
     align-items: center;
-    margin: 15px 0;
+    margin: 30px 0;
     background-color: #ecf0f1;
-    padding: 8px;
+    padding: 10px;
+    border-radius: 5px;
+
 }
+
 
 .label-input input {
     height: 25px;
     width: 100%;
     border: none;
-    background-color: #ecf0f1;
+    background-color: transparent;
     padding-left: 10px;
+    font-size: 14px;
+    color: black;
 }
 
 .icon-modify {
-    color: #7f8c8d;
+    color: #340069;
     padding: 0 5px;
 }
 
 
-.form-group select,
-.form-group input[type="text"],
-.form-group input[type="email"],
-.form-group input[type="password"] {
-  background-color: #ecf0f1;
+.toggle-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+   
+}
+.theme-input{
+    margin-left: 600px;
+}
+
+.language-input{
+    margin-left: 523px;
 }
 
 .toggle-group {
@@ -166,6 +228,18 @@ color: #f87d8f;
     width: 0;
     height: 0;
 }
+.theme-input{
+    margin-left: 600px;
+}
+
+.language-input{
+    margin-left: 523px;
+}
+
+.label-input input::placeholder {
+    color: #888;
+  }
+  
 
 .slider {
     position: absolute;
@@ -192,7 +266,7 @@ color: #f87d8f;
 }
 
 input:checked + .slider {
-    background-color: #fdafaf;
+    background-color: #340069;
 }
 
 input:checked + .slider:before {
@@ -200,7 +274,7 @@ input:checked + .slider:before {
 }
 
 .button {
-    background-color: #fa9797;
+    background-color: #340069;
     color: white;
     border: none;
     padding: 12px 24px;
@@ -212,7 +286,7 @@ input:checked + .slider:before {
 }
 
 .button:hover {
-    background-color: #fd7979;
+    background-color: #340069;
 }
 
 /* Responsividade */
@@ -230,3 +304,8 @@ input:checked + .slider:before {
         padding: 20px;
     }
 }
+
+i {
+    color: #340069;
+}
+

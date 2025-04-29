@@ -51,7 +51,7 @@ if (isset($_POST['login'])) {
     <script src="https://kit.fontawesome.com/dfc8dc048e.js" crossorigin="anonymous"></script>
 
 </head>
-
+//teste
 <body>
     <!---tela de cadastro r--->
     <div class="container">
