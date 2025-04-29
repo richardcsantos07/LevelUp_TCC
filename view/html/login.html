@@ -1,44 +1,3 @@
-<?php
-// Processamento do cadastro
-if (isset($_POST['submit'])) {
-    include_once('config.php');
-
-    $name = $_POST['name'];
-    $data_nasc = $_POST['data_nasc'];
-    $email = $_POST['email'];
-    $senha = $_POST['senha'];
-
-    $result = mysqli_query($conexao, "INSERT INTO alunos(nome, data_nasc, email, senha) VALUES ('$name', '$data_nasc', '$email', '$senha')");
-
-    header('Location: ../html/Home.html');
-}
-
-// Processamento do login
-if (isset($_POST['login'])) {
-    include_once('config.php');
-
-    $email = $_POST['email'];
-    $senha = $_POST['senha'];
-
-    // Consulta para verificar se o usuário existe
-    $sql = "SELECT * FROM alunos WHERE email = '$email' AND senha = '$senha'";
-    $result = mysqli_query($conexao, $sql);
-
-    // Verifica se encontrou um usuário
-    if (mysqli_num_rows($result) > 0) {
-        // Login bem-sucedido
-        // Inicie a sessão e redirecione
-        session_start();
-        $_SESSION['email'] = $email;
-        header('Location: ../html/Home.html');
-    } else {
-        // Login falhou
-        // Você pode adicionar uma mensagem de erro aqui
-        $login_error = "Email ou senha incorretos!";
-    }
-}
-?>
-
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -47,18 +6,17 @@ if (isset($_POST['login'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Login</title>
-    <link rel="stylesheet" href="../view/css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
     <script src="https://kit.fontawesome.com/dfc8dc048e.js" crossorigin="anonymous"></script>
 
 </head>
-//teste
 <body>
     <!---tela de cadastro r--->
     <div class="container">
         <div class="content first-content">
 
             <div class="first-column">
-                <h2 class="title title-primary"> LevelUp</h2>
+                <h2 class="title title-primary"> Level Up</h2>
                 <p class="description description-primary">Entrar com E-mail institucional</p>
                 <a class="description description-primary" href="formulario.html" target="_blank">Formulário
                     Institucional</a>
@@ -116,7 +74,7 @@ if (isset($_POST['login'])) {
         <div class="content second-content">
 
             <div class="first-column">
-                <h2 class="title title-primary">Game Shakers!</h2>
+                <h2 class="title title-primary">Level Up</h2>
                 <p class="description description-primary">Entrar com E-mail institucional</p>
                 <a class="description description-primary" href="formulario.html" target="_blank">Formulário
                     Institucional</a>
@@ -147,12 +105,8 @@ if (isset($_POST['login'])) {
                 <p class="description description-second">ou use sua conta de email:</p>
 
                 <!-- Formulário de login corrigido para usar método POST -->
-                <form class="form" method="POST" action="">
-                    <!-- Exibir mensagem de erro se houver -->
-                    <?php if (isset($login_error)): ?>
-                        <p style="color: red; text-align: center;"><?php echo $login_error; ?></p>
-                    <?php endif; ?>
-
+                <form class="form" method="POST" action="../../controller/login.php">
+                    
                     <label class="label-input" for="email">
                         <i class="far fa-envelope icon-modify"></i>
                         <input type="email" name="email" placeholder="Email" required>
@@ -183,7 +137,7 @@ if (isset($_POST['login'])) {
         </div><!-- second-content -->
     </div> <!--- container --->
 
-    <script src="../view/js/app.js"></script>
+    <script src="../js/app.js"></script>
 </body>
 
 </html>

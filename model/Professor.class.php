@@ -153,7 +153,7 @@ class Professor
         $stmt->bindValue(':s', $senha);
         $stmt->execute();
         if ($stmt->rowCount() > 0) {
-            return $stmt->fetch();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
         } else {
             return array();
         }
