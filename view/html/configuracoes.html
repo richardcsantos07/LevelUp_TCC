@@ -29,6 +29,11 @@
       <span>Configurações</span>
     </div>
 
+    <div class="menu-item" data-content="profile">
+      <i class="fa-solid fa-user"></i>
+      <span>Perfil</span>
+    </div>
+
     <div class="menu-item" data-content="Support">
       <i class="fa-solid fa-headset"></i>
       <span>Suporte</span>
@@ -61,6 +66,69 @@
           </label>
         </div>
 
+      </div>
+
+      <!-- Perfil do Usuário -->
+      <div class="content" id="profile">
+        <h2>Informações do Aluno</h2>
+        
+        <div class="user-profile">
+          <div class="profile-picture">
+            <img src="/api/placeholder/150/150" alt="Foto de Perfil" id="profile-image">
+          </div>
+          
+          <div class="user-info">
+            <div class="info-card">
+              <div class="info-item">
+                <i class="fa-solid fa-user icon-info"></i>
+                <div class="info-content">
+                  <span class="info-label">Nome</span>
+                  <span class="info-value" id="user-name">Carregando...</span>
+                </div>
+              </div>
+              
+              <div class="info-item">
+                <i class="fa-solid fa-envelope icon-info"></i>
+                <div class="info-content">
+                  <span class="info-label">E-mail</span>
+                  <span class="info-value" id="user-email">Carregando...</span>
+                </div>
+              </div>
+              
+              <div class="info-item">
+                <i class="fa-solid fa-calendar icon-info"></i>
+                <div class="info-content">
+                  <span class="info-label">Data de Nascimento</span>
+                  <span class="info-value" id="user-birth">Carregando...</span>
+                </div>
+              </div>
+              
+              <div class="info-item">
+                <i class="fa-solid fa-id-card icon-info"></i>
+                <div class="info-content">
+                  <span class="info-label">RA (Registro do Aluno)</span>
+                  <span class="info-value" id="user-ra">Carregando...</span>
+                </div>
+              </div>
+              
+              <div class="info-item">
+                <i class="fa-solid fa-graduation-cap icon-info"></i>
+                <div class="info-content">
+                  <span class="info-label">Série</span>
+                  <span class="info-value" id="user-serie">Carregando...</span>
+                </div>
+              </div>
+              
+              <div class="info-item">
+                <i class="fa-solid fa-users icon-info"></i>
+                <div class="info-content">
+                  <span class="info-label">Turma</span>
+                  <span class="info-value" id="user-turma">Carregando...</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Sobre -->
