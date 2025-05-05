@@ -7,16 +7,10 @@ class Crianca
     private $email;
     private $senha;
     private $idResponsavel;
-    private $nomeResponsavel;
     private $dataNasc;
     private $nivelAcesso;
-    private $instituicao; // atributo para composição
-
-    public function __construct(Instituicao $instituicao)
-    {
-        $this->instituicao = $instituicao;
-    }
-
+    private $pdo;
+    
     // getters e setters para os atributos
 
     public function getId()
@@ -59,14 +53,6 @@ class Crianca
     {
         $this->idResponsavel = $idResponsavel;
     }
-    public function getNomeResponsavel()
-    {
-        return $this->nomeResponsavel;
-    }
-    public function setNomeResponsavel($nomeResponsavel)
-    {
-        $this->nomeResponsavel = $nomeResponsavel;
-    }
     public function getDataNasc()
     {
         return $this->dataNasc;
@@ -84,11 +70,37 @@ class Crianca
         $this->nivelAcesso = $nivelAcesso;
     }
 
-    // métodos específicos da Crianca
+    public function __construct(Instituicao $instituicao)
+    {
+      
+        $dns = "mysql:dbname=leveluptest;host=localhost";
+        $dbUser = "root";
+        $dbPass = "";
+
+        try {
+            $this->pdo = new PDO($dns, $dbUser, $dbPass);
+            return true;
+        } catch (\Throwable $th) {
+            return false;
+        }  
+    }
+
+    public function inserirCadCri($nome, $email, $senha, $idResponsavel, $dataNasc)
+    {
+        $sql = "INSERT INTO crianca (nome, email, idResponsavel, dataNasc) VALUES (:n, :e, :s, :idr :d)";
+        $stmt = $this->pdo->prepare($sql);
+        
+        $stmt->bindValue(':n', $nome);
+        $stmt->bindValue(':e', $email);
+        $stmt->bindValue(':s', $senha);
+        $stmt->bindValue(':idr', $idResponsavel);
+        $stmt->bindValue(':d', $dataNasc);
+        return $stmt->execute();
+    }
 
     public function conferirCadCri()
     {
-        return $this->instituicao->conferirCadInstituicao();
+       
     }
 
     public function verJogos()

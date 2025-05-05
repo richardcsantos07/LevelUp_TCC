@@ -90,6 +90,12 @@ class Aluno
     {
         $this->id_inst = $id_inst;
     }
+    
+    // Método para retornar a conexão PDO
+    public function getPdo()
+    {
+        return $this->pdo;
+    }
 
     // métodos específicos do Aluno
 
@@ -101,8 +107,10 @@ class Aluno
 
         try {
             $this->pdo = new PDO($dns, $dbUser, $dbPass);
+            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return true;
         } catch (\Throwable $th) {
+            echo "Erro de conexão: " . $th->getMessage();
             return false;
         }
     }
@@ -115,13 +123,12 @@ class Aluno
         $stmt->execute();
 
         if ($stmt->rowCount() > 0) {
-            $info = $stmt->fetch();
+            $info = $stmt->fetch(PDO::FETCH_ASSOC);
             return $info;
         } else {
             $info = array();
             return $info;
         }
-
     }
 
     public function chkUserPass($email, $senha)
@@ -132,11 +139,10 @@ class Aluno
         $stmt->bindValue(':s', $senha);
         $stmt->execute();
         if ($stmt->rowCount() > 0) {
-            return $stmt->fetch();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
         } else {
             return array();
         }
-
     }
 
     public function inserirCadAluno($id, $nome, $email, $senha, $serie, $turma, $dataNasc, $id_inst)
@@ -152,12 +158,47 @@ class Aluno
         $stmt->bindValue(':d', $dataNasc);
         $stmt->bindValue(':ii', $id_inst);
         return $stmt->execute();
+    }
 
+    public function conferirCadAlunoForId($id)
+    {
+        $sql = "SELECT * FROM aluno WHERE id = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':id', $id);
+        $stmt->execute();
+
+        if($stmt->rowCount() > 0){
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } else {
+            return null;
+        }
     }
 
     public function conferirCadAluno()
     {
-        return $this->instituicao->conferirCadInstituicao();
+        $sql = "SELECT * FROM aluno ORDER BY ra DESC";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+
+        if($stmt->rowCount() > 0){
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } else {
+            return null;
+        }
+    }
+    
+    // Novo método para listar todos os alunos
+    public function listarTodosAlunos()
+    {
+        $sql = "SELECT * FROM aluno ORDER BY ra DESC";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+
+        if($stmt->rowCount() > 0){
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            return array(); // Retorna array vazio em vez de null para facilitar o loop
+        }
     }
 
     public function verJogos()

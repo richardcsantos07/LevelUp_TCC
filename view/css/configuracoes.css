@@ -229,10 +229,12 @@ body {
 }
 .theme-input{
     margin-left: 600px;
+    border-radius: 5px;
 }
 
 .language-input{
     margin-left: 523px;
+    border-radius: 5px;
 }
 
 .label-input input::placeholder {

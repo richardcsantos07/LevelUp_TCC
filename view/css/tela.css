@@ -57,7 +57,7 @@ body {
 
 /* Cabeçalho */
 .header {
-    background-color: #f87d8f; 
+    background-color: #2d007a; 
     color: white;
     display: flex;
     justify-content: space-between;
@@ -112,7 +112,7 @@ body {
 
 .menu-left h2 {
     font-size: 18px;
-    color: #f87d8f;
+    color: #2d007a;
 }
 
 .menu {
@@ -122,7 +122,7 @@ body {
 }
 
 .dropdown-btn {
-    background-color: #f87d8f;
+    background-color: #2d007a;
     color: white;
     border: none;
     padding: 10px;
@@ -135,7 +135,7 @@ body {
 }
 
 .dropdown-btn:hover {
-    background-color: #f87d8f;
+    background-color: #2d007a;
 }
 
 .dropdown-content {
@@ -154,13 +154,13 @@ body {
 
 .dropdown-content li a {
     text-decoration: none;
-    color: #f87d8f;
+    color: #2d007a;
     font-weight: bold;
     display: block;
 }
 
 .dropdown-content li a:hover {
-    color: #f87d8f;
+    color: #2d007a;
 }
 
 /* Área Central */
@@ -190,7 +190,7 @@ body {
 .search-bar button {
     padding: 10px 20px;
     border: none;
-    background-color: #f87d8f;
+    background-color: #2d007a;
     color: white;
     cursor: pointer;
     height: 40px;
@@ -198,7 +198,7 @@ body {
 }
 
 .search-bar button:hover {
-    background-color: #f87d8f;
+    background-color: #2d007a;
 }
 
 /* Lista de Jogos */
