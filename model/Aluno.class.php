@@ -162,7 +162,7 @@ class Aluno
 
     public function conferirCadAlunoForId($id)
     {
-        $sql = "SELECT * FROM aluno WHERE id = :id";
+        $sql = "SELECT * FROM aluno WHERE ra = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':id', $id);
         $stmt->execute();
