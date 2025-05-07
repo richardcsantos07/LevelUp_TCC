@@ -9,7 +9,7 @@ if(!$conection){
     echo "<h1>Erro ao conctar no Banco de Dados!</h1>";
 } else {
     if(isset($_POST['submit'])){
-        $ra         = $_POST['ra'];
+        $ra         = $_POST['ra-aluno'];
         $nome       = $_POST['nome']; 
         $email      = $_POST['email'];
         $senha      = $_POST['senha'];

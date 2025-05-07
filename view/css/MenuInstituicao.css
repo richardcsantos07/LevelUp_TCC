@@ -67,11 +67,7 @@ body {
     font-weight: 600;
 }
 
-.logo {
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--primary-color);
-}
+
 
 .user-info {
     padding: 15px;

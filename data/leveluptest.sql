@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 25/04/2025 às 18:39
+-- Tempo de geração: 07/05/2025 às 02:38
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -33,19 +33,20 @@ CREATE TABLE `aluno` (
   `email` varchar(255) DEFAULT NULL,
   `senha` varchar(255) DEFAULT NULL,
   `turma` varchar(100) DEFAULT NULL,
-  `serie` varchar(50) DEFAULT NULL,
   `dataNasc` date DEFAULT NULL,
-  `nivelAcesso` varchar(50) DEFAULT NULL,
-  `id_inst` int(10) DEFAULT NULL
+  `nivelAcesso` varchar(50) DEFAULT 'user',
+  `id_inst` int(10) DEFAULT NULL,
+  `nome_responsavel` varchar(250) DEFAULT NULL,
+  `tell_responsavel` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `aluno`
 --
 
-INSERT INTO `aluno` (`ra`, `nome`, `email`, `senha`, `turma`, `serie`, `dataNasc`, `nivelAcesso`, `id_inst`) VALUES
-(0, 'Richard Camargo dos Santos', 'richardcamargodosantos@gmail.com', 'aluno1234', 'A', '3', '2025-04-24', NULL, 3),
-(12345, 'Lucas', 'lucas@gmail.com', 'lucas1234', 'A', '3', '2025-04-24', NULL, 3);
+INSERT INTO `aluno` (`ra`, `nome`, `email`, `senha`, `turma`, `dataNasc`, `nivelAcesso`, `id_inst`, `nome_responsavel`, `tell_responsavel`) VALUES
+(0, 'Richard Camargo dos Santos', 'richardcamargodosantos@gmail.com', 'aluno1234', 'A', '2025-04-24', NULL, 3, NULL, NULL),
+(12345, 'Lucas', 'lucas@gmail.com', 'lucas1234', 'A', '2025-04-24', NULL, 3, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -59,6 +60,21 @@ CREATE TABLE `atividade` (
   `descricao` text DEFAULT NULL,
   `materia` varchar(255) DEFAULT NULL,
   `nota` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `atividade_aluno`
+--
+
+CREATE TABLE `atividade_aluno` (
+  `id_atv` int(11) NOT NULL,
+  `id_aluno` int(11) NOT NULL,
+  `nome` varchar(255) DEFAULT NULL,
+  `nota` decimal(4,2) DEFAULT NULL,
+  `descricao` text DEFAULT NULL,
+  `materia` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -160,7 +176,8 @@ CREATE TABLE `professor` (
 --
 
 INSERT INTO `professor` (`id`, `nome`, `email`, `senha`, `materia`, `dataNasc`, `nivelAcesso`, `telefone`, `id_inst`) VALUES
-(3, 'RICHARD CAMARGO DOS SANTOS', 'silshe@globomail.com', '222', 'artes', '2025-04-23', 'professor', '11930248633', 3);
+(3, 'RICHARD CAMARGO DOS SANTOS', 'silshe@globomail.com', '222', 'artes', '2025-04-23', 'professor', '11930248633', 3),
+(4, 'richard', 'richard@gmail.com', 'prof1234', 'inglês', '2025-04-16', 'professor', '11930248633', 3);
 
 -- --------------------------------------------------------
 
@@ -174,8 +191,9 @@ CREATE TABLE `responsavel` (
   `email` varchar(255) DEFAULT NULL,
   `senha` varchar(255) DEFAULT NULL,
   `dataNasc` date DEFAULT NULL,
-  `nivelAcesso` varchar(50) DEFAULT NULL,
-  `telefone` varchar(20) DEFAULT NULL
+  `nivelAcesso` varchar(50) DEFAULT 'admin',
+  `telefone` varchar(20) DEFAULT NULL,
+  `cpf` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -227,6 +245,13 @@ ALTER TABLE `aluno`
 --
 ALTER TABLE `atividade`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Índices de tabela `atividade_aluno`
+--
+ALTER TABLE `atividade_aluno`
+  ADD PRIMARY KEY (`id_atv`,`id_aluno`),
+  ADD KEY `id_aluno` (`id_aluno`);
 
 --
 -- Índices de tabela `crianca`
@@ -324,7 +349,7 @@ ALTER TABLE `jogo`
 -- AUTO_INCREMENT de tabela `professor`
 --
 ALTER TABLE `professor`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de tabela `responsavel`
@@ -347,6 +372,13 @@ ALTER TABLE `turma`
 --
 ALTER TABLE `aluno`
   ADD CONSTRAINT `fk_aluno_instituicao` FOREIGN KEY (`id_inst`) REFERENCES `instituicao` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Restrições para tabelas `atividade_aluno`
+--
+ALTER TABLE `atividade_aluno`
+  ADD CONSTRAINT `atividade_aluno_ibfk_1` FOREIGN KEY (`id_atv`) REFERENCES `atividade` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `atividade_aluno_ibfk_2` FOREIGN KEY (`id_aluno`) REFERENCES `aluno` (`ra`) ON DELETE CASCADE;
 
 --
 -- Restrições para tabelas `crianca`
