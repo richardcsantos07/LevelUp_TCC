@@ -7,7 +7,9 @@ class Aluno
     private $email;
     private $senha;
     private $turma;
-    private $serie;
+    private $nomeResponsavel;
+    private $telefoneResponsavel;
+    private $telefone;
     private $dataNasc;
     private $nivelAcesso;
     private $id_inst;
@@ -56,13 +58,29 @@ class Aluno
     {
         $this->turma = $turma;
     }
-    public function getSerie()
+    public function getTelefone()
     {
-        return $this->serie;
+        return $this->telefone;
     }
-    public function setSerie($serie)
+    public function setTelefone($telefone)
     {
-        $this->serie = $serie;
+        $this->telefone = $telefone;
+    }
+    public function getNomeResponsavel()
+    {
+        return $this->nomeResponsavel;
+    }
+    public function setNomeResponsavel($nomeResponsavel)
+    {
+        $this->nomeResponsavel = $nomeResponsavel;
+    }
+    public function getTelefoneResponsavel()
+    {
+        return $this->telefoneResponsavel;
+    }
+    public function setTelefoneResponsavel($telefoneResponsavel)
+    {
+        $this->telefoneResponsavel = $telefoneResponsavel;
     }
     public function getDataNasc()
     {
@@ -145,17 +163,19 @@ class Aluno
         }
     }
 
-    public function inserirCadAluno($id, $nome, $email, $senha, $serie, $turma, $dataNasc, $id_inst)
+    public function inserirCadAluno($id, $nome, $email, $senha, $telefone, $turma, $dataNasc, $nomeResponsavel, $telefoneResponsavel, $id_inst)
     {
-        $sql = "INSERT INTO aluno (ra, nome, email, senha, serie, turma, dataNasc, id_inst) VALUES (:ra, :n, :e, :s, :ser, :tur, :d, :ii)";
+        $sql = "INSERT INTO aluno (ra, nome, email, senha, tell, turma, dataNasc, nome_responsavel, tell_responsavel, id_inst) VALUES (:ra, :n, :e, :s, :t, :tur, :d, :nr, :tr, :ii)";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':ra', $id);
         $stmt->bindValue(':n', $nome);
         $stmt->bindValue(':e', $email);
         $stmt->bindValue(':s', $senha);
-        $stmt->bindValue(':ser', $serie);
+        $stmt->bindValue(':t', $telefone);
         $stmt->bindValue(':tur', $turma);
         $stmt->bindValue(':d', $dataNasc);
+        $stmt->bindValue(':nr', $nomeResponsavel);
+        $stmt->bindValue(':tr', $telefoneResponsavel);
         $stmt->bindValue(':ii', $id_inst);
         return $stmt->execute();
     }
@@ -188,10 +208,11 @@ class Aluno
     }
     
     // Novo método para listar todos os alunos
-    public function listarTodosAlunos()
+    public function listarTodosAlunos($id_inst)
     {
-        $sql = "SELECT * FROM aluno ORDER BY ra DESC";
+        $sql = "SELECT * FROM aluno WHERE id_inst = :ii ORDER BY ra DESC";
         $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':ii', $id_inst);
         $stmt->execute();
 
         if($stmt->rowCount() > 0){

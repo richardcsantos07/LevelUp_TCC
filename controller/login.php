@@ -17,6 +17,8 @@ if (isset($_POST['login'])) {
 
         $user = $aluno->chkUserPass($email, $senha);
         if (!empty($user)) {
+            $_SESSION['id'] = $user['ra'];
+            $_SESSION['id_inst'] = $user['id_inst'];
             $_SESSION['email'] = $user['email'];
             $_SESSION['password'] = $user['senha'];
             $_SESSION['Acesslevel'] = $user['nivelAcesso'];
@@ -33,6 +35,8 @@ if (isset($_POST['login'])) {
 
         $user = $prof->chkUserPass($email, $senha);
         if (!empty($user)) {
+            $_SESSION['id'] = $user['id'];
+            $_SESSION['id_inst'] = $user['id_inst'];
             $_SESSION['email'] = $user['email'];
             $_SESSION['password'] = $user['senha'];
             $_SESSION['Acesslevel'] = $user['nivelAcesso'];
@@ -50,10 +54,11 @@ if (isset($_POST['login'])) {
 
         $user = $inst->chkUserPass($email, $senha);
         if (!empty($user)) {
+            $_SESSION['id'] = $user['id'];
             $_SESSION['email'] = $user['email'];
             $_SESSION['password'] = $user['senha'];
             $_SESSION['Acesslevel'] = $user['nivelAcesso'];
-            header('location: ../view/html/MenuInstituicao.html');
+            header('location: ../view/MenuInstituicao.php');
         } else {
             echo "<script>
                             alert('Usuário ou Senha incorretos')
@@ -67,6 +72,7 @@ if (isset($_POST['login'])) {
 
         $user = $resp->chkUserPass($email, $senha);
         if (!empty($user)) {
+            $_SESSION['id'] = $user['id'];
             $_SESSION['email'] = $user['email'];
             $_SESSION['password'] = $user['senha'];
             $_SESSION['Acesslevel'] = $user['nivelAcesso'];
@@ -84,6 +90,7 @@ if (isset($_POST['login'])) {
 
         $user = $crianca->chkUserPass($email, $senha);
         if (!empty($user)) {
+            $_SESSION['id'] = $user['id'];
             $_SESSION['email'] = $user['email'];
             $_SESSION['password'] = $user['senha'];
             $_SESSION['Acesslevel'] = $user['nivelAcesso'];

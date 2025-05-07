@@ -1,5 +1,6 @@
 // Gerenciamento das abas e conteúdos
 document.addEventListener('DOMContentLoaded', function () {
+    console.log('Script carregado');  // Para debug
     // Mostrar/esconder submenus
     const toggleItems = document.querySelectorAll('.menu-item.has-submenu');
     toggleItems.forEach(item => {
