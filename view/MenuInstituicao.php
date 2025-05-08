@@ -279,7 +279,7 @@ $professorObj = new Professor();
                                 ?>
                             </select>
                         </div>
-
+                    
                         <div class="form-group">
                             <label for="responsavel-aluno">Nome do Responsável</label>
                             <input type="text" id="responsavel-aluno" name="responsavel-aluno">
