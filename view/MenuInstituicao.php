@@ -663,62 +663,27 @@ $professorObj = new Professor();
 
 
                 <div class="table-container">
-                    <form id="form-turma">
+                    <form id="form-turma" action="../controller/inserirTurma.php" method="POST">
                         <div class="form-group">
-                            <label for="nome-turma">Nome da Turma</label>
-                            <input type="text" id="nome-turma" name="nome-turma" required>
+                            <label for="serie-turma">Serie</label>
+                            <input type="text" id="serie-turma" name="serie-turma" required>
                         </div>
 
                         <div class="form-group">
-                            <label for="ano-letivo">Ano Letivo</label>
-                            <select id="ano-letivo" name="ano-letivo" required>
-                                <option value="">Selecione o ano letivo</option>
-                                <option value="2025">2025</option>
-                                <option value="2026">2026</option>
-                            </select>
+                            <label for="turma">Turma</label>
+                            <input type="text" id="turma" name="turma" required>
                         </div>
 
                         <div class="form-group">
-                            <label for="periodo">Período</label>
-                            <select id="periodo" name="periodo" required>
-                                <option value="">Selecione o período</option>
-                                <option value="manha">Manhã</option>
-                                <option value="tarde">Tarde</option>
-                                <option value="noite">Noite</option>
-                                <option value="integral">Integral</option>
-                            </select>
+                            <label for="turno-turma">Turno</label>
+                            <input type="text" id="turno-turma" name="turno-turma" required>
                         </div>
 
-                        <div class="form-group">
-                            <label for="professor-responsavel">Professor Responsável</label>
-                            <select id="professor-responsavel" name="professor-responsavel">
-                                <option value="">Selecione o professor</option>
-                                <option value="1">Roberto Almeida</option>
-                                <option value="2">Mariana Costa</option>
-                                <option value="3">Fernando Santos</option>
-                                <option value="4">Patrícia Lima</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="capacidade">Capacidade de Alunos</label>
-                            <input type="number" id="capacidade" name="capacidade" min="1" max="100" value="30"
-                                required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="sala">Sala</label>
-                            <input type="text" id="sala" name="sala">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="descricao-turma">Descrição</label>
-                            <textarea id="descricao-turma" name="descricao-turma"></textarea>
-                        </div>
+                        <input type="hidden" name="id_inst" id="id_inst" value="<?= $id_inst?>">
 
                         <div class="modal-footer">
                             <button type="button" class="btn-cancel" id="btn-cancelar-turma">Cancelar</button>
-                            <button type="submit" class="btn-save">Criar Turma</button>
+                            <button type="submit" class="btn-save" name="btn-cad-turma" id="btn-cad-turma">Criar Turma</button>
                         </div>
                     </form>
                 </div>

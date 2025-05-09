@@ -52,11 +52,12 @@ class Turma {
         }
     }
 
-    public function inserirTurma($turma)
+    public function inserirTurma($turma, $id_inst)
     {
-        $sql = "INSERT INTO turma (turma) VALUES (:turma)";
+        $sql = "INSERT INTO turma (turma, id_inst) VALUES (:t, :ii)";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':turma', $turma);
+        $stmt->bindValue(':t', $turma);
+        $stmt->bindValue(':ii', $id_inst);
         $stmt->execute();
     }
     public function listarTurmas($id_inst)
@@ -70,6 +71,22 @@ class Turma {
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } else {
             return null;
+        }
+    }
+
+    public function chkTurma($turma, $id_inst){
+        $sql = "SELECT * FROM turma WHERE turma = :t AND id_inst = :ii";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':i', $turma);
+        $stmt->bindValue(':ii', $id_inst);
+        $stmt->execute();
+
+        if ($stmt->rowCount() > 0) {
+            $info = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $info;
+        } else {
+            $info = array();
+            return $info;
         }
     }
 }
