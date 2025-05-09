@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendário</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/calendar.css">
+</head>
+<body>
+    <div class="container">
+        <div class="calendar-content">
+            <div class="calendar-header">
+                <div class="month-navigation">
+                    <button class="nav-btn" id="prev-month">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <h2 id="month-year">Maio 2025</h2>
+                    <button class="nav-btn" id="next-month">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="weekdays">
+                <div>Dom</div>
+                <div>Seg</div>
+                <div>Ter</div>
+                <div>Qua</div>
+                <div>Qui</div>
+                <div>Sex</div>
+                <div>Sáb</div>
+            </div>
+            
+            <div class="days-grid">
+                <!-- Dias do mês anterior -->
+                <div class="day other-month">28</div>
+                <div class="day other-month">29</div>
+                <div class="day other-month">30</div>
+                
+                <!-- Dias do mês atual -->
+                <div class="day">1</div>
+                <div class="day">2</div>
+                <div class="day">3</div>
+                <div class="day">4</div>
+                <div class="day">5</div>
+                <div class="day">6</div>
+                <div class="day">7</div>
+                <div class="day">8</div>
+                <div class="day current-day">9</div>
+                <div class="day">10</div>
+                <div class="day">11</div>
+                <div class="day event">12 <span class="event-dot"></span></div>
+                <div class="day">13</div>
+                <div class="day">14</div>
+                <div class="day">15</div>
+                <div class="day event">16 <span class="event-dot"></span></div>
+                <div class="day">17</div>
+                <div class="day">18</div>
+                <div class="day">19</div>
+                <div class="day">20</div>
+                <div class="day">21</div>
+                <div class="day">22</div>
+                <div class="day">23</div>
+                <div class="day">24</div>
+                <div class="day event">25 <span class="event-dot"></span></div>
+                <div class="day">26</div>
+                <div class="day">27</div>
+                <div class="day">28</div>
+                <div class="day">29</div>
+                <div class="day">30</div>
+                <div class="day">31</div>
+                
+                <!-- Dias do próximo mês -->
+                <div class="day other-month">1</div>
+            </div>
+            
+            <div class="calendar-actions">
+                <button class="btn" id="add-event">
+                    <i class="fas fa-plus"></i> Adicionar Evento
+                </button>
+                <button class="btn" id="view-events">
+                    <i class="fas fa-calendar-check"></i> Ver Eventos
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript básico para destacar o dia selecionado
+        document.querySelectorAll('.day').forEach(day => {
+            day.addEventListener('click', function() {
+                // Remove a classe 'selected' de qualquer dia que já esteja selecionado
+                document.querySelectorAll('.day').forEach(d => {
+                    d.classList.remove('selected');
+                });
+                // Adiciona a classe 'selected' ao dia clicado
+                this.classList.add('selected');
+            });
+        });
+    </script>
+</body>
+</html>
