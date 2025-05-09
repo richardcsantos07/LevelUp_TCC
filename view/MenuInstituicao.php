@@ -576,7 +576,7 @@ $professorObj = new Professor();
 
             <!-- Fim do Cadastrar Professor -->
 
-           <!-- Comunicados -->
+          <!-- Comunicados -->
 <div class="content-section" id="comunicados">
     <div class="header">
         <h1 class="page-title">Comunicados</h1>
@@ -600,33 +600,21 @@ $professorObj = new Professor();
         $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
         $firstDayOfWeek = date('w', strtotime("$year-$month-01"));
         
-        // Cálculo dos meses anterior e próximo
-        $prevMonth = $month - 1;
-        $prevYear = $year;
-        if ($prevMonth < 1) {
-            $prevMonth = 12;
-            $prevYear--;
-        }
+        // Nomes dos meses em português
+        $monthNames = [
+            1 => 'Janeiro', 2 => 'Fevereiro', 3 => 'Março', 4 => 'Abril',
+            5 => 'Maio', 6 => 'Junho', 7 => 'Julho', 8 => 'Agosto',
+            9 => 'Setembro', 10 => 'Outubro', 11 => 'Novembro', 12 => 'Dezembro'
+        ];
         
-        $nextMonth = $month + 1;
-        $nextYear = $year;
-        if ($nextMonth > 12) {
-            $nextMonth = 1;
-            $nextYear++;
-        }
-        
-        // Verifica se é uma requisição AJAX
-        $isAjax = isset($_GET['ajax']);
-        
-        // Renderiza o conteúdo do calendário
         ?>
         
         <div class="calendar-content">
             <div class="calendar-header">
                 <div class="month-navigation">
-                    <button class="nav-btn" onclick="loadCalendar(<?= $prevMonth ?>, <?= $prevYear ?>)">&#8249;</button>
-                    <h2><?= ucfirst(strftime('%B', strtotime("$year-$month-01"))) . " $year" ?></h2>
-                    <button class="nav-btn" onclick="loadCalendar(<?= $nextMonth ?>, <?= $nextYear ?>)">&#8250;</button>
+                    <button class="nav-btn">&#8249;</button>
+                    <h2><?= $monthNames[$month] . " " . $year ?></h2>
+                    <button class="nav-btn">&#8250;</button>
                 </div>
             </div>
             <div class="weekdays">
@@ -649,38 +637,113 @@ $professorObj = new Professor();
                 <button class="btn">Ver Eventos</button>
             </div>
         </div>
-        
-        <?php
-        // Se não for AJAX, inclui o script JavaScript
-        if (!$isAjax):
-        ?>
-        <script>
-            function loadCalendar(month, year) {
-                fetch(`?month=${month}&year=${year}&ajax=1`)
-                    .then(response => response.text())
-                    .then(html => {
-                        document.getElementById('calendar-container').innerHTML = html;
-                        attachDayClick(); // Reatribui eventos aos dias
-                    });
-            }
-            
-            // Função para destacar dia clicado
-            function attachDayClick() {
-                document.querySelectorAll('.calendar-content .day').forEach(day => {
-                    day.addEventListener('click', function() {
-                        document.querySelectorAll('.calendar-content .day').forEach(d => 
-                            d.classList.remove('selected'));
-                        this.classList.add('selected');
-                    });
-                });
-            }
-            
-            // Ao carregar a página, anexa eventos de clique nos dias
-            window.addEventListener('DOMContentLoaded', attachDayClick);
-        </script>
-        <?php endif; ?>
+    </div>
+
+    <!-- Comunicados com Calendário Dinâmico -->
+<div class="content-section" id="comunicados">
+    <div class="header">
+        <h1 class="page-title">Comunicados</h1>
+        <div class="search-bar">
+            <input type="text" placeholder="Buscar comunicado...">
+            <span class="search-icon">🔍</span>
+        </div>
+    </div>
+    
+    <!-- Calendário Dinâmico -->
+    <div class="calendar" id="calendar-container">
+        <!-- O conteúdo do calendário será renderizado pelo JavaScript -->
+    </div>
+
+    <!-- Modal para eventos do dia -->
+    <div class="events-modal" id="day-events-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Eventos do dia</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="event-list" id="day-events-list">
+                <!-- Eventos serão adicionados dinamicamente aqui -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para adicionar evento -->
+    <div class="events-modal" id="add-event-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Adicionar Evento</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="add-event-form">
+                <div class="form-group">
+                    <label for="event-title">Título do Evento</label>
+                    <input type="text" id="event-title" name="event-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="event-date">Data</label>
+                    <input type="date" id="event-date" name="event-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="event-time">Horário</label>
+                    <input type="time" id="event-time" name="event-time" required>
+                </div>
+                <div class="form-group">
+                    <label for="event-description">Descrição</label>
+                    <textarea id="event-description" name="event-description"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel">Cancelar</button>
+                    <button type="submit" class="btn-save">Salvar Evento</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cadastro de comunicados -->
+    <div class="table-container">
+        <div class="table-header">
+            <div class="table-title">Novo Comunicado</div>
+        </div>
+        <form id="form-comunicado">
+            <div class="form-group">
+                <label for="titulo-comunicado">Título</label>
+                <input type="text" id="titulo-comunicado" name="titulo-comunicado" required>
+            </div>
+
+            <div class="form-group">
+                <label for="destinatarios">Destinatários</label>
+                <select id="destinatarios" name="destinatarios" multiple required>
+                    <option value="todos">Todos</option>
+                    <option value="alunos">Todos os Alunos</option>
+                    <option value="professores">Todos os Professores</option>
+                    <option value="1a">1º Ano A - Manhã</option>
+                    <option value="1b">1º Ano B - Tarde</option>
+                    <option value="2a">2º Ano A - Manhã</option>
+                    <option value="2b">2º Ano B - Tarde</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="conteudo-comunicado">Conteúdo</label>
+                <textarea id="conteudo-comunicado" name="conteudo-comunicado" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="anexo">Anexo</label>
+                <input type="file" id="anexo" name="anexo">
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" id="btn-cancelar-comunicado">Cancelar</button>
+                <button type="submit" class="btn-save">Enviar Comunicado</button>
+            </div>
+        </form>
     </div>
 </div>
+<!-- Fim do Comunicados -->
+
+<!-- Adicione esta tag de script no final da página para o calendario -->
+<script src="js/calendar.js"></script>
 
     
                     <!-- Fim CALENDARIO -->        
