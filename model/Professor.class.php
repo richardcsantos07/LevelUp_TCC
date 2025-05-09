@@ -9,6 +9,7 @@ class Professor
     private $senha;
     private $materia;
     private $data_nasc;
+    private $cpf;
     private $nivelAcesso;
     private $telefone;
     private $id_inst;
@@ -96,6 +97,15 @@ class Professor
         return $this->pdo;
     }
 
+    public function getCpf()
+    {
+        return $this->cpf;
+    }
+    public function setCpf($cpf)
+    {
+        $this->cpf = $cpf;
+    }
+
 
     function __construct()
     {
@@ -111,9 +121,9 @@ class Professor
         }
     }
 
-    public function criarCadastroProf($nome, $email, $senha, $materia, $data_nasc, $telefone, $id_inst)
+    public function criarCadastroProf($nome, $email, $senha, $materia, $cpf, $data_nasc, $telefone, $id_inst)
     {
-        $sql = "INSERT INTO professor SET nome = :n, email = :e, senha = :s, materia = :m, dataNasc = :d, telefone = :t, id_inst = :ii";
+        $sql = "INSERT INTO professor SET nome = :n, email = :e, senha = :s, materia = :m, cpf = :c, dataNasc = :d, telefone = :t, id_inst = :ii";
 
         $stmt = $this->pdo->prepare($sql);
 
@@ -121,6 +131,7 @@ class Professor
         $stmt->bindValue(':e', $email);
         $stmt->bindValue(':s', $senha);
         $stmt->bindValue(':m', $materia);
+        $stmt->bindValue(':c', $cpf);
         $stmt->bindValue(':d', $data_nasc);
         $stmt->bindValue(':t', $telefone);
         $stmt->bindValue(':ii', $id_inst);
@@ -160,18 +171,21 @@ class Professor
 
     }
 
-    public function listarTodosProfessores()
+    public function listarTodosProfessores($id_inst)
     {
-        $sql = "SELECT * FROM professor ORDER BY id DESC";
+        $sql = "SELECT * FROM professor WHERE id_inst = :ii ORDER BY id DESC";
         $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':ii', $id_inst);
         $stmt->execute();
 
-        if($stmt->rowCount() > 0){
+        if ($stmt->rowCount() > 0) {
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } else {
             return array(); // Retorna array vazio em vez de null para facilitar o loop
         }
     }
+        
+    
 
 
 
