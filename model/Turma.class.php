@@ -74,19 +74,18 @@ class Turma {
         }
     }
 
-    public function chkTurma($turma, $id_inst){
+   public function chkTurma($turma, $id_inst)
+    {
         $sql = "SELECT * FROM turma WHERE turma = :t AND id_inst = :ii";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':i', $turma);
+        $stmt->bindValue(':t', $turma);
         $stmt->bindValue(':ii', $id_inst);
         $stmt->execute();
 
-        if ($stmt->rowCount() > 0) {
-            $info = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $info;
+        if($stmt->rowCount() > 0){
+            return true;
         } else {
-            $info = array();
-            return $info;
+            return false;
         }
     }
 }
