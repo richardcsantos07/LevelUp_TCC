@@ -1,0 +1,455 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+:root {
+    --primary-color: #2d007a;
+    --secondary-color: #2d007a;
+    --accent-color: #8a4fd3;
+    --text-color: #333;
+    --light-grey: #f4f4f4;
+    --dark-grey: #888;
+    --border-color: #e0e0e0;
+    --sidebar-width: 250px;
+    --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+body {
+    background-color: var(--light-grey);
+    color: var(--text-color);
+    min-height: 100vh;
+    display: flex;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+    color: #2d007a;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: rgb(255, 255, 255);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    height: 100vh;
+    z-index: 100;
+    transition: transform 0.3s ease; /* Adicionado para transição suave */
+}
+
+.logo {
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.logo h2 {
+    color: var(--primary-color);
+    font-size: 24px;
+}
+
+.sidebar nav {
+    flex: 1;
+}
+
+.sidebar ul {
+    list-style-type: none;
+}
+
+.sidebar li {
+    margin-bottom: 5px;
+}
+
+.sidebar a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text-color);
+    padding: 12px 20px;
+    transition: all 0.3s ease;
+    border-left: 4px solid transparent;
+}
+
+.sidebar a:hover, 
+.sidebar a.active {
+    background-color: rgba(74, 110, 208, 0.1);
+    border-left: 4px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+.sidebar a i {
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+}
+
+.sidebar-footer {
+    padding: 20px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--dark-grey);
+    border-top: 1px solid var(--border-color);
+}
+
+.logout {
+    color: #000000 !important;
+}
+
+/* Main Content Styles */
+.main {
+    flex: 1;
+    margin-left: var(--sidebar-width);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    transition: margin-left 0.3s ease; /* Adicionado para transição suave */
+}
+
+/* Top Bar Styles */
+.top-bar {
+    background-color: #2d007a;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow);
+    height: 80px;
+}
+
+.greeting h2 {
+    font-size: 18px;
+    margin-left: 28px;
+    color: #ffffff;
+}
+
+.greeting p {
+    color: var(--dark-grey);
+    font-size: 14px;
+    margin-left: 28px;
+    color: #ffffff;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    background-color: var(--light-grey);
+    border-radius: 20px;
+    padding: 5px 15px;
+    width: 300px;
+}
+
+.search-input {
+    border: none;
+    background: transparent;
+    padding: 8px;
+    width: 100%;
+    outline: none;
+}
+
+.search-btn {
+    background: none;
+    border: none;
+    color: var(--dark-grey);
+    cursor: pointer;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.notifications {
+    position: relative;
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #d9534f;
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: #ffffff;
+}
+
+.user-avatar {
+    width: 35px;
+    height: 35px;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.user-name {
+    font-weight: 500;
+}
+
+/* Content Area Styles */
+.content {
+    padding: 30px;
+    flex: 1;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.more-actions {
+    position: relative;
+    cursor: pointer;
+}
+
+.dots {
+    font-size: 20px;
+    letter-spacing: 2px;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: white;
+    box-shadow: var(--shadow);
+    border-radius: 5px;
+    width: 150px;
+    z-index: 10;
+}
+
+.dropdown-content a {
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: var(--text-color);
+}
+
+.dropdown-content a:hover {
+    background-color: var(--light-grey);
+}
+
+.more-actions:hover .dropdown-content {
+    display: block;
+}
+
+/* Games Grid Styles */
+.games-container {
+    margin-bottom: 30px;
+}
+
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.game-card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    text-align: center;
+}
+
+.game-card:hover {
+    transform: translateY(-5px);
+}
+
+.game-icon {
+    font-size: 24px;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+.game-title {
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.game-difficulty {
+    font-size: 12px;
+    color: var(--dark-grey);
+}
+
+/* Progress Styles */
+.progress-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.progress-card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+}
+
+.progress-title {
+    font-weight: 500;
+    margin-bottom: 15px;
+}
+
+.progress-bar {
+    height: 10px;
+    background-color: var(--light-grey);
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.progress {
+    height: 100%;
+    background-color: var(--primary-color);
+    border-radius: 5px;
+}
+
+.progress-info {
+    font-size: 12px;
+    color: var(--dark-grey);
+    text-align: right;
+}
+
+/* Media Queries for Responsiveness */
+@media screen and (max-width: 992px) {
+    :root {
+        --sidebar-width: 60px;
+    }
+
+    .sidebar a span, .logo h2, .sidebar-footer {
+        display: none;
+    }
+
+    .sidebar a i {
+        margin-right: 0;
+        font-size: 20px;
+    }
+
+    .user-name {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .top-bar {
+        flex-direction: column;
+        height: auto;
+        padding: 15px;
+    }
+
+    .greeting, .search-container, .user-info {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .search-container {
+        order: 3;
+    }
+
+    .progress-container, .games-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .main {
+        margin-left: 0;
+    }
+
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+    .mobile-toggle {
+        display: block;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: var(--primary-color);
+        color: white;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: var(--shadow);
+        cursor: pointer;
+        z-index: 101;
+    }
+}
+
+/* Estilos para o botão de toggle do menu - ADICIONADO */
+.menu-toggle-btn {
+    position: fixed;
+    top: 20px;
+    left: 260px;
+    background-color: var(--primary-color);
+    color: white;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    z-index: 101;
+    transition: all 0.3s ease;
+}
+
+/* Estados para o menu colapsado/expandido - ADICIONADO */
+.menu-collapsed .menu-toggle-btn {
+    left: 20px;
+}
+
+.menu-expanded .sidebar {
+    transform: translateX(0);
+}
+
+.menu-expanded .main {
+    margin-left: var(--sidebar-width);
+}
+
+.menu-collapsed .sidebar {
+    transform: translateX(-100%);
+}
+
+.menu-collapsed .main {
+    margin-left: 0;
+}
