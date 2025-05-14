@@ -279,7 +279,7 @@ $professorObj = new Professor();
                                 ?>
                             </select>
                         </div>
-
+                    
                         <div class="form-group">
                             <label for="responsavel-aluno">Nome do Responsável</label>
                             <input type="text" id="responsavel-aluno" name="responsavel-aluno">
@@ -295,8 +295,8 @@ $professorObj = new Professor();
 
                         <div class="modal-footer">
                             <button type="button" class="btn-cancel" id="btn-cancelar-aluno">Cancelar</button>
-                            <button type="submit" name="btn-cad-aluno" id="btn-cad-aluno" class="btn-save">Cadastrar
-                                Aluno</button>
+                            <button type="submit" name="btn-cad-aluno"
+                            id="btn-cad-aluno" class="btn-save">Cadastrar Aluno</button>
                         </div>
                     </form>
                 </div>
@@ -322,8 +322,8 @@ $professorObj = new Professor();
                     </div>
                     <?PHP
                     $pdo = $alunoObj->getPdo(); // Precisamos adicionar este método à classe Aluno
-                    
-                    if (!empty($_GET['search'])) {
+    
+                    if(!empty($_GET['search'])) {
                         $data = $_GET['search'];
                         $sql = "SELECT * FROM aluno WHERE 
                         ra LIKE :search
@@ -333,7 +333,7 @@ $professorObj = new Professor();
                         OR serie    LIKE :search
                         OR dataNasc LIKE :search
                         ORDER BY ra DESC";
-
+                
                         $stmt = $pdo->prepare($sql);
                         $param = "%$data%"; // Corrigido: era "%data%"
                         $stmt->bindParam(':search', $param);
@@ -343,8 +343,8 @@ $professorObj = new Professor();
                         // Usar o método da classe para obter todos os alunos
                         $result = $alunoObj->listarTodosAlunos($id_inst); // Precisamos adicionar este método à classe Aluno
                     }
-
-
+                                                                            
+                         
                     ?>
                     <table>
                         <thead>
@@ -412,67 +412,113 @@ $professorObj = new Professor();
                                     <button class="btn btn-primary">Buscar</button>
                                 </div>
                             </div>
-                            <?PHP
-                            $pdo = $professorObj->getPdo(); // Precisamos adicionar este método à classe Aluno
-                            
-                            if (!empty($_GET['search'])) {
-                                $data = $_GET['search'];
-                                $sql = "SELECT * FROM professor WHERE 
-                        id LIKE :search
-                        OR nome     LIKE :search
-                        OR email    LIKE :search
-                        OR senha    LIKE :search
-                        OR materia    LIKE :search
-                        OR dataNasc LIKE :search
-                        ORDER BY id DESC";
 
-                                $stmt = $pdo->prepare($sql);
-                                $param = "%$data%"; // Corrigido: era "%data%"
-                                $stmt->bindParam(':search', $param);
-                                $stmt->execute();
-                                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                            } else {
-                                // Usar o método da classe para obter todos os alunos
-                                $result = $professorObj->listarTodosProfessores($id_inst); // Precisamos adicionar este método à classe Aluno
-                            }
-
-
-                            ?>
-
-                            <!-- Listar Professores -->
+                            <!-- Table view (hidden by default) -->
                             <table id="teachersTable" style="margin-top: 20px;">
                                 <thead>
                                     <tr>
                                         <th>Nome</th>
-                                        <th>E-mail</th>
-                                        <th>Senha</th>
                                         <th>Disciplina</th>
-                                        <th>Data de Nascimento</th>
-                                        <th>Telefone</th>
-                                        <th>CPF</th>
+                                        <th>Status</th>
+                                        <th>Turmas</th>
+                                        <th>Alunos</th>
+                                        <th>Tempo de Casa</th>
                                         <th>Ações</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?PHP
-                                    foreach ($result as $professor) {
-                                        echo "<tr>";
-                                        echo "<td>{$professor['nome']}</td>";
-                                        echo "<td>{$professor['email']}</td>";
-                                        echo "<td>{$professor['senha']}</td>";
-                                        echo "<td>{$professor['materia']}</td>";
-                                        echo "<td>{$professor['dataNasc']}</td>";
-                                        echo "<td>{$professor['telefone']}</td>";
-                                        echo "<td>{$professor['cpf']}</td>";
-
-                                        // Ações (editar, excluir, ver detalhes)
-                                        echo "<td class='actions'>";
-                                        echo "<button title='Editar'>✏️</button>";
-                                        echo "<button title='Excluir'>❌</button>";
-                                        echo "</td>";
-                                        echo "</tr>";
-                                    }
-                                    ?>
+                                    <tr>
+                                        <td>
+                                            <div class="profile-card">
+                                                <div class="profile-img">MR</div>
+                                                <div class="profile-info">
+                                                    <div class="profile-name">Marcos Ribeiro</div>
+                                                    <div class="profile-subtitle">ID: 1001</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>Matemática</td>
+                                        <td><span class="badge badge-success">Ativo</span></td>
+                                        <td>4</td>
+                                        <td>120</td>
+                                        <td>8 anos</td>
+                                        <td>
+                                            <div class="actions">
+                                                <div class="action-btn bg-primary">👁️</div>
+                                                <div class="action-btn bg-success">✏️</div>
+                                                <div class="action-btn bg-danger">❌</div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="profile-card">
+                                                <div class="profile-img">CS</div>
+                                                <div class="profile-info">
+                                                    <div class="profile-name">Carla Silva</div>
+                                                    <div class="profile-subtitle">ID: 1002</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>Português</td>
+                                        <td><span class="badge badge-success">Ativo</span></td>
+                                        <td>3</td>
+                                        <td>85</td>
+                                        <td>5 anos</td>
+                                        <td>
+                                            <div class="actions">
+                                                <div class="action-btn bg-primary">👁️</div>
+                                                <div class="action-btn bg-success">✏️</div>
+                                                <div class="action-btn bg-danger">❌</div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="profile-card">
+                                                <div class="profile-img">JA</div>
+                                                <div class="profile-info">
+                                                    <div class="profile-name">João Almeida</div>
+                                                    <div class="profile-subtitle">ID: 1003</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>História</td>
+                                        <td><span class="badge badge-success">Ativo</span></td>
+                                        <td>2</td>
+                                        <td>60</td>
+                                        <td>3 anos</td>
+                                        <td>
+                                            <div class="actions">
+                                                <div class="action-btn bg-primary">👁️</div>
+                                                <div class="action-btn bg-success">✏️</div>
+                                                <div class="action-btn bg-danger">❌</div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="profile-card">
+                                                <div class="profile-img">RL</div>
+                                                <div class="profile-info">
+                                                    <div class="profile-name">Roberta Lima</div>
+                                                    <div class="profile-subtitle">ID: 1004</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>Ciências</td>
+                                        <td><span class="badge badge-warning">Licença</span></td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>6 anos</td>
+                                        <td>
+                                            <div class="actions">
+                                                <div class="action-btn bg-primary">👁️</div>
+                                                <div class="action-btn bg-success">✏️</div>
+                                                <div class="action-btn bg-danger">❌</div>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -492,7 +538,7 @@ $professorObj = new Professor();
                     </div>
 
                     <div class="table-container">
-                        <form id="form-professor" method="POST" action="../controller/inserirProf.php">
+                        <form id="form-professor">
                             <div class="form-group">
                                 <label for="nome-professor">Nome Completo</label>
                                 <input type="text" id="nome-professor" name="nome-professor" required>
@@ -504,24 +550,8 @@ $professorObj = new Professor();
                             </div>
 
                             <div class="form-group">
-                                <label for="senha-professor">Senha</label>
-                                <input type="password" id="senha-professor" name="senha-professor" required>
-                            </div>
-
-                            <div class="form-group">
                                 <label for="disciplina">Disciplina</label>
                                 <input type="text" id="disciplina" name="disciplina" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="cpf-professor">CPF</label>
-                                <input type="text" id="cpf-professor" name="cpf-professor" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="data-nascimento-professor">Data de Nascimento</label>
-                                <input type="date" id="data-nascimento-professor" name="data-nascimento-professor"
-                                    required>
                             </div>
 
                             <div class="form-group">
@@ -530,12 +560,9 @@ $professorObj = new Professor();
                                     placeholder="(00) 00000-0000">
                             </div>
 
-                            <input type="hidden" name="id_inst" id="id_inst" value="<?= $id_inst ?>">
-
                             <div class="modal-footer">
                                 <button type="button" class="btn-cancel">Cancelar</button>
-                                <button type="submit" class="btn-save" name="btn-cad-professor"
-                                    id="btn-cad-professor">Cadastrar Professor</button>
+                                <button type="submit" class="btn-save">Cadastrar Professor</button>
                             </div>
                         </form>
                     </div>
@@ -663,27 +690,62 @@ $professorObj = new Professor();
 
 
                 <div class="table-container">
-                    <form id="form-turma" action="../controller/inserirTurma.php" method="POST">
+                    <form id="form-turma">
                         <div class="form-group">
-                            <label for="serie-turma">Serie</label>
-                            <input type="text" id="serie-turma" name="serie-turma" required>
+                            <label for="nome-turma">Nome da Turma</label>
+                            <input type="text" id="nome-turma" name="nome-turma" required>
                         </div>
 
                         <div class="form-group">
-                            <label for="turma">Turma</label>
-                            <input type="text" id="turma" name="turma" required>
+                            <label for="ano-letivo">Ano Letivo</label>
+                            <select id="ano-letivo" name="ano-letivo" required>
+                                <option value="">Selecione o ano letivo</option>
+                                <option value="2025">2025</option>
+                                <option value="2026">2026</option>
+                            </select>
                         </div>
 
                         <div class="form-group">
-                            <label for="turno-turma">Turno</label>
-                            <input type="text" id="turno-turma" name="turno-turma" required>
+                            <label for="periodo">Período</label>
+                            <select id="periodo" name="periodo" required>
+                                <option value="">Selecione o período</option>
+                                <option value="manha">Manhã</option>
+                                <option value="tarde">Tarde</option>
+                                <option value="noite">Noite</option>
+                                <option value="integral">Integral</option>
+                            </select>
                         </div>
 
-                        <input type="hidden" name="id_inst" id="id_inst" value="<?= $id_inst?>">
+                        <div class="form-group">
+                            <label for="professor-responsavel">Professor Responsável</label>
+                            <select id="professor-responsavel" name="professor-responsavel">
+                                <option value="">Selecione o professor</option>
+                                <option value="1">Roberto Almeida</option>
+                                <option value="2">Mariana Costa</option>
+                                <option value="3">Fernando Santos</option>
+                                <option value="4">Patrícia Lima</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="capacidade">Capacidade de Alunos</label>
+                            <input type="number" id="capacidade" name="capacidade" min="1" max="100" value="30"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sala">Sala</label>
+                            <input type="text" id="sala" name="sala">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="descricao-turma">Descrição</label>
+                            <textarea id="descricao-turma" name="descricao-turma"></textarea>
+                        </div>
 
                         <div class="modal-footer">
                             <button type="button" class="btn-cancel" id="btn-cancelar-turma">Cancelar</button>
-                            <button type="submit" class="btn-save" name="btn-cad-turma" id="btn-cad-turma">Criar Turma</button>
+                            <button type="submit" class="btn-save">Criar Turma</button>
                         </div>
                     </form>
                 </div>
