@@ -108,7 +108,7 @@ class Aluno
     {
         $this->id_inst = $id_inst;
     }
-    
+
     // Método para retornar a conexão PDO
     public function getPdo()
     {
@@ -187,7 +187,7 @@ class Aluno
         $stmt->bindValue(':id', $id);
         $stmt->execute();
 
-        if($stmt->rowCount() > 0){
+        if ($stmt->rowCount() > 0) {
             return $stmt->fetch(PDO::FETCH_ASSOC);
         } else {
             return null;
@@ -200,13 +200,13 @@ class Aluno
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
 
-        if($stmt->rowCount() > 0){
+        if ($stmt->rowCount() > 0) {
             return $stmt->fetch(PDO::FETCH_ASSOC);
         } else {
             return null;
         }
     }
-    
+
     // Novo método para listar todos os alunos
     public function listarTodosAlunos($id_inst)
     {
@@ -215,11 +215,28 @@ class Aluno
         $stmt->bindValue(':ii', $id_inst);
         $stmt->execute();
 
-        if($stmt->rowCount() > 0){
+        if ($stmt->rowCount() > 0) {
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } else {
             return array(); // Retorna array vazio em vez de null para facilitar o loop
         }
+    }
+
+    public function excluirAluno($id, $id_inst)
+    {
+
+         try {
+        $sql = "DELETE FROM aluno WHERE ra = :ra AND id_inst = :id_inst";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':ra', $id);
+        $stmt->bindValue(':id_inst', $id_inst);
+        return $stmt->execute();
+    } catch(PDOException $e) {
+        echo "Erro ao excluir: " . $e->getMessage();
+        return false;
+    }
+
+       
     }
 
     public function verJogos()

@@ -23,10 +23,12 @@ class Professor
     {
         $this->id = $id;
     }
-    public function getIdInst(){
+    public function getIdInst()
+    {
         return $this->id_inst;
     }
-    public function setIdInst($id_inst){
+    public function setIdInst($id_inst)
+    {
         $this->id_inst = $id_inst;
     }
     public function getNome()
@@ -184,8 +186,23 @@ class Professor
             return array(); // Retorna array vazio em vez de null para facilitar o loop
         }
     }
-        
-    
+
+    public function excluirProf($id, $id_inst)
+    {
+
+        try {
+            $sql = "DELETE FROM professor WHERE id = :id AND id_inst = :id_inst";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindValue(':id', $id);
+            $stmt->bindValue(':id_inst', $id_inst);
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            echo "Erro ao excluir: " . $e->getMessage();
+            return false;
+        }
+
+    }
+
 
 
 

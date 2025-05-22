@@ -375,7 +375,7 @@ $professorObj = new Professor();
                                 // Ações (editar, excluir, ver detalhes)
                                 echo "<td class='actions'>";
                                 echo "<button title='Editar'>✏️</button>";
-                                echo "<button title='Excluir'>❌</button>";
+                                echo "<a title='Excluir' href='../controller/deleteAluno.php?id={$aluno['ra']}'>❌</a>";
                                 echo "</td>";
                                 echo "</tr>";
                             }
@@ -468,7 +468,7 @@ $professorObj = new Professor();
                                         // Ações (editar, excluir, ver detalhes)
                                         echo "<td class='actions'>";
                                         echo "<button title='Editar'>✏️</button>";
-                                        echo "<button title='Excluir'>❌</button>";
+                                        echo "<a title='Excluir' href='../controller/deleteProf.php?id={$professor['id']}'>❌</a>";
                                         echo "</td>";
                                         echo "</tr>";
                                     }
