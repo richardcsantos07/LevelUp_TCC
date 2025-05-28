@@ -11,7 +11,8 @@ $alunoObj = new Aluno();
 require '../model/Professor.class.php';
 $professorObj = new Professor();
 
-
+require '../model/Instituicao.class.php';
+$instObj = new Instituicao();
 
 
 
@@ -338,10 +339,10 @@ $professorObj = new Professor();
                         $param = "%$data%"; // Corrigido: era "%data%"
                         $stmt->bindParam(':search', $param);
                         $stmt->execute();
-                        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        $resultAluno = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     } else {
                         // Usar o método da classe para obter todos os alunos
-                        $result = $alunoObj->listarTodosAlunos($id_inst); // Precisamos adicionar este método à classe Aluno
+                        $resultAluno = $alunoObj->listarTodosAlunos($id_inst); // Precisamos adicionar este método à classe Aluno
                     }
 
 
@@ -362,7 +363,7 @@ $professorObj = new Professor();
                         </thead>
                         <tbody>
                             <?PHP
-                            foreach ($result as $aluno) {
+                            foreach ($resultAluno as $aluno) {
                                 echo "<tr>";
                                 echo "<td>{$aluno['nome']}</td>";
                                 echo "<td>{$aluno['email']}</td>";
@@ -565,50 +566,59 @@ $professorObj = new Professor();
                             <button id="btn-novo-comunicado">+ Novo Comunicado</button>
                         </div>
                     </div>
+                    <?PHP
+                    $pdo = $instObj->getPdo(); // Precisamos adicionar este método à classe Aluno
+                    
+                    if (!empty($_GET['search'])) {
+                        $data = $_GET['search'];
+                        $sql = "SELECT * FROM comunicado WHERE 
+                        ra LIKE :search
+                        OR nome     LIKE :search
+                        OR email    LIKE :search
+                        OR turma    LIKE :search
+                        OR serie    LIKE :search
+                        OR dataNasc LIKE :search
+                        ORDER BY ra DESC";
+
+                        $stmt = $pdo->prepare($sql);
+                        $param = "%$data%"; // Corrigido: era "%data%"
+                        $stmt->bindParam(':search', $param);
+                        $stmt->execute();
+                        $resultComunicado = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    } else {
+                        // Usar o método da classe para obter todos os alunos
+                        $resultComunicado = $instObj->conferirCadComunicado($id_inst); // Precisamos adicionar este método à classe Aluno
+                    }
+
+
+                    ?>
                     <table>
                         <thead>
                             <tr>
                                 <th>Título</th>
                                 <th>Destinatários</th>
-                                <th>Data de Envio</th>
-                                <th>Status</th>
+                                <th>Descrição</th>
+                                
                                 <th>Ações</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Reunião de Pais e Mestres</td>
-                                <td>Todos os Alunos</td>
-                                <td>03/05/2025</td>
-                                <td><span class="status status-active">Enviado</span></td>
-                                <td class="actions">
-                                    <button title="Ver detalhes">👁️</button>
-                                    <button title="Reenviar">🔄</button>
-                                    <button title="Excluir">❌</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Alteração no Calendário Escolar</td>
-                                <td>Professores</td>
-                                <td>30/04/2025</td>
-                                <td><span class="status status-active">Enviado</span></td>
-                                <td class="actions">
-                                    <button title="Ver detalhes">👁️</button>
-                                    <button title="Reenviar">🔄</button>
-                                    <button title="Excluir">❌</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Feira de Ciências</td>
-                                <td>2º Ano A, 2º Ano B</td>
-                                <td>25/04/2025</td>
-                                <td><span class="status status-active">Enviado</span></td>
-                                <td class="actions">
-                                    <button title="Ver detalhes">👁️</button>
-                                    <button title="Reenviar">🔄</button>
-                                    <button title="Excluir">❌</button>
-                                </td>
-                            </tr>
+                            <?PHP
+                                    foreach ($resultComunicado as $comunicado) {
+                                        echo "<tr>";
+                                        echo "<td>{$comunicado['titulo']}</td>";
+                                        echo "<td>{$comunicado['destinatario']}</td>";
+                                        echo "<td>{$comunicado['descricao']}</td>";
+                                        
+
+                                        // Ações (editar, excluir, ver detalhes)
+                                        echo "<td class='actions'>";
+                                        echo "<button title='Editar'>✏️</button>";
+                                        echo "<a title='Excluir' href='../controller/deleteComunicado.php?id={$comunicado['id']}'>❌</a>";
+                                        echo "</td>";
+                                        echo "</tr>";
+                                    }
+                                    ?>
                         </tbody>
                     </table>
                 </div>
@@ -617,7 +627,7 @@ $professorObj = new Professor();
                     <div class="table-header">
                         <div class="table-title">Novo Comunicado</div>
                     </div>
-                    <form id="form-comunicado">
+                    <form id="form-comunicado" action="../controller/insertInst.php" method="POST">
                         <div class="form-group">
                             <label for="titulo-comunicado">Título</label>
                             <input type="text" id="titulo-comunicado" name="titulo-comunicado" required>
@@ -646,9 +656,11 @@ $professorObj = new Professor();
                             <input type="file" id="anexo" name="anexo">
                         </div>
 
+                        <input type="hidden" name="id_inst" id="id_inst" value="<?= $id_inst ?>">
+
                         <div class="modal-footer">
                             <button type="button" class="btn-cancel" id="btn-cancelar-comunicado">Cancelar</button>
-                            <button type="submit" class="btn-save">Enviar Comunicado</button>
+                            <button type="submit" class="btn-save" name="btn-cad-comunicado" id="btn-cad-comunicado">Enviar Comunicado</button>
                         </div>
                     </form>
                 </div>

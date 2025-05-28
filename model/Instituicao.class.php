@@ -134,6 +134,10 @@ class Instituicao
     {
         $this->telefone = $telefone;
     }
+    public function getPdo()
+    {
+        return $this->pdo;
+    }
 
     function __construct()
     {
@@ -198,6 +202,48 @@ class Instituicao
         $stmt->bindValue(':ti', $tipoInstituicao);
         $stmt->bindValue(':dc', $dataCriacaoInst);
         return $stmt->execute();
+
+    }
+
+    public function inserirCadComunicado($titulo, $destinatario, $descricao, $arquivo, $idInstituicao)
+    {
+        $sql = "INSERT INTO comunicado (titulo, destinatario, descricao, arquivo_upado, id_inst) VALUES (:t, :d, :dc, :a, :id)";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':t', $titulo);
+        $stmt->bindValue(':d', $destinatario);
+        $stmt->bindValue(':dc', $descricao);
+        $stmt->bindValue(':a', $arquivo);
+        $stmt->bindValue(':id', $idInstituicao);
+        return $stmt->execute();
+    }
+
+     public function conferirCadComunicado($id_inst)
+    {
+        $sql = "SELECT * FROM comunicado WHERE id_inst = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':id', $id_inst);
+        $stmt->execute();
+
+        if ($stmt->rowCount() > 0) {
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            return array();
+        }
+    }
+
+    public function excluirComunicado($id, $id_inst)
+    {
+
+        try {
+            $sql = "DELETE FROM comunicado WHERE id = :id AND id_inst = :id_inst";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindValue(':id', $id);
+            $stmt->bindValue(':id_inst', $id_inst);
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            echo "Erro ao excluir: " . $e->getMessage();
+            return false;
+        }
 
     }
 

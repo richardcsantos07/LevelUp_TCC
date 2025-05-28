@@ -88,12 +88,13 @@ class Responsavel
         return $this->pdo;
     }
 
-    function __construct(){
+    function __construct()
+    {
         $dns = "mysql:host=localhost;dbname=leveluptest";
         $dbUser = "root";
         $dbPass = "";
 
-        try{
+        try {
             $this->pdo = new PDO($dns, $dbUser, $dbPass);
             return true;
         } catch (\Throwable $th) {
@@ -156,10 +157,36 @@ class Responsavel
         $stmt->bindValue(':id', $id);
         $stmt->execute();
 
-        if($stmt->rowCount() > 0){
+        if ($stmt->rowCount() > 0) {
             return $stmt->fetch(PDO::FETCH_ASSOC);
         } else {
             return null;
+        }
+    }
+
+    public function deletarCadResp($id)
+    {
+
+        try {
+            $deleteCri = "DELETE FROM crianca WHERE idResponsavel = :id";
+            $stmtC = $this->pdo->prepare($deleteCri);
+            $stmtC->bindValue(':id', $id);
+            $stmtC->execute();
+
+            $deleteResp = "DELETE FROM responsavel WHERE id = :id";
+            $stmt = $this->pdo->prepare($deleteResp);
+            $stmt->bindValue(':id', $id);
+
+            // Confirma as alterações
+            $this->pdo->commit();
+            
+            return $stmt->
+                execute();
+
+
+        } catch (PDOException $e) {
+            echo "Erro ao deletar criança: " . $e->getMessage();
+            return false;
         }
     }
 

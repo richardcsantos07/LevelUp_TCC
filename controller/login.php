@@ -76,7 +76,7 @@ if (isset($_POST['login'])) {
             $_SESSION['email'] = $user['email'];
             $_SESSION['password'] = $user['senha'];
             $_SESSION['Acesslevel'] = $user['nivelAcesso'];
-            header('location: ../view/html/MenuResponsavel.html');
+            header('location: ../view/MenuResponsavel.php');
         } else {
             echo "<script>
                             alert('Usuário ou Senha incorretos')
