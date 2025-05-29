@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LevelUp - Menu Aluno</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Reset e estilos base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        :root {
+            --primary: #340069;
+            --primary-dark: #ffffff;
+            --primary-light: #340069;
+            --secondary: #ac2020;
+            --secondary-light: #8957e5;
+            --accent: #ac2020;
+            --accent-dark: #ac2020;
+            --dark: #0d1117;
+            --dark-header:#340069;
+            --light: #ffffff;
+            --gray: #586069;
+            --gray-light: #6a737d;
+            --border: #30363d;
+            --white: #ffffff;
+            --shadow: rgba(0, 0, 0, 0.2);
+            --shadow-light: rgba(0, 0, 0, 0.1);
+            --glow: rgba(88, 166, 255, 0.5);
+            --glow-accent: rgba(46, 164, 79, 0.4);
+            
+            /* Mantendo algumas cores específicas do design original */
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --bg-light: #f5f5f5;
+            --bg-white: #ffffff;
+            --bg-dark: #212121;
+            --border-color: #e0e0e0;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --error-color: #f44336;
+            --math-color: #2196f3;
+            --portuguese-color: #ff5722;
+            --science-color: #4caf50;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 8px rgba(0,0,0,0.12);
+            --shadow-lg: 0 8px 16px rgba(0,0,0,0.14);
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-primary);
+            font-size: 16px;
+            line-height: 1.5;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        /* Navbar Superior */
+        .navbar {
+            background-color: #340069;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 2000;
+        }
+
+        .navbar .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .btn-login {
+            background-color: #340069;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-login:hover {
+            background-color: white;
+            color: #340069;
+        }
+
+        .btn-register {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-register:hover {
+            background-color: #218838;
+        }
+
+        /* Layout principal */
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Menu Hamburguer */
+        .menu-toggle-btn {
+            position: fixed;
+            top: 90px;
+            left: 20px;
+            z-index: 2001;
+            background: var(--primary);
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+        }
+
+        .menu-toggle-btn:hover {
+            background: var(--primary-light);
+            transform: scale(1.05);
+        }
+
+        .hamburger {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 20px;
+            height: 3px;
+            background: var(--white);
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+
+        /* Animação do hamburguer */
+        body.menu-open .hamburger span:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+
+        body.menu-open .hamburger span:nth-child(2) {
+            opacity: 0;
+        }
+
+        body.menu-open .hamburger span:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+
+        .sidebar {
+            width: 260px;
+            background-color: var(--primary);
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: calc(100vh - 70px);
+            top: 70px;
+            transition: var(--transition);
+            z-index: 1000;
+            transform: translateX(-260px);
+        }
+
+        body.menu-open .sidebar {
+            transform: translateX(0);
+        }
+
+        .logo {
+            padding: 20px;
+            text-align: center;
+            background-color: var(--dark-header);
+        }
+
+        .logo h2 {
+            color: var(--white);
+            font-size: 24px;
+            letter-spacing: 1px;
+        }
+
+        .menu-container {
+            flex: 1;
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-bottom: 5px;
+        }
+
+        .nav-menu li a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            transition: var(--transition);
+            border-left: 4px solid transparent;
+        }
+
+        .nav-menu li a i {
+            margin-right: 15px;
+            font-size: 18px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .nav-menu li a:hover,
+        .nav-menu li a.active {
+            color: var(--white);
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left-color: var(--accent);
+        }
+
+        .nav-menu li.logout a {
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 20px;
+        }
+
+        .nav-menu li.logout a:hover {
+            color: var(--white);
+            background-color: rgba(172, 32, 32, 0.2);
+        }
+
+        .sidebar-footer {
+            padding: 15px;
+            text-align: center;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Overlay para fechar menu */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        body.menu-open .overlay {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Conteúdo principal */
+        .main {
+            flex: 1;
+            width: 100%;
+            margin-top: 70px;
+            transition: var(--transition);
+        }
+
+        /* Top Bar */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px 15px 80px;
+            background-color: var(--white);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 70px;
+            z-index: 100;
+        }
+
+        .greeting {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .greeting h2 {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .greeting p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            width: 300px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 8px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 20px 0 0 20px;
+            outline: none;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--glow);
+        }
+
+        .search-btn {
+            background-color: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: 0 20px 20px 0;
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .search-btn:hover {
+            background-color: var(--primary-light);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notifications {
+            position: relative;
+            cursor: pointer;
+            font-size: 20px;
+            color: var(--text-secondary);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--secondary);
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background-color: var(--primary-light);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Conteúdo da página */
+        .content {
+            padding: 30px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .more-actions {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .dots {
+            font-size: 20px;
+            color: var(--text-secondary);
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: var(--white);
+            min-width: 150px;
+            box-shadow: var(--shadow-md);
+            border-radius: var(--radius-md);
+            z-index: 10;
+        }
+
+        .dropdown-content a {
+            display: block;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+
+        .dropdown-content a:hover {
+            background-color: var(--bg-light);
+        }
+
+        .more-actions:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Cards de jogos */
+        .games-container {
+            margin-bottom: 30px;
+        }
+
+        .games-grid {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .game-card {
+            background-color: var(--white);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            padding: 20px;
+            width: calc(33.333% - 14px);
+            min-width: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+        }
+
+        .game-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .game-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 24px;
+        }
+
+        .game-title {
+            font-weight: 600;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .game-difficulty {
+            font-size: 14px;
+            color: var(--text-secondary);
+            padding: 4px 10px;
+            border-radius: 12px;
+            background-color: var(--bg-light);
+        }
+
+        /* Cards de progresso */
+        .progress-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .progress-card {
+            background-color: var(--white);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            padding: 20px;
+            width: calc(33.333% - 14px);
+            min-width: 200px;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .progress-card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .progress-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress {
+            height: 100%;
+            border-radius: 4px;
+        }
+
+        .progress-card:nth-child(1) .progress {
+            background-color: var(--math-color);
+        }
+
+        .progress-card:nth-child(2) .progress {
+            background-color: var(--portuguese-color);
+        }
+
+        .progress-card:nth-child(3) .progress {
+            background-color: var(--science-color);
+        }
+
+        .progress-info {
+            text-align: right;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Responsividade */
+        @media screen and (max-width: 1200px) {
+            .game-card, .progress-card {
+                width: calc(50% - 10px);
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .game-card, .progress-card {
+                width: 100%;
+            }
+            
+            .top-bar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+                padding: 15px 15px 15px 70px;
+            }
+            
+            .search-container {
+                width: 100%;
+            }
+            
+            .user-info {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .content {
+                padding: 20px 15px;
+            }
+        }
+
+        @media screen and (max-width: 576px) {
+            .games-grid {
+                gap: 15px;
+            }
+            
+            .progress-container {
+                gap: 15px;
+            }
+
+            .menu-toggle-btn {
+                top: 85px;
+                left: 15px;
+                padding: 10px;
+            }
+
+            .top-bar {
+                padding: 15px 15px 15px 60px;
+                top: 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar Superior -->
+    <nav class="navbar">
+        <div class="logo">LevelUp</div>
+        <ul class="nav-links">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Sobre</a></li>
+            <li><a href="#">Funcionalidades</a></li>
+            <li><a href="#">Contato</a></li>
+        </ul>
+        <div class="nav-buttons">
+            <a href="#" class="btn btn-login">Login</a>
+            <a href="#" class="btn btn-register">Cadastrar</a>
+        </div>
+    </nav>
+
+    <!-- Botão de toggle do menu -->
+    <div class="menu-toggle-btn" id="menuToggleBtn">
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+
+    <!-- Overlay para fechar menu -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Menu lateral -->
+    <div class="sidebar">
+        <div class="logo">
+            <h2>LevelUp</h2>
+        </div>
+        <div class="menu-container">
+            <ul class="nav-menu">
+                <li>
+                    <a href="#" class="active">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fas fa-user"></i>
+                        <span>Perfil</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fas fa-book"></i>
+                        <span>Matérias</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fas fa-tasks"></i>
+                        <span>Tarefas</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fas fa-cog"></i>
+                        <span>Configurações</span>
+                    </a>
+                </li>
+                <li class="logout">
+                    <a href="#">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Sair da conta</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="sidebar-footer">
+            <p>&copy; 2025 LevelUp</p>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="greeting">
+                <h2>Olá, Aluno!</h2>
+                <p>Bem-vindo de volta</p>
+            </div>
+            <div class="search-container">
+                <input type="text" placeholder="Pesquisar..." class="search-input">
+                <button class="search-btn"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="user-info">
+                <div class="notifications">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </div>
+                <div class="user-profile">
+                    <div class="user-avatar">A</div>
+                    <div class="user-name">Aluno</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content">
+            <div class="section-header">
+                <h3>Jogos Disponíveis</h3>
+                <div class="more-actions">
+                    <span class="dots">•••</span>
+                    <div class="dropdown-content">
+                        <a href="#">Ver todos</a>
+                        <a href="#">Ordernar por</a>
+                        <a href="#">Filtrar</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="games-container">
+                <div class="games-grid">
+                    <div class="game-card">
+                        <div class="game-icon"><i class="fas fa-gamepad"></i></div>
+                        <div class="game-title">Matemática Divertida</div>
+                        <div class="game-difficulty">Fácil</div>
+                    </div>
+                    <div class="game-card">
+                        <div class="game-icon"><i class="fas fa-puzzle-piece"></i></div>
+                        <div class="game-title">Desafio de Lógica</div>
+                        <div class="game-difficulty">Médio</div>
+                    </div>
+                    <div class="game-card">
+                        <div class="game-icon"><i class="fas fa-brain"></i></div>
+                        <div class="game-title">Quiz de Ciências</div>
+                        <div class="game-difficulty">Difícil</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <h3>Progresso</h3>
+            </div>
+            <div class="progress-container">
+                <div class="progress-card">
+                    <div class="progress-title">Matemática</div>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 75%"></div>
+                    </div>
+                    <div class="progress-info">75% Completo</div>
+                </div>
+                <div class="progress-card">
+                    <div class="progress-title">Português</div>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 45%"></div>
+                    </div>
+                    <div class="progress-info">45% Completo</div>
+                </div>
+                <div class="progress-card">
+                    <div class="progress-title">Ciências</div>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 60%"></div>
+                    </div>
+                    <div class="progress-info">60% Completo</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript para controlar o menu
+        const menuToggleBtn = document.getElementById('menuToggleBtn');
+        const overlay = document.getElementById('overlay');
+        const body = document.body;
+
+        // Função para abrir/fechar menu
+        function toggleMenu() {
+            body.classList.toggle('menu-open');
+        }
+
+        // Event listeners
+        menuToggleBtn.addEventListener('click', toggleMenu);
+        overlay.addEventListener('click', toggleMenu);
+
+        // Fechar menu ao clicar em um link (opcional)
+        const menuLinks = document.querySelectorAll('.nav-menu a');
+        menuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    body.classList.remove('menu-open');
+                }
+            });
+        });
+
+        // Fechar menu ao redimensionar para desktop
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                body.classList.remove('menu-open');
+            }
+        });
+    </script>
+</body>
+</html>
