@@ -180,11 +180,29 @@ class Aluno
         return $stmt->execute();
     }
 
-    public function conferirCadAlunoForId($id)
+    public function updateCadAluno($id, $nome, $email, $senha, $telefone, $turma, $dataNasc, $nomeResponsavel, $telefoneResponsavel, $id_inst)
     {
-        $sql = "SELECT * FROM aluno WHERE ra = :id";
+        $sql = "UPDATE aluno SET nome = :n, email = :e, senha = :s, tell = :t, turma = :tur, dataNasc = :d, nome_responsavel = :nr, tell_responsavel = :tr WHERE ra = :ra AND id_inst = :ii";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':ra', $id);
+        $stmt->bindValue(':n', $nome);
+        $stmt->bindValue(':e', $email);
+        $stmt->bindValue(':s', $senha);
+        $stmt->bindValue(':t', $telefone);
+        $stmt->bindValue(':tur', $turma);
+        $stmt->bindValue(':d', $dataNasc);
+        $stmt->bindValue(':nr', $nomeResponsavel);
+        $stmt->bindValue(':tr', $telefoneResponsavel);
+        $stmt->bindValue(':ii', $id_inst);
+        return $stmt->execute();
+    }
+
+    public function conferirCadAlunoForId($id, $id_inst)
+    {
+        $sql = "SELECT * FROM aluno WHERE ra = :id AND id_inst = :ii";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':id', $id);
+        $stmt->bindValue(':ii', $id_inst);
         $stmt->execute();
 
         if ($stmt->rowCount() > 0) {

@@ -7,7 +7,7 @@ if(!isset($_SESSION['id'])) {
 }
 
 
-require_once('../model/Responsavel.class.php');
+require '../model/Responsavel.class.php';
 
 $responsavel = new Responsavel();
 

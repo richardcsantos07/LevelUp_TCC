@@ -99,7 +99,7 @@ $respObj = new Responsavel();
                     <?php
                     $resp = $respObj->conferirCadastro($id_resp);
                     if ($resp) {
-                    ?>
+                        ?>
                         <div class="perfil-info">
                             <p><strong>Nome:</strong> <?= htmlspecialchars($resp['nome']) ?></p>
                             <p><strong>E-mail:</strong> <?= htmlspecialchars($resp['email']) ?></p>
@@ -108,16 +108,61 @@ $respObj = new Responsavel();
                         </div>
 
                         <div class="danger-zone">
-                            
+                            <button type="button" class="btn-edit-profile" id="btn-edit-profile">
+                                Editar Perfil</button>
                             <button type="button" class="btn-delete-account" id="btn-delete-account">
                                 Excluir Minha Conta
                             </button>
                         </div>
-                    <?php
+                        <?php
                     } else {
                         echo "<p>Informações do responsável não encontradas.</p>";
                     }
                     ?>
+                </div>
+            </div>
+
+            <!-- Modal de edição de Perfil -->
+            <div class="modal-overlay" id="modal-edit-profile">
+                <div class="modal">
+                    <h3>Editar Perfil do Responsável</h3>
+                    <form id="form-edit-profile" action="../controller/updateResp.php" method="POST">
+                        <div class="form-group">
+                            <label for="nome">Nome Completo</label>
+                            <input type="text" id="nome" name="nome" value="<?= htmlspecialchars($resp['nome']) ?>" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">E-mail</label>
+                            <input type="email" id="email" name="email" value="<?= htmlspecialchars($resp['email']) ?>" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="telefone">Telefone</label>
+                            <input type="tel" id="telefone" name="telefone" value="<?= htmlspecialchars($resp['telefone']) ?>" required />
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="cpf">CPF</label>
+                            <input type="text" id="cpf" name="cpf" value="<?= htmlspecialchars($resp['cpf']) ?>" required />
+                        </div>
+
+                        <!-- ADICIONADO: Campos obrigatórios que estavam faltando -->
+                        <div class="form-group">
+                            <label for="senha">Nova Senha (opcional)</label>
+                            <input type="password" id="senha" name="senha" placeholder="Deixe em branco para manter a atual" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="data_nasc">Data de Nascimento</label>
+                            <input type="date" id="data_nasc" name="data_nasc" value="<?= isset($resp['dataNasc']) ? $resp['dataNasc'] : '' ?>" required />
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn-cancel" id="btn-cancel-edit">Cancelar</button>
+                            <button type="submit" class="btn-save" name="btn-save-profile" id="btn-save-profile">Salvar Alterações</button>
+                        </div>
+                    </form>
                 </div>
             </div>
 
@@ -161,7 +206,7 @@ $respObj = new Responsavel();
 
             <?php
             $pdo = $criancaObj->getPdo();
-            
+
             if (!empty($_GET['search'])) {
                 $data = $_GET['search'];
                 $sql = "SELECT * FROM crianca WHERE 
@@ -232,6 +277,47 @@ $respObj = new Responsavel();
         </div>
     </div>
 
+     <!-- Modal de edição de Criança - CORRIGIDO -->
+<div class="modal-overlay" id="modal-edit-crianca">
+    <div class="modal">
+        <h3>Editar Dados da Criança</h3>
+        <form id="form-edit-crianca" action="../controller/updateCri.php" method="POST">
+            <div class="form-group">
+                <label for="edit-nome">Nome Completo</label>
+                <input type="text" id="edit-nome" name="nome" required />
+            </div>
+
+            <div class="form-group">
+                <label for="edit-email">E-mail</label>
+                <input type="email" id="edit-email" name="email" required />
+            </div>
+
+            <div class="form-group">
+                <label for="edit-telefone">Telefone</label>
+                <input type="tel" id="edit-telefone" name="telefone" required />
+            </div>
+            
+            <div class="form-group">
+                <label for="edit-senha">Nova Senha (opcional)</label>
+                <input type="password" id="edit-senha" name="senha" placeholder="Deixe em branco para manter a atual" />
+            </div>
+
+            <div class="form-group">
+                <label for="edit-data-nasc">Data de Nascimento</label>
+                <input type="date" id="edit-data-nasc" name="data_nasc" required />
+            </div>
+
+            <!-- Campo oculto para o ID da criança -->
+            <input type="hidden" id="edit-id" name="id" />
+
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" id="btn-cancel-edit-crianca">Cancelar</button>
+                <button type="submit" class="btn-save" name="btn-save-profile" id="btn-save-crianca">Salvar Alterações</button>
+            </div>
+        </form>
+    </div>
+</div>
+
     <!-- Modal de Confirmação de Exclusão -->
     <div class="modal-overlay" id="modal-delete-account">
         <div class="modal">
@@ -244,7 +330,7 @@ $respObj = new Responsavel();
                 <li>✗ Todos os dados relacionados serão perdidos</li>
             </ul>
             <p><strong>Tem certeza de que deseja continuar?</strong></p>
-            
+
             <div class="modal-buttons">
                 <button type="button" class="btn-cancel-delete" id="btn-cancel-delete">
                     Cancelar
@@ -257,13 +343,8 @@ $respObj = new Responsavel();
     </div>
 
     <script src="js/MenuCrianca.js"></script>
+
     
-    <script>
-        function editarCrianca(id) {
-            alert('Funcionalidade de edição em desenvolvimento. ID: ' + id);
-            // Aqui você pode implementar a funcionalidade de edição
-        }
-    </script>
 </body>
 
 </html>

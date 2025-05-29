@@ -129,6 +129,22 @@ class Crianca
         return $stmt->execute();
     }
 
+    public function updateCadCri($nome, $email, $senha, $idResponsavel, $dataNasc, $telefone, $id)
+    {
+        
+        $sql = "UPDATE crianca SET nome = :n, email = :e, senha = :s, idResponsavel = :idr, dataNasc = :d, telefone = :t WHERE id = :id AND idResponsavel = :idr";
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->bindValue(':n', $nome);
+        $stmt->bindValue(':e', $email);
+        $stmt->bindValue(':s', $senha);
+        $stmt->bindValue(':idr', $idResponsavel);
+        $stmt->bindValue(':d', $dataNasc);
+        $stmt->bindValue(':t', $telefone);
+        $stmt->bindValue(':id', $id);
+        return $stmt->execute();
+    }
+
     public function conferirCadCri($idResponsavel)
     {
         $sql = "SELECT * FROM crianca WHERE idResponsavel = :idr";
@@ -156,6 +172,25 @@ class Crianca
             return false;
         }
     }
+
+    public function buscarCriancaPorId($id_crianca, $id_responsavel) {
+    try {
+        $sql = "SELECT id, nome, email, dataNasc, telefone, idResponsavel 
+                FROM crianca 
+                WHERE id = :id_crianca AND idResponsavel = :id_responsavel";
+        
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':id_crianca', $id_crianca, PDO::PARAM_INT);
+        $stmt->bindParam(':id_responsavel', $id_responsavel, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+        
+    } catch (PDOException $e) {
+        error_log("Erro ao buscar criança por ID: " . $e->getMessage());
+        return false;
+    }
+}
 
     public function verJogos()
     {

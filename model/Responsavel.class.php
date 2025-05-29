@@ -168,26 +168,48 @@ class Responsavel
     {
 
         try {
+            // Inicia a transação
+            $this->pdo->beginTransaction();
+
+            // Primeiro deleta as crianças
             $deleteCri = "DELETE FROM crianca WHERE idResponsavel = :id";
             $stmtC = $this->pdo->prepare($deleteCri);
             $stmtC->bindValue(':id', $id);
             $stmtC->execute();
 
+            // Depois deleta o responsável
             $deleteResp = "DELETE FROM responsavel WHERE id = :id";
             $stmt = $this->pdo->prepare($deleteResp);
             $stmt->bindValue(':id', $id);
+            $result = $stmt->execute();
 
-            // Confirma as alterações
+            // Se tudo deu certo, confirma as alterações
             $this->pdo->commit();
-            
-            return $stmt->
-                execute();
 
+            return $result;
 
         } catch (PDOException $e) {
-            echo "Erro ao deletar criança: " . $e->getMessage();
-            return false;
+            // Em caso de erro, desfaz as alterações
+            $this->pdo->rollBack();
+            throw new Exception("Erro ao deletar cadastro: " . $e->getMessage());
         }
+    }
+
+     public function updateCadResp($nome, $email, $senha, $data_nasc, $telefone, $cpf, $id)
+    {
+        $sql = "UPDATE responsavel SET nome = :n, email = :e, senha = :s, dataNasc = :d, telefone = :t, cpf = :c WHERE id = :id";
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->bindValue(':n', $nome);
+        $stmt->bindValue(':e', $email);
+        $stmt->bindValue(':s', $senha);
+        $stmt->bindValue(':d', $data_nasc);
+        $stmt->bindValue(':t', $telefone);
+        $stmt->bindValue(':c', $cpf);
+        $stmt->bindValue(':id', $id);
+
+        return $stmt->execute();
     }
 
     public function alterarConfig()

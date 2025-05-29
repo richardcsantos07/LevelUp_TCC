@@ -364,7 +364,7 @@ $instObj = new Instituicao();
                         <tbody>
                             <?PHP
                             foreach ($resultAluno as $aluno) {
-                                echo "<tr>";
+                                echo "<tr data-id='{$aluno['ra']}'>";
                                 echo "<td>{$aluno['nome']}</td>";
                                 echo "<td>{$aluno['email']}</td>";
                                 echo "<td>{$aluno['senha']}</td>";
@@ -375,7 +375,7 @@ $instObj = new Instituicao();
                                 echo "<td>{$aluno['tell_responsavel']}</td>";
                                 // Ações (editar, excluir, ver detalhes)
                                 echo "<td class='actions'>";
-                                echo "<button title='Editar'>✏️</button>";
+                                echo "<button class='btn-editar-aluno' title='Editar' data-id='{$aluno['ra']}'>✏️</button>";
                                 echo "<a title='Excluir' href='../controller/deleteAluno.php?id={$aluno['ra']}'>❌</a>";
                                 echo "</td>";
                                 echo "</tr>";
@@ -386,6 +386,75 @@ $instObj = new Instituicao();
                 </div>
             </div>
             <!-- Fim do Listar Alunos -->
+
+            <!-- Modal de Edição de Aluno (adicionar após a tabela de alunos) -->
+            <div class="modal-backdrop" id="modal-editar-aluno">
+                <div class="modal">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Editar Aluno</h3>
+                        <button class="close-modal" type="button" onclick="fecharModalEditarAluno()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="form-editar-aluno" action="../controller/updateAluno.php" method="POST">
+                            <input type="hidden" id="edit-ra-aluno" name="ra-aluno">
+                            <input type="hidden" name="id_inst" value="<?= $id_inst ?>">
+
+                            <div class="form-group">
+                                <label for="edit-nome-aluno">Nome Completo</label>
+                                <input type="text" id="edit-nome-aluno" name="nome-aluno" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="edit-data-nascimento">Data de Nascimento</label>
+                                <input type="date" id="edit-data-nascimento" name="data-nascimento" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="edit-email-aluno">E-mail</label>
+                                <input type="email" id="edit-email-aluno" name="email-aluno" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="edit-telefone-aluno">Telefone</label>
+                                <input type="tel" id="edit-telefone-aluno" name="telefone-aluno"
+                                    placeholder="(00) 00000-0000">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="edit-turma-aluno">Turma</label>
+                                <select id="edit-turma-aluno" name="turma-aluno">
+                                    <option value="">Selecione uma turma</option>
+                                    <?php
+                                    $turmas = $turmaObj->listarTurmas($id_inst);
+                                    if ($turmas !== null && is_array($turmas)) {
+                                        foreach ($turmas as $turma) {
+                                            echo "<option value='{$turma['turma']}'>{$turma['turma']}</option>";
+                                        }
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="edit-responsavel-aluno">Nome do Responsável</label>
+                                <input type="text" id="edit-responsavel-aluno" name="responsavel-aluno">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="edit-telefone-responsavel">Telefone do Responsável</label>
+                                <input type="tel" id="edit-telefone-responsavel" name="telefone-responsavel"
+                                    placeholder="(00) 00000-0000">
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn-cancel"
+                                    onclick="fecharModalEditarAluno()">Cancelar</button>
+                                <button type="submit" name="btn-update-aluno" class="btn-save">Atualizar Aluno</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
 
             <!-- Professores Section -->
             <!-- Content Area -->
@@ -598,27 +667,27 @@ $instObj = new Instituicao();
                                 <th>Título</th>
                                 <th>Destinatários</th>
                                 <th>Descrição</th>
-                                
+
                                 <th>Ações</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?PHP
-                                    foreach ($resultComunicado as $comunicado) {
-                                        echo "<tr>";
-                                        echo "<td>{$comunicado['titulo']}</td>";
-                                        echo "<td>{$comunicado['destinatario']}</td>";
-                                        echo "<td>{$comunicado['descricao']}</td>";
-                                        
+                            foreach ($resultComunicado as $comunicado) {
+                                echo "<tr>";
+                                echo "<td>{$comunicado['titulo']}</td>";
+                                echo "<td>{$comunicado['destinatario']}</td>";
+                                echo "<td>{$comunicado['descricao']}</td>";
 
-                                        // Ações (editar, excluir, ver detalhes)
-                                        echo "<td class='actions'>";
-                                        echo "<button title='Editar'>✏️</button>";
-                                        echo "<a title='Excluir' href='../controller/deleteComunicado.php?id={$comunicado['id']}'>❌</a>";
-                                        echo "</td>";
-                                        echo "</tr>";
-                                    }
-                                    ?>
+
+                                // Ações (editar, excluir, ver detalhes)
+                                echo "<td class='actions'>";
+                                echo "<button title='Editar'>✏️</button>";
+                                echo "<a title='Excluir' href='../controller/deleteComunicado.php?id={$comunicado['id']}'>❌</a>";
+                                echo "</td>";
+                                echo "</tr>";
+                            }
+                            ?>
                         </tbody>
                     </table>
                 </div>
@@ -660,7 +729,8 @@ $instObj = new Instituicao();
 
                         <div class="modal-footer">
                             <button type="button" class="btn-cancel" id="btn-cancelar-comunicado">Cancelar</button>
-                            <button type="submit" class="btn-save" name="btn-cad-comunicado" id="btn-cad-comunicado">Enviar Comunicado</button>
+                            <button type="submit" class="btn-save" name="btn-cad-comunicado"
+                                id="btn-cad-comunicado">Enviar Comunicado</button>
                         </div>
                     </form>
                 </div>
@@ -691,11 +761,12 @@ $instObj = new Instituicao();
                             <input type="text" id="turno-turma" name="turno-turma" required>
                         </div>
 
-                        <input type="hidden" name="id_inst" id="id_inst" value="<?= $id_inst?>">
+                        <input type="hidden" name="id_inst" id="id_inst" value="<?= $id_inst ?>">
 
                         <div class="modal-footer">
                             <button type="button" class="btn-cancel" id="btn-cancelar-turma">Cancelar</button>
-                            <button type="submit" class="btn-save" name="btn-cad-turma" id="btn-cad-turma">Criar Turma</button>
+                            <button type="submit" class="btn-save" name="btn-cad-turma" id="btn-cad-turma">Criar
+                                Turma</button>
                         </div>
                     </form>
                 </div>

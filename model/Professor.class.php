@@ -189,7 +189,7 @@ class Professor
 
     public function excluirProf($id, $id_inst)
     {
-
+        
         try {
             $sql = "DELETE FROM professor WHERE id = :id AND id_inst = :id_inst";
             $stmt = $this->pdo->prepare($sql);
