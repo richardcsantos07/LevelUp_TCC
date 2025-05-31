@@ -50,9 +50,15 @@ document.addEventListener('DOMContentLoaded', function () {
     // Inicializar eventos de edição de aluno após o DOM estar carregado
     inicializarEventosEdicaoAluno();
     
-    // Inicializar eventos do formulário de edição
-    inicializarFormularioEdicao();
+    // Inicializar eventos de edição de professor após o DOM estar carregado
+    inicializarEventosEdicaoProfessor();
+    
+    // Inicializar eventos dos formulários de edição
+    inicializarFormularioEdicaoAluno();
+    inicializarFormularioEdicaoProfessor();
 });
+
+// ==================== FUNÇÕES PARA ALUNOS ====================
 
 // Função para inicializar eventos de edição de aluno
 function inicializarEventosEdicaoAluno() {
@@ -65,7 +71,7 @@ function inicializarEventosEdicaoAluno() {
     });
 }
 
-// Função para abrir modal de edição - VERSÃO MELHORADA
+// Função para abrir modal de edição de aluno
 function abrirModalEditarAluno(alunoId) {
     console.log('Abrindo modal para aluno ID:', alunoId);
     
@@ -83,7 +89,7 @@ function abrirModalEditarAluno(alunoId) {
             
             if (data.success) {
                 // Preencher o formulário com os dados do aluno
-                preencherFormularioEdicao(data.aluno);
+                preencherFormularioEdicaoAluno(data.aluno);
                 
                 // Mostrar o modal
                 const modal = document.getElementById('modal-editar-aluno');
@@ -100,9 +106,9 @@ function abrirModalEditarAluno(alunoId) {
         });
 }
 
-// Função para preencher formulário de edição - VERSÃO MELHORADA
-function preencherFormularioEdicao(aluno) {
-    console.log('Preenchendo formulário com:', aluno);
+// Função para preencher formulário de edição de aluno
+function preencherFormularioEdicaoAluno(aluno) {
+    console.log('Preenchendo formulário de aluno com:', aluno);
     
     try {
         document.getElementById('edit-ra-aluno').value = aluno.id || aluno.ra || '';
@@ -119,14 +125,14 @@ function preencherFormularioEdicao(aluno) {
             selectTurma.value = aluno.turma;
         }
         
-        console.log('Formulário preenchido com sucesso');
+        console.log('Formulário de aluno preenchido com sucesso');
     } catch (error) {
-        console.error('Erro ao preencher formulário:', error);
+        console.error('Erro ao preencher formulário de aluno:', error);
         alert('Erro ao preencher formulário. Verifique o console.');
     }
 }
 
-// Função para fechar modal de edição
+// Função para fechar modal de edição de aluno
 function fecharModalEditarAluno() {
     const modal = document.getElementById('modal-editar-aluno');
     modal.classList.remove('show');
@@ -136,14 +142,14 @@ function fecharModalEditarAluno() {
     document.getElementById('form-editar-aluno').reset();
 }
 
-// Função para inicializar o formulário de edição - VERSÃO MELHORADA
-function inicializarFormularioEdicao() {
+// Função para inicializar o formulário de edição de aluno
+function inicializarFormularioEdicaoAluno() {
     const formEditarAluno = document.getElementById('form-editar-aluno');
     if (formEditarAluno) {
         formEditarAluno.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            console.log('=== INÍCIO SUBMISSÃO FORMULÁRIO ===');
+            console.log('=== INÍCIO SUBMISSÃO FORMULÁRIO ALUNO ===');
             
             // Validação básica antes de enviar
             const ra = document.getElementById('edit-ra-aluno').value.trim();
@@ -152,7 +158,7 @@ function inicializarFormularioEdicao() {
             const telefone = document.getElementById('edit-telefone-aluno').value.trim();
             const dataNasc = document.getElementById('edit-data-nascimento').value;
             
-            console.log('Dados do formulário:');
+            console.log('Dados do formulário de aluno:');
             console.log('RA:', ra);
             console.log('Nome:', nome);
             console.log('Email:', email);
@@ -170,7 +176,7 @@ function inicializarFormularioEdicao() {
             btnSubmit.textContent = 'Atualizando...';
             btnSubmit.disabled = true;
             
-            // CORREÇÃO: Criar FormData manualmente com os nomes corretos
+            // Criar FormData manualmente com os nomes corretos
             const formData = new FormData();
             formData.append('ra-aluno', document.getElementById('edit-ra-aluno').value);
             formData.append('nome-aluno', document.getElementById('edit-nome-aluno').value);
@@ -193,7 +199,7 @@ function inicializarFormularioEdicao() {
             }
             
             // Debug: Mostrar todos os dados do FormData
-            console.log('FormData enviado:');
+            console.log('FormData de aluno enviado:');
             for (let [key, value] of formData.entries()) {
                 console.log(key + ':', value);
             }
@@ -204,20 +210,16 @@ function inicializarFormularioEdicao() {
             })
             .then(response => {
                 console.log('Response status:', response.status);
-                console.log('Response headers:', response.headers);
                 
-                // Verificar se a resposta é JSON
                 const contentType = response.headers.get('content-type');
                 console.log('Content-Type:', contentType);
                 
                 if (contentType && contentType.includes('application/json')) {
                     return response.json();
                 } else {
-                    // Se não for JSON, ler como texto para debug
                     return response.text().then(text => {
                         console.log('Resposta não-JSON recebida:', text);
                         
-                        // Se a resposta for bem-sucedida mas não JSON, assumir sucesso
                         if (response.ok) {
                             return { success: true };
                         } else {
@@ -232,7 +234,6 @@ function inicializarFormularioEdicao() {
                 if (data.success !== false) {
                     alert('Aluno atualizado com sucesso!');
                     fecharModalEditarAluno();
-                    // Recarregar a página para mostrar as mudanças
                     window.location.reload();
                 } else {
                     alert('Erro ao atualizar aluno: ' + (data.message || 'Erro desconhecido'));
@@ -241,33 +242,233 @@ function inicializarFormularioEdicao() {
             })
             .catch(error => {
                 console.error('Erro completo:', error);
-                console.error('Stack trace:', error.stack);
                 alert('Erro ao atualizar aluno. Verifique o console para mais detalhes.');
             })
             .finally(() => {
-                // Restaurar botão
                 btnSubmit.textContent = textoOriginal;
                 btnSubmit.disabled = false;
-                console.log('=== FIM SUBMISSÃO FORMULÁRIO ===');
+                console.log('=== FIM SUBMISSÃO FORMULÁRIO ALUNO ===');
             });
         });
     }
 }
 
-// Fechar modal ao clicar fora dele
+// ==================== FUNÇÕES PARA PROFESSORES ====================
+
+// Função para inicializar eventos de edição de professor
+function inicializarEventosEdicaoProfessor() {
+    const botoesEditar = document.querySelectorAll('.btn-editar-professor');
+    botoesEditar.forEach(botao => {
+        botao.addEventListener('click', function() {
+            const professorId = this.getAttribute('data-id');
+            abrirModalEditarProfessor(professorId);
+        });
+    });
+}
+
+// Função para abrir modal de edição de professor
+function abrirModalEditarProfessor(professorId) {
+    console.log('Abrindo modal para professor ID:', professorId);
+    
+    // Buscar dados do professor
+    fetch(`../controller/getProfessor.php?id=${professorId}`)
+        .then(response => {
+            console.log('Response getProfessor status:', response.status);
+            if (!response.ok) {
+                throw new Error('Erro na resposta do servidor: ' + response.status);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Dados do professor recebidos:', data);
+            
+            if (data.success) {
+                // Preencher o formulário com os dados do professor
+                preencherFormularioEdicaoProfessor(data.professor);
+                
+                // Mostrar o modal
+                const modal = document.getElementById('modal-editar-professor');
+                modal.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            } else {
+                alert('Erro ao carregar dados do professor: ' + data.message);
+                console.error('Erro nos dados:', data);
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao buscar professor:', error);
+            alert('Erro ao carregar dados do professor');
+        });
+}
+
+// Função para preencher formulário de edição de professor
+function preencherFormularioEdicaoProfessor(professor) {
+    console.log('Preenchendo formulário de professor com:', professor);
+    
+    try {
+        document.getElementById('edit-id-professor').value = professor.id || '';
+        document.getElementById('edit-nome-professor').value = professor.nome || '';
+        document.getElementById('edit-email-professor').value = professor.email || '';
+        document.getElementById('edit-telefone-professor').value = professor.telefone || professor.tell || '';
+        document.getElementById('edit-data-nascimento-professor').value = professor.dataNasc || '';
+        document.getElementById('edit-materia-professor').value = professor.materia || '';
+        document.getElementById('edit-cpf-professor').value = professor.cpf || '';
+        
+        console.log('Formulário de professor preenchido com sucesso');
+    } catch (error) {
+        console.error('Erro ao preencher formulário de professor:', error);
+        alert('Erro ao preencher formulário. Verifique o console.');
+    }
+}
+
+// Função para fechar modal de edição de professor
+function fecharModalEditarProfessor() {
+    const modal = document.getElementById('modal-editar-professor');
+    modal.classList.remove('show');
+    document.body.style.overflow = 'auto'; // Restaura scroll da página
+    
+    // Limpar formulário
+    document.getElementById('form-editar-professor').reset();
+}
+
+// Função para inicializar o formulário de edição de professor
+function inicializarFormularioEdicaoProfessor() {
+    const formEditarProfessor = document.getElementById('form-editar-professor');
+    if (formEditarProfessor) {
+        formEditarProfessor.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            console.log('=== INÍCIO SUBMISSÃO FORMULÁRIO PROFESSOR ===');
+            
+            // Validação básica antes de enviar
+            const id = document.getElementById('edit-id-professor').value.trim();
+            const nome = document.getElementById('edit-nome-professor').value.trim();
+            const email = document.getElementById('edit-email-professor').value.trim();
+            const telefone = document.getElementById('edit-telefone-professor').value.trim();
+            const dataNasc = document.getElementById('edit-data-nascimento-professor').value;
+            const materia = document.getElementById('edit-materia-professor').value.trim();
+            const cpf = document.getElementById('edit-cpf-professor').value.trim();
+            
+            console.log('Dados do formulário de professor:');
+            console.log('ID:', id);
+            console.log('Nome:', nome);
+            console.log('Email:', email);
+            console.log('Telefone:', telefone);
+            console.log('Data Nasc:', dataNasc);
+            console.log('Materia:', materia);
+            console.log('CPF:', cpf);
+            
+            if (!nome || !email || !id || !dataNasc) {
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                return;
+            }
+            
+            // Mostrar indicador de carregamento
+            const btnSubmit = this.querySelector('button[type="submit"]');
+            const textoOriginal = btnSubmit.textContent;
+            btnSubmit.textContent = 'Atualizando...';
+            btnSubmit.disabled = true;
+            
+            // Criar FormData manualmente com os nomes corretos
+            const formData = new FormData();
+            formData.append('id-professor', document.getElementById('edit-id-professor').value);
+            formData.append('nome-professor', document.getElementById('edit-nome-professor').value);
+            formData.append('email-professor', document.getElementById('edit-email-professor').value);
+            formData.append('telefone-professor', document.getElementById('edit-telefone-professor').value);
+            formData.append('data-nascimento', document.getElementById('edit-data-nascimento-professor').value);
+            formData.append('materia-professor', document.getElementById('edit-materia-professor').value);
+            formData.append('cpf-professor', document.getElementById('edit-cpf-professor').value);
+            
+            // Adicionar senha se fornecida
+            const senhaField = document.getElementById('edit-senha-professor');
+            if (senhaField && senhaField.value.trim()) {
+                formData.append('senha-professor', senhaField.value);
+            }
+            
+            // Debug: Mostrar todos os dados do FormData
+            console.log('FormData de professor enviado:');
+            for (let [key, value] of formData.entries()) {
+                console.log(key + ':', value);
+            }
+            
+            fetch('../controller/updateProf.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                
+                const contentType = response.headers.get('content-type');
+                console.log('Content-Type:', contentType);
+                
+                if (contentType && contentType.includes('application/json')) {
+                    return response.json();
+                } else {
+                    return response.text().then(text => {
+                        console.log('Resposta não-JSON recebida:', text);
+                        
+                        if (response.ok) {
+                            return { success: true };
+                        } else {
+                            throw new Error('Resposta não-JSON e não bem-sucedida: ' + text);
+                        }
+                    });
+                }
+            })
+            .then(data => {
+                console.log('Dados recebidos:', data);
+                
+                if (data.success !== false) {
+                    alert('Professor atualizado com sucesso!');
+                    fecharModalEditarProfessor();
+                    window.location.reload();
+                } else {
+                    alert('Erro ao atualizar professor: ' + (data.message || 'Erro desconhecido'));
+                    console.error('Erro na atualização:', data);
+                }
+            })
+            .catch(error => {
+                console.error('Erro completo:', error);
+                alert('Erro ao atualizar professor. Verifique o console para mais detalhes.');
+            })
+            .finally(() => {
+                btnSubmit.textContent = textoOriginal;
+                btnSubmit.disabled = false;
+                console.log('=== FIM SUBMISSÃO FORMULÁRIO PROFESSOR ===');
+            });
+        });
+    }
+}
+
+// ==================== FUNÇÕES GERAIS ====================
+
+// Fechar modais ao clicar fora deles
 document.addEventListener('click', function(e) {
-    const modal = document.getElementById('modal-editar-aluno');
-    if (e.target === modal) {
+    // Modal de aluno
+    const modalAluno = document.getElementById('modal-editar-aluno');
+    if (e.target === modalAluno) {
         fecharModalEditarAluno();
+    }
+    
+    // Modal de professor
+    const modalProfessor = document.getElementById('modal-editar-professor');
+    if (e.target === modalProfessor) {
+        fecharModalEditarProfessor();
     }
 });
 
-// Fechar modal com ESC
+// Fechar modais com ESC
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
-        const modal = document.getElementById('modal-editar-aluno');
-        if (modal && modal.classList.contains('show')) {
+        const modalAluno = document.getElementById('modal-editar-aluno');
+        const modalProfessor = document.getElementById('modal-editar-professor');
+        
+        if (modalAluno && modalAluno.classList.contains('show')) {
             fecharModalEditarAluno();
+        }
+        
+        if (modalProfessor && modalProfessor.classList.contains('show')) {
+            fecharModalEditarProfessor();
         }
     }
 });

@@ -141,6 +141,26 @@ class Professor
         return $stmt->execute();
     }
 
+    public function updateCadProf($id, $nome, $email, $senha, $materia, $cpf, $data_nasc, $telefone, $id_inst)
+    {
+        $sql = "UPDATE professor SET nome = :n, email = :e, senha = :s, materia = :m, cpf = :c, dataNasc = :d, telefone = :t WHERE id = :id and id_inst = :ii";
+        
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':id', $id);
+        $stmt->bindValue(':n', $nome);
+        $stmt->bindValue(':e', $email);
+        $stmt->bindValue(':s', $senha);
+        $stmt->bindValue(':m', $materia);
+        $stmt->bindValue(':c', $cpf);
+        $stmt->bindValue(':d', $data_nasc);
+        $stmt->bindValue(':t', $telefone);
+        $stmt->bindValue(':ii', $id_inst);
+
+        return $stmt->execute();
+    }
+
+
     public function chkUser($email)
     {
         $sql = "SELECT * FROM professor WHERE email = :e";
@@ -206,10 +226,37 @@ class Professor
 
 
 
-    public function conferirCadastro()
-    {
+    public function buscarCadProfId($id_inst, $id)
+{
+    try {
+        // Garantir que os parâmetros sejam tratados como inteiros
+        $id_inst = (int) $id_inst;
+        $id = (int) $id;
+        
+        $sql = "SELECT * FROM professor WHERE id_inst = :id_inst AND id = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':id_inst', $id_inst, PDO::PARAM_INT);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
 
+        // Log para debug
+        error_log("SQL executado: $sql");
+        error_log("Parâmetros - id_inst: $id_inst, id: $id");
+        error_log("Linhas encontradas: " . $stmt->rowCount());
+
+        if ($stmt->rowCount() > 0) {
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            error_log("Dados encontrados: " . json_encode($result));
+            return $result;
+        } else {
+            error_log("Nenhum professor encontrado com os parâmetros fornecidos");
+            return null;
+        }
+    } catch (PDOException $e) {
+        error_log("Erro na consulta buscarCadProfId: " . $e->getMessage());
+        throw new Exception("Erro ao buscar professor: " . $e->getMessage());
     }
+}
 
     public function alterarConfig()
     {

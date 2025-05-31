@@ -526,7 +526,7 @@ $instObj = new Instituicao();
                                 <tbody>
                                     <?PHP
                                     foreach ($result as $professor) {
-                                        echo "<tr>";
+                                        echo "<tr data-id='{$professor['id']}'>";
                                         echo "<td>{$professor['nome']}</td>";
                                         echo "<td>{$professor['email']}</td>";
                                         echo "<td>{$professor['senha']}</td>";
@@ -537,7 +537,7 @@ $instObj = new Instituicao();
 
                                         // Ações (editar, excluir, ver detalhes)
                                         echo "<td class='actions'>";
-                                        echo "<button title='Editar'>✏️</button>";
+                                        echo "<button class='btn-editar-professor' title='Editar' data-id='{$professor['id']}'>✏️</button>";
                                         echo "<a title='Excluir' href='../controller/deleteProf.php?id={$professor['id']}'>❌</a>";
                                         echo "</td>";
                                         echo "</tr>";
@@ -615,8 +615,64 @@ $instObj = new Instituicao();
 
 
             </div>
-
             <!-- Fim do Cadastrar Professor -->
+            <!-- Modal de Edição de Professor-->
+            <div class="modal-backdrop" id="modal-editar-professor">
+                <div class="modal">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Editar Professor</h3>
+                        <button class="close-modal" type="button" onclick="fecharModalEditarProfessor()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="form-editar-professor" action="../controller/updateProfessor.php" method="POST">
+                            <input type="hidden" id="edit-id-professor" name="id-professor">
+                            <input type="hidden" name="id_inst" value="<?= $id_inst ?>">
+
+                            <div class="form-group">
+                                <label for="edit-nome-professor">Nome Completo</label>
+                                <input type="text" id="edit-nome-professor" name="nome-professor" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="edit-data-nascimento">Data de Nascimento</label>
+                                <input type="date" id="edit-data-nascimento-professor" name="data-nascimento" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="edit-email-professor">E-mail</label>
+                                <input type="email" id="edit-email-professor" name="email-professor" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="edit-telefone-professor">Telefone</label>
+                                <input type="tel" id="edit-telefone-professor" name="telefone-professor"
+                                    placeholder="(00) 00000-0000">
+                            </div>
+
+                            
+
+                            <div class="form-group">
+                                <label for="edit-materia-professor">Matéria</label>
+                                <input type="text" id="edit-materia-professor" name="materia-professor">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="edit-cpf-professor">CPF</label>
+                                <input type="tel" id="edit-cpf-professor" name="cpf-professor"
+                                    placeholder="000.000.000.00">
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn-cancel"
+                                    onclick="fecharModalEditarProfessor()">Cancelar</button>
+                                <button type="submit" name="btn-update-professor" class="btn-save">Atualizar Professor</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            
 
             <!-- Comunicados -->
             <div class="content-section" id="comunicados">
