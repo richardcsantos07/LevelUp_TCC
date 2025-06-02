@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 08/05/2025 às 01:06
+-- Tempo de geração: 02/06/2025 às 00:55
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -46,10 +46,8 @@ CREATE TABLE `aluno` (
 --
 
 INSERT INTO `aluno` (`ra`, `nome`, `email`, `senha`, `turma`, `dataNasc`, `nivelAcesso`, `id_inst`, `nome_responsavel`, `tell_responsavel`, `tell`) VALUES
-(0, 'Richard Camargo dos Santos', 'richardcamargodosantos@gmail.com', 'aluno1234', 'A', '2025-04-24', NULL, 3, NULL, NULL, NULL),
-(4574, 'PATRICIA LUCIANA CAMARGO', 'plcamargo@gmail.com', 'plc2404', '1º A - Manhã', '1982-04-24', 'user', 3, 'Richard Camargo dos Santos', '11930248633', '11984140536'),
-(4575, 'Richard Camargo dos Santos', 'richardcamargo@gmail.com', 'rcds2005', '2', '2005-11-07', 'user', 3, 'PATRICIA LUCIANA CAMARGO', '11930248633', '11930248633'),
-(12345, 'Lucas', 'lucas@gmail.com', 'lucas1234', 'A', '2025-04-24', NULL, 3, NULL, NULL, NULL);
+(4575, 'Richard Camargo dos Santos', 'richardcamargo@gmail.com', 'rcds2005', '1º A - Manhã', '2005-11-07', 'user', 3, 'PATRICIA LUCIANA CAMARGO', '11930248633', '11930248633'),
+(4576, 'Lucas Almeida Sporques', 'lucassporques@gmail.com', 'lucas1234', '3º B - Tarde', '2005-07-10', 'user', 3, 'Sr. Almeida ', '11930248633', '1194540577');
 
 -- --------------------------------------------------------
 
@@ -83,6 +81,31 @@ CREATE TABLE `atividade_aluno` (
 -- --------------------------------------------------------
 
 --
+-- Estrutura para tabela `comunicado`
+--
+
+CREATE TABLE `comunicado` (
+  `id` int(11) NOT NULL,
+  `titulo` varchar(250) DEFAULT NULL,
+  `destinatario` varchar(250) DEFAULT NULL,
+  `descricao` text DEFAULT NULL,
+  `arquivo_upado` text DEFAULT NULL,
+  `id_inst` int(11) DEFAULT NULL,
+  `data_comunicado` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `comunicado`
+--
+
+INSERT INTO `comunicado` (`id`, `titulo`, `destinatario`, `descricao`, `arquivo_upado`, `id_inst`, `data_comunicado`) VALUES
+(7, 'Semana da Tecnologia', '1a', 'semana de estudos intensivos', NULL, 3, NULL),
+(8, 'Semana da Tecnologia', '1a', 'semana de estudos intensivos', NULL, 3, '2025-06-17'),
+(9, 'Semana da Tecnologia', '1a', 'semana de estudos intensivos', NULL, 3, '2025-06-17');
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura para tabela `crianca`
 --
 
@@ -93,23 +116,16 @@ CREATE TABLE `crianca` (
   `senha` varchar(255) DEFAULT NULL,
   `idResponsavel` int(11) DEFAULT NULL,
   `dataNasc` date DEFAULT NULL,
-  `nivelAcesso` varchar(50) DEFAULT NULL
+  `nivelAcesso` varchar(50) DEFAULT 'user',
+  `telefone` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
-
 --
--- Estrutura para tabela `desenvolvedor`
+-- Despejando dados para a tabela `crianca`
 --
 
-CREATE TABLE `desenvolvedor` (
-  `id` int(11) NOT NULL,
-  `nome` varchar(255) NOT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `senha` varchar(255) DEFAULT NULL,
-  `dataNasc` date DEFAULT NULL,
-  `nivelAcesso` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+INSERT INTO `crianca` (`id`, `nome`, `email`, `senha`, `idResponsavel`, `dataNasc`, `nivelAcesso`, `telefone`) VALUES
+(4, 'Richard Camargo', 'richardcamargodosantos@gmail.com', '', 3, '2005-11-07', 'user', '11930248633');
 
 -- --------------------------------------------------------
 
@@ -171,16 +187,16 @@ CREATE TABLE `professor` (
   `dataNasc` date DEFAULT NULL,
   `nivelAcesso` varchar(50) DEFAULT 'professor',
   `telefone` varchar(20) DEFAULT NULL,
-  `id_inst` int(11) DEFAULT NULL
+  `id_inst` int(11) DEFAULT NULL,
+  `cpf` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `professor`
 --
 
-INSERT INTO `professor` (`id`, `nome`, `email`, `senha`, `materia`, `dataNasc`, `nivelAcesso`, `telefone`, `id_inst`) VALUES
-(3, 'RICHARD CAMARGO DOS SANTOS', 'silshe@globomail.com', '222', 'artes', '2025-04-23', 'professor', '11930248633', 3),
-(4, 'richard', 'richard@gmail.com', 'prof1234', 'inglês', '2025-04-16', 'professor', '11930248633', 3);
+INSERT INTO `professor` (`id`, `nome`, `email`, `senha`, `materia`, `dataNasc`, `nivelAcesso`, `telefone`, `id_inst`, `cpf`) VALUES
+(6, 'Davi Coelho Branco', 'davicoelhobranco@gmail.com', 'branco1234', 'Fisica', '1982-04-24', 'professor', '11984140536', 3, '30959593896');
 
 -- --------------------------------------------------------
 
@@ -199,16 +215,12 @@ CREATE TABLE `responsavel` (
   `cpf` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
-
 --
--- Estrutura para tabela `responsavel_crianca`
+-- Despejando dados para a tabela `responsavel`
 --
 
-CREATE TABLE `responsavel_crianca` (
-  `responsavel_id` int(11) NOT NULL,
-  `crianca_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+INSERT INTO `responsavel` (`id`, `nome`, `email`, `senha`, `dataNasc`, `nivelAcesso`, `telefone`, `cpf`) VALUES
+(3, 'Silvio Donizete dos Santos', 'silshe@globomail.com', 'silvio123', '1982-06-15', 'admin', '(11) 974633374', '521.313.828-47');
 
 -- --------------------------------------------------------
 
@@ -228,18 +240,8 @@ CREATE TABLE `turma` (
 
 INSERT INTO `turma` (`id`, `turma`, `id_inst`) VALUES
 (1, '1º A - Manhã', 3),
-(2, '3º B - Tarde', 3);
-
--- --------------------------------------------------------
-
---
--- Estrutura para tabela `turma_aluno`
---
-
-CREATE TABLE `turma_aluno` (
-  `turma_id` int(11) NOT NULL,
-  `aluno_ra` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+(2, '3º B - Tarde', 3),
+(5, '4º c - Manhã', 3);
 
 --
 -- Índices para tabelas despejadas
@@ -266,17 +268,18 @@ ALTER TABLE `atividade_aluno`
   ADD KEY `id_aluno` (`id_aluno`);
 
 --
+-- Índices de tabela `comunicado`
+--
+ALTER TABLE `comunicado`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_id_inst` (`id_inst`);
+
+--
 -- Índices de tabela `crianca`
 --
 ALTER TABLE `crianca`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idResponsavel` (`idResponsavel`);
-
---
--- Índices de tabela `desenvolvedor`
---
-ALTER TABLE `desenvolvedor`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- Índices de tabela `instituicao`
@@ -304,25 +307,11 @@ ALTER TABLE `responsavel`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices de tabela `responsavel_crianca`
---
-ALTER TABLE `responsavel_crianca`
-  ADD PRIMARY KEY (`responsavel_id`,`crianca_id`),
-  ADD KEY `crianca_id` (`crianca_id`);
-
---
 -- Índices de tabela `turma`
 --
 ALTER TABLE `turma`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_turma_instituicao` (`id_inst`);
-
---
--- Índices de tabela `turma_aluno`
---
-ALTER TABLE `turma_aluno`
-  ADD PRIMARY KEY (`turma_id`,`aluno_ra`),
-  ADD KEY `aluno_ra` (`aluno_ra`);
 
 --
 -- AUTO_INCREMENT para tabelas despejadas
@@ -335,16 +324,16 @@ ALTER TABLE `atividade`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT de tabela `comunicado`
+--
+ALTER TABLE `comunicado`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
 -- AUTO_INCREMENT de tabela `crianca`
 --
 ALTER TABLE `crianca`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de tabela `desenvolvedor`
---
-ALTER TABLE `desenvolvedor`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de tabela `instituicao`
@@ -362,19 +351,19 @@ ALTER TABLE `jogo`
 -- AUTO_INCREMENT de tabela `professor`
 --
 ALTER TABLE `professor`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de tabela `responsavel`
 --
 ALTER TABLE `responsavel`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de tabela `turma`
 --
 ALTER TABLE `turma`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Restrições para tabelas despejadas
@@ -394,6 +383,12 @@ ALTER TABLE `atividade_aluno`
   ADD CONSTRAINT `atividade_aluno_ibfk_2` FOREIGN KEY (`id_aluno`) REFERENCES `aluno` (`ra`) ON DELETE CASCADE;
 
 --
+-- Restrições para tabelas `comunicado`
+--
+ALTER TABLE `comunicado`
+  ADD CONSTRAINT `fk_comunicado_inst` FOREIGN KEY (`id_inst`) REFERENCES `instituicao` (`id`) ON UPDATE CASCADE;
+
+--
 -- Restrições para tabelas `crianca`
 --
 ALTER TABLE `crianca`
@@ -406,24 +401,10 @@ ALTER TABLE `professor`
   ADD CONSTRAINT `fk_professor_instituicao` FOREIGN KEY (`id_inst`) REFERENCES `instituicao` (`id`);
 
 --
--- Restrições para tabelas `responsavel_crianca`
---
-ALTER TABLE `responsavel_crianca`
-  ADD CONSTRAINT `responsavel_crianca_ibfk_1` FOREIGN KEY (`responsavel_id`) REFERENCES `responsavel` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `responsavel_crianca_ibfk_2` FOREIGN KEY (`crianca_id`) REFERENCES `crianca` (`id`) ON DELETE CASCADE;
-
---
 -- Restrições para tabelas `turma`
 --
 ALTER TABLE `turma`
   ADD CONSTRAINT `fk_turma_instituicao` FOREIGN KEY (`id_inst`) REFERENCES `instituicao` (`id`);
-
---
--- Restrições para tabelas `turma_aluno`
---
-ALTER TABLE `turma_aluno`
-  ADD CONSTRAINT `turma_aluno_ibfk_1` FOREIGN KEY (`turma_id`) REFERENCES `turma` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `turma_aluno_ibfk_2` FOREIGN KEY (`aluno_ra`) REFERENCES `aluno` (`ra`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

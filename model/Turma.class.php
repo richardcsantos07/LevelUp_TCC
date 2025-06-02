@@ -88,4 +88,38 @@ class Turma {
             return false;
         }
     }
+
+    public function chkTurmaId($id, $id_inst)
+    {
+        $sql = "SELECT * FROM turma WHERE id = :i AND id_inst = :ii";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':i', $id);
+        $stmt->bindValue(':ii', $id_inst);
+        $stmt->execute();
+
+        if($stmt->rowCount() > 0){
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } else {
+            return array();
+        }
+    }
+
+    public function excluirTurma($id, $id_inst)
+    {
+        $sql = "DELETE FROM turma WHERE id = :id AND id_inst = :ii";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':id', $id);
+        $stmt->bindValue(':ii', $id_inst);
+        $stmt->execute();
+    }
+
+    public function atualizarTurma($id, $turma, $id_inst)
+    {
+        $sql = "UPDATE turma SET turma = :t WHERE id = :id AND id_inst = :ii";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':t', $turma);
+        $stmt->bindValue(':id', $id);
+        $stmt->bindValue(':ii', $id_inst);
+        $stmt->execute();
+    }
 }

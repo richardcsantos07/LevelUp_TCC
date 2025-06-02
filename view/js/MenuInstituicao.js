@@ -43,6 +43,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (activeSection) {
                     activeSection.classList.add('active');
                 }
+
+                // Se a seção for "configuracoes", carregar dados da instituição
+                if (sectionId === 'configuracoes') {
+                    carregarDadosInstituicao();
+                }
             }
         });
     });
@@ -56,6 +61,14 @@ document.addEventListener('DOMContentLoaded', function () {
     // Inicializar eventos dos formulários de edição
     inicializarFormularioEdicaoAluno();
     inicializarFormularioEdicaoProfessor();
+
+    // Carregar dados da instituição ao carregar a página, se a seção "configuracoes" estiver ativa
+    if (document.getElementById('configuracoes').classList.contains('active')) {
+        carregarDadosInstituicao();
+    }
+
+    // Inicializar formulário de configurações
+    inicializarFormularioConfiguracoes();
 });
 
 // ==================== FUNÇÕES PARA ALUNOS ====================
@@ -69,6 +82,108 @@ function inicializarEventosEdicaoAluno() {
             abrirModalEditarAluno(alunoId);
         });
     });
+}
+
+// ==================== FUNÇÕES PARA INSTITUIÇÃO ====================
+
+// Função para carregar dados da instituição e preencher o formulário de configurações
+function carregarDadosInstituicao() {
+    fetch('../controller/getInst.php')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro ao buscar dados da instituição: ' + response.status);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                preencherFormularioConfiguracoes(data.instituicao);
+            } else {
+                alert('Erro: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao carregar dados da instituição:', error);
+            alert('Erro ao carregar dados da instituição.');
+        });
+}
+
+// Função para preencher o formulário de configurações com os dados da instituição
+function preencherFormularioConfiguracoes(instituicao) {
+    document.getElementById('nome-instituicao').value = instituicao.nome || '';
+    document.getElementById('email-contato').value = instituicao.email || '';
+    document.getElementById('telefone-contato').value = instituicao.telefone || '';
+    document.getElementById('cep').value = instituicao.cep || '';
+    document.getElementById('estado').value = instituicao.estado || '';
+    document.getElementById('bairro').value = instituicao.bairro || '';
+    document.getElementById('rua').value = instituicao.rua || '';
+    document.getElementById('num').value = instituicao.num || '';
+    document.getElementById('senha-instituicao').value = '';
+}
+
+// Função para inicializar o formulário de configurações
+function inicializarFormularioConfiguracoes() {
+    const formConfiguracoes = document.getElementById('form-configuracoes');
+    if (formConfiguracoes) {
+        formConfiguracoes.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Validação básica
+            const nome = document.getElementById('nome-instituicao').value.trim();
+            const email = document.getElementById('email-contato').value.trim();
+
+            if (!nome || !email) {
+                alert('Por favor, preencha os campos obrigatórios: Nome da Instituição e E-mail.');
+                return;
+            }
+
+            // Mostrar indicador de carregamento
+            const btnSubmit = this.querySelector('button[type="submit"]');
+            const textoOriginal = btnSubmit.textContent;
+            btnSubmit.textContent = 'Atualizando...';
+            btnSubmit.disabled = true;
+
+            // Criar FormData com os dados do formulário
+            const formData = new FormData();
+            formData.append('nome-instituicao', nome);
+            formData.append('email-contato', email);
+            formData.append('telefone-contato', document.getElementById('telefone-contato').value.trim());
+            formData.append('cep', document.getElementById('cep').value.trim());
+            formData.append('estado', document.getElementById('estado').value.trim());
+            formData.append('bairro', document.getElementById('bairro').value.trim());
+            formData.append('rua', document.getElementById('rua').value.trim());
+            formData.append('num', document.getElementById('num').value.trim());
+            formData.append('senha-instituicao', document.getElementById('senha-instituicao').value);
+
+            fetch('../controller/updateInst.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro na resposta do servidor: ' + response.status);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    alert('Configurações atualizadas com sucesso!');
+                    // Recarregar dados para garantir atualização
+                    carregarDadosInstituicao();
+                } else {
+                    alert('Erro ao atualizar configurações: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao atualizar configurações:', error);
+                alert('Erro ao atualizar configurações.');
+            })
+            .finally(() => {
+                btnSubmit.textContent = textoOriginal;
+                btnSubmit.disabled = false;
+            });
+        });
+    }
 }
 
 // Função para abrir modal de edição de aluno

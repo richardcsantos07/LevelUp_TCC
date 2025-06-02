@@ -621,7 +621,8 @@ $instObj = new Instituicao();
                 <div class="modal">
                     <div class="modal-header">
                         <h3 class="modal-title">Editar Professor</h3>
-                        <button class="close-modal" type="button" onclick="fecharModalEditarProfessor()">&times;</button>
+                        <button class="close-modal" type="button"
+                            onclick="fecharModalEditarProfessor()">&times;</button>
                     </div>
                     <div class="modal-body">
                         <form id="form-editar-professor" action="../controller/updateProfessor.php" method="POST">
@@ -649,7 +650,7 @@ $instObj = new Instituicao();
                                     placeholder="(00) 00000-0000">
                             </div>
 
-                            
+
 
                             <div class="form-group">
                                 <label for="edit-materia-professor">Matéria</label>
@@ -665,14 +666,15 @@ $instObj = new Instituicao();
                             <div class="modal-footer">
                                 <button type="button" class="btn-cancel"
                                     onclick="fecharModalEditarProfessor()">Cancelar</button>
-                                <button type="submit" name="btn-update-professor" class="btn-save">Atualizar Professor</button>
+                                <button type="submit" name="btn-update-professor" class="btn-save">Atualizar
+                                    Professor</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
 
-            
+
 
             <!-- Comunicados -->
             <div class="content-section" id="comunicados">
@@ -723,7 +725,7 @@ $instObj = new Instituicao();
                                 <th>Título</th>
                                 <th>Destinatários</th>
                                 <th>Descrição</th>
-
+                                <th>Data</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
@@ -734,11 +736,11 @@ $instObj = new Instituicao();
                                 echo "<td>{$comunicado['titulo']}</td>";
                                 echo "<td>{$comunicado['destinatario']}</td>";
                                 echo "<td>{$comunicado['descricao']}</td>";
-
+                                echo "<td>{$comunicado['data_comunicado']}</td>";
 
                                 // Ações (editar, excluir, ver detalhes)
                                 echo "<td class='actions'>";
-                                echo "<button title='Editar'>✏️</button>";
+                                
                                 echo "<a title='Excluir' href='../controller/deleteComunicado.php?id={$comunicado['id']}'>❌</a>";
                                 echo "</td>";
                                 echo "</tr>";
@@ -774,6 +776,11 @@ $instObj = new Instituicao();
                         <div class="form-group">
                             <label for="conteudo-comunicado">Conteúdo</label>
                             <textarea id="conteudo-comunicado" name="conteudo-comunicado" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="data-comunicado">Data</label>
+                            <input type="date" id="data-comunicado" name="data-comunicado" required>
                         </div>
 
                         <div class="form-group">
@@ -838,7 +845,28 @@ $instObj = new Instituicao();
                         <span class="search-icon">🔍</span>
                     </div>
                 </div>
+                <?PHP
+                $pdo = $turmaObj->getPdo(); // Precisamos adicionar este método à classe Aluno
+                
+                if (!empty($_GET['search'])) {
+                    $data = $_GET['search'];
+                    $sql = "SELECT * FROM turma WHERE 
+                        id LIKE :search
+                        OR turma LIKE :search
+                        ORDER BY id DESC";
 
+                    $stmt = $pdo->prepare($sql);
+                    $param = "%$data%"; // Corrigido: era "%data%"
+                    $stmt->bindParam(':search', $param);
+                    $stmt->execute();
+                    $resultTurma = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                } else {
+
+                    $resultTurma = $turmaObj->listarTurmas($id_inst);
+                }
+
+
+                ?>
                 <div class="table-container">
                     <div class="table-header">
                         <div class="table-title">Lista de Turmas</div>
@@ -849,63 +877,24 @@ $instObj = new Instituicao();
                     <table>
                         <thead>
                             <tr>
-                                <th>Nome</th>
-                                <th>Período</th>
-                                <th>Professor Responsável</th>
-                                <th>Alunos</th>
-                                <th>Status</th>
+                                <th>Turma</th>
+
                                 <th>Ações</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1º Ano A</td>
-                                <td>Manhã</td>
-                                <td>Roberto Almeida</td>
-                                <td>25/30</td>
-                                <td><span class="status status-active">Ativa</span></td>
-                                <td class="actions">
-                                    <button title="Editar">✏️</button>
-                                    <button title="Gerenciar Alunos">👨‍👩‍👧‍👦</button>
-                                    <button title="Ver detalhes">👁️</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>1º Ano B</td>
-                                <td>Tarde</td>
-                                <td>Mariana Costa</td>
-                                <td>28/30</td>
-                                <td><span class="status status-active">Ativa</span></td>
-                                <td class="actions">
-                                    <button title="Editar">✏️</button>
-                                    <button title="Gerenciar Alunos">👨‍👩‍👧‍👦</button>
-                                    <button title="Ver detalhes">👁️</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2º Ano A</td>
-                                <td>Manhã</td>
-                                <td>Fernando Santos</td>
-                                <td>22/30</td>
-                                <td><span class="status status-active">Ativa</span></td>
-                                <td class="actions">
-                                    <button title="Editar">✏️</button>
-                                    <button title="Gerenciar Alunos">👨‍👩‍👧‍👦</button>
-                                    <button title="Ver detalhes">👁️</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2º Ano B</td>
-                                <td>Tarde</td>
-                                <td>Patrícia Lima</td>
-                                <td>0/30</td>
-                                <td><span class="status status-pending">Pendente</span></td>
-                                <td class="actions">
-                                    <button title="Editar">✏️</button>
-                                    <button title="Gerenciar Alunos">👨‍👩‍👧‍👦</button>
-                                    <button title="Ver detalhes">👁️</button>
-                                </td>
-                            </tr>
+                            <?PHP
+                            foreach ($resultTurma as $turma) {
+                                echo "<tr data-id='{$turma['id']}'>";
+                                echo "<td>{$turma['turma']}</td>";
+
+                                echo "<td class='actions'>";
+                                echo "<button class='btn-editar-aluno' title='Editar' data-id='{$turma['id']}'>✏️</button>";
+                                echo "<a title='Excluir' href='../controller/deleteTurma.php?id={$turma['id']}'>❌</a>";
+                                echo "</td>";
+                                echo "</tr>";
+                            }
+                            ?>
                         </tbody>
                     </table>
                 </div>
@@ -925,31 +914,47 @@ $instObj = new Instituicao();
                     <form id="form-configuracoes">
                         <div class="form-group">
                             <label for="nome-instituicao">Nome da Instituição</label>
-                            <input type="text" id="nome-instituicao" name="nome-instituicao" value="EduGestão">
+                            <input type="text" id="nome-instituicao" name="nome-instituicao" value="">
                         </div>
 
                         <div class="form-group">
                             <label for="email-contato">E-mail de Contato</label>
-                            <input type="email" id="email-contato" name="email-contato"
-                                value="contato@edugestao.com.br">
+                            <input type="email" id="email-contato" name="email-contato" value="">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="senha-instituicao">Senha (deixe em branco para manter atual)</label>
+                            <input type="password" id="senha-instituicao" name="senha-instituicao" value="">
                         </div>
 
                         <div class="form-group">
                             <label for="telefone-contato">Telefone de Contato</label>
-                            <input type="tel" id="telefone-contato" name="telefone-contato" value="(11) 5555-5555">
+                            <input type="tel" id="telefone-contato" name="telefone-contato" value="">
                         </div>
 
                         <div class="form-group">
-                            <label for="endereco">Endereço</label>
-                            <textarea id="endereco" name="endereco">Av. Paulista, 1000 - São Paulo/SP</textarea>
+                            <label for="cep">CEP</label>
+                            <input type="text" id="cep" name="cep" value="">
                         </div>
 
                         <div class="form-group">
-                            <label for="ano-letivo-atual">Ano Letivo Atual</label>
-                            <select id="ano-letivo-atual" name="ano-letivo-atual">
-                                <option value="2025" selected>2025</option>
-                                <option value="2026">2026</option>
-                            </select>
+                            <label for="estado">Estado</label>
+                            <input type="text" id="estado" name="estado" value="">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="bairro">Bairro</label>
+                            <input type="text" id="bairro" name="bairro" value="">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="rua">Rua</label>
+                            <input type="text" id="rua" name="rua" value="">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="num">Número</label>
+                            <input type="text" id="num" name="num" value="">
                         </div>
 
                         <div class="modal-footer">

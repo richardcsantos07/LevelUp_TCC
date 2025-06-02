@@ -35,6 +35,7 @@ if (!$conecta) {
         $titulo = $_POST['titulo-comunicado'];
         $destinatario = $_POST['destinatarios'];
         $descricao = $_POST['conteudo-comunicado'];
+        $data_comunicado = $_POST['data-comunicado'];
         $arquivo = $_POST['anexo'];
 
         // Processa o upload do arquivo
@@ -50,13 +51,15 @@ if (!$conecta) {
         if(move_uploaded_file($_FILES['anexo']['tmp_name'], $caminho_arquivo)) {
             // Arquivo foi enviado com sucesso
             // Salva no banco o caminho do arquivo
-            $inst->inserirCadComunicado($titulo, $destinatario, $descricao, $caminho_arquivo, idInstituicao: $id_inst);
+            $inst->inserirCadComunicado($titulo, $destinatario, $descricao, data_comunicado: $data_comunicado, arquivo: $caminho_arquivo, idInstituicao: $id_inst);
         } else {
             echo "Erro ao fazer upload do arquivo";
         }
     } else {
         // Sem arquivo anexo
-        $inst->inserirCadComunicado($titulo, $destinatario, $descricao, null, idInstituicao: $id_inst);
+        $inst->inserirCadComunicado(
+            $titulo, $destinatario, $descricao, data_comunicado: $data_comunicado, arquivo: null, idInstituicao: $id_inst
+        );
     }
     }
 }

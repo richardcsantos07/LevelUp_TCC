@@ -205,13 +205,14 @@ class Instituicao
 
     }
 
-    public function inserirCadComunicado($titulo, $destinatario, $descricao, $arquivo, $idInstituicao)
+    public function inserirCadComunicado($titulo, $destinatario, $descricao, $data_comunicado, $arquivo, $idInstituicao)
     {
-        $sql = "INSERT INTO comunicado (titulo, destinatario, descricao, arquivo_upado, id_inst) VALUES (:t, :d, :dc, :a, :id)";
+        $sql = "INSERT INTO comunicado (titulo, destinatario, descricao, data_comunicado, arquivo_upado, id_inst) VALUES (:t, :d, :dc, :dt, :a, :id)";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':t', $titulo);
         $stmt->bindValue(':d', $destinatario);
         $stmt->bindValue(':dc', $descricao);
+        $stmt->bindValue(':dt', $data_comunicado);
         $stmt->bindValue(':a', $arquivo);
         $stmt->bindValue(':id', $idInstituicao);
         return $stmt->execute();
@@ -247,9 +248,18 @@ class Instituicao
 
     }
 
-    public function conferirCadInstituicao()
+    public function conferirCadInstituicao($id)
     {
-        // implementação
+        $sql = "SELECT * FROM instituicao WHERE id = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':id', $id);
+        $stmt->execute();
+
+        if ($stmt->rowCount() > 0) {
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } else {
+            return array();
+        }
     }
 
     public function deletarCadInstituicao()
@@ -257,9 +267,21 @@ class Instituicao
         // implementação
     }
 
-    public function alterarCadInstituicao()
+    public function alterarCadInstituicao($id, $nome, $email, $senha, $telefone, $cep, $estado, $bairro, $rua, $num)
     {
-        // implementação
+        $sql = "UPDATE instituicao SET nome = :nome, email = :email, senha = :senha, telefone = :telefone, cep = :cep, estado = :estado, bairro = :bairro, rua = :rua, num = :num WHERE id = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':nome', $nome);
+        $stmt->bindValue(':email', $email);
+        $stmt->bindValue(':senha', $senha);
+        $stmt->bindValue(':telefone', $telefone);
+        $stmt->bindValue(':cep', $cep);
+        $stmt->bindValue(':estado', $estado);
+        $stmt->bindValue(':bairro', $bairro);
+        $stmt->bindValue(':rua', $rua);
+        $stmt->bindValue(':num', $num);
+        $stmt->bindValue(':id', $id);
+        return $stmt->execute();
     }
 
     public function inserirCadAluno()
