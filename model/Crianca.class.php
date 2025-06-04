@@ -115,6 +115,20 @@ class Crianca
 
     }
 
+    public function chkUserPass($email, $senha)
+    {
+        $sql = "SELECT * FROM crianca WHERE email = :e AND senha = :s";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':e', $email);
+        $stmt->bindValue(':s', $senha);
+        $stmt->execute();
+        if ($stmt->rowCount() > 0) {
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } else {
+            return array();
+        }
+    }
+
     public function inserirCadCri($nome, $email, $senha, $idResponsavel, $dataNasc, $telefone)
     {
         $sql = "INSERT INTO crianca (nome, email, senha, idResponsavel, dataNasc, telefone) VALUES (:n, :e, :s, :idr, :d, :t)";
@@ -175,9 +189,11 @@ class Crianca
 
     public function buscarCriancaPorId($id_crianca, $id_responsavel) {
     try {
-        $sql = "SELECT id, nome, email, dataNasc, telefone, idResponsavel 
+        $sql = "SELECT crianca.id, crianca.nome, crianca.email, crianca.dataNasc, crianca.telefone, 
+                       responsavel.nome AS nome_responsavel, responsavel.telefone AS telefone_responsavel
                 FROM crianca 
-                WHERE id = :id_crianca AND idResponsavel = :id_responsavel";
+                JOIN responsavel ON crianca.idResponsavel = responsavel.id
+                WHERE crianca.id = :id_crianca AND crianca.idResponsavel = :id_responsavel";
         
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':id_crianca', $id_crianca, PDO::PARAM_INT);

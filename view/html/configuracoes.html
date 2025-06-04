@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -7,6 +8,130 @@
   <title>Configurações</title>
   <link rel="stylesheet" href="../css/configuracoes.css" />
   <script src="https://kit.fontawesome.com/dfc8dc048e.js" crossorigin="anonymous"></script>
+  <style>
+    /* Estilos adicionais para melhor aparência */
+    .loading-message, .error-message {
+      margin: 20px 0;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    
+    .loading-message {
+      background-color: #f8f9fa;
+      color: #6c757d;
+      border: 1px solid #dee2e6;
+    }
+    
+    .error-message {
+      background-color: #fff5f5;
+      color: #dc3545;
+      border: 1px solid #f5c6cb;
+    }
+    
+    .error-message button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    
+    .error-message button:hover {
+      background-color: #0056b3;
+    }
+    
+    .toggle-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 15px 0;
+      padding: 10px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+    }
+    
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+    }
+    
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 24px;
+    }
+    
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    
+    input:checked + .slider {
+      background-color: #007bff;
+    }
+    
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+    
+    .info-item {
+      display: none;
+    }
+    
+    .info-item.visible {
+      display: flex;
+    }
+    
+    .additional-info {
+      margin-top: 20px;
+    }
+    
+    .contact-card {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 15px 0;
+    }
+    
+    .contact-method {
+      display: flex;
+      align-items: center;
+      margin: 10px 0;
+      padding: 10px;
+      background: white;
+      border-radius: 6px;
+    }
+    
+    .contact-method i {
+      margin-right: 10px;
+      color: #007bff;
+      width: 20px;
+    }
+  </style>
 </head>
 
 <body>
@@ -46,7 +171,6 @@
       <div class="content active" id="settings">
         <h2>Configurações Gerais</h2>
 
-
         <div class="form-group">
           <label class="label-input" for="language">Idioma
             <select class="language-input" id="language">
@@ -66,11 +190,57 @@
           </label>
         </div>
 
+        <h3>Notificações</h3>
+        
+        <div class="toggle-container">
+          <div>
+            <strong>Notificações Push</strong>
+            <p>Receber notificações sobre novos jogos e atividades</p>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="push-notifications" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-container">
+          <div>
+            <strong>Alertas por E-mail</strong>
+            <p>Receber updates e novidades por e-mail</p>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="email-alerts" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-container">
+          <div>
+            <strong>Sons e Efeitos</strong>
+            <p>Reproduzir sons nos jogos e interface</p>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="sound-effects" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-container">
+          <div>
+            <strong>Auto-salvamento</strong>
+            <p>Salvar progresso automaticamente</p>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="auto-save" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
       </div>
 
       <!-- Perfil do Usuário -->
       <div class="content" id="profile">
-        <h2>Informações do Aluno</h2>
+        <h2>Informações do Usuário</h2>
         
         <div class="user-profile">
           <div class="profile-picture">
@@ -79,7 +249,7 @@
           
           <div class="user-info">
             <div class="info-card">
-              <div class="info-item">
+              <div class="info-item visible">
                 <i class="fa-solid fa-user icon-info"></i>
                 <div class="info-content">
                   <span class="info-label">Nome</span>
@@ -87,7 +257,7 @@
                 </div>
               </div>
               
-              <div class="info-item">
+              <div class="info-item visible">
                 <i class="fa-solid fa-envelope icon-info"></i>
                 <div class="info-content">
                   <span class="info-label">E-mail</span>
@@ -95,7 +265,15 @@
                 </div>
               </div>
               
-              <div class="info-item">
+              <div class="info-item visible">
+                <i class="fa-solid fa-phone icon-info"></i>
+                <div class="info-content">
+                  <span class="info-label">Telefone</span>
+                  <span class="info-value" id="user-phone">-</span>
+                </div>
+              </div>
+              
+              <div class="info-item visible">
                 <i class="fa-solid fa-calendar icon-info"></i>
                 <div class="info-content">
                   <span class="info-label">Data de Nascimento</span>
@@ -103,33 +281,63 @@
                 </div>
               </div>
               
-              <div class="info-item">
+              <div class="info-item visible">
                 <i class="fa-solid fa-id-card icon-info"></i>
                 <div class="info-content">
-                  <span class="info-label">RA (Registro do Aluno)</span>
+                  <span class="info-label" id="user-ra-label">RA/CPF/ID</span>
                   <span class="info-value" id="user-ra">Carregando...</span>
                 </div>
               </div>
               
-              <div class="info-item">
+              <div class="info-item" id="serie-item">
                 <i class="fa-solid fa-graduation-cap icon-info"></i>
                 <div class="info-content">
-                  <span class="info-label">Série</span>
-                  <span class="info-value" id="user-serie">Carregando...</span>
+                  <span class="info-label">Série/Matéria</span>
+                  <span class="info-value" id="user-serie">-</span>
                 </div>
               </div>
               
-              <div class="info-item">
+              <div class="info-item" id="turma-item">
                 <i class="fa-solid fa-users icon-info"></i>
                 <div class="info-content">
                   <span class="info-label">Turma</span>
-                  <span class="info-value" id="user-turma">Carregando...</span>
+                  <span class="info-value" id="user-turma">-</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Informações adicionais para alunos -->
+            <div class="additional-info" id="responsavel-info" style="display: none;">
+              <h3>Informações do Responsável</h3>
+              <div class="info-card">
+                <div class="info-item visible">
+                  <i class="fa-solid fa-user-tie icon-info"></i>
+                  <div class="info-content">
+                    <span class="info-label">Nome do Responsável</span>
+                    <span class="info-value" id="user-responsavel">-</span>
+                  </div>
+                </div>
+                
+                <div class="info-item visible">
+                  <i class="fa-solid fa-phone icon-info"></i>
+                  <div class="info-content">
+                    <span class="info-label">Telefone do Responsável</span>
+                    <span class="info-value" id="user-phone-responsavel">-</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
+        <!-- Botão de logout -->
+        <div style="margin-top: 30px; text-align: center;">
+          <button onclick="logout()" style="background-color: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 16px;">
+            <i class="fa-solid fa-sign-out-alt"></i> Sair da Conta
+          </button>
+        </div>
       </div>
+      
 
       <!-- Sobre -->
       <div class="content" id="security">
@@ -171,8 +379,12 @@
         <p>O Level Up é mais do que um site de jogos é um parceiro na jornada de aprendizado, incentivando a autonomia,
           a criatividade e o gosto por aprender desde cedo.</p>
 
+        <div style="margin-top: 30px; text-align: center;">
+          <p><strong>Versão:</strong> 1.0.0 | <strong>Última atualização:</strong> Junho 2025</p>
+        </div>
       </div>
 
+      <!-- Suporte -->
       <div class="content" id="Support">
         <h2>Suporte</h2>
         <p>O Level Up oferece um canal completo de atendimento para ajudar pais, responsáveis, educadores e escolas a
@@ -182,15 +394,57 @@
             <br>
         <p>Se você precisa de ajuda para acessar a plataforma, utilizar os jogos ou tem dúvidas sobre o funcionamento do
           site:</p>
-              <br>
-        <p><b>Chat online:</b> atendimento em tempo real durante o horário comercial.</p>
-            <br>
-        <p><b>E-mail:</b> entre em contato com a nossa equipe através do suporte@levelup.com.br</p>
-        
+
+        <div class="contact-card">
+          <div class="contact-method">
+            <i class="fa-solid fa-comments"></i>
+            <div>
+              <strong>Chat Online</strong>
+              <p>Atendimento em tempo real durante o horário comercial (8h às 18h)</p>
+            </div>
+          </div>
+          
+          <div class="contact-method">
+            <i class="fa-solid fa-envelope"></i>
+            <div>
+              <strong>E-mail</strong>
+              <p>suporte@levelup.com.br</p>
+            </div>
+          </div>
+          
+          <div class="contact-method">
+            <i class="fa-solid fa-phone"></i>
+            <div>
+              <strong>Telefone</strong>
+              <p>(11) 1234-5678 - Horário comercial</p>
+            </div>
+          </div>
+          
+          <div class="contact-method">
+            <i class="fa-solid fa-question-circle"></i>
+            <div>
+              <strong>FAQ</strong>
+              <p>Consulte nossas perguntas frequentes</p>
+            </div>
+          </div>
+        </div>
+
+        <h4>Tempo de Resposta</h4>
+        <ul>
+          <li><strong>Chat Online:</strong> Imediato durante horário comercial</li>
+          <li><strong>E-mail:</strong> Até 24 horas úteis</li>
+          <li><strong>Telefone:</strong> Imediato durante horário comercial</li>
+        </ul>
+
+        <div style="margin-top: 20px; padding: 15px; background-color: #e7f3ff; border-radius: 8px;">
+          <strong>💡 Dica:</strong> Para um atendimento mais rápido, tenha em mãos seu ID de usuário e descreva detalhadamente o problema encontrado.
+        </div>
       </div>
     </div>
+  </div>
 
-    <script src="../js/configuracoes.js"></script>
+  <script src="../js/configuracoes.js"></script>
 </body>
 
-</html>
+</html></document_content>
+</invoke>

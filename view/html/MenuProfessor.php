@@ -1,3 +1,20 @@
+<?php
+session_start();
+
+// Verificar se o usuário está logado como professor
+if (!isset($_SESSION['id']) || !isset($_SESSION['tipo_usuario']) || $_SESSION['tipo_usuario'] !== 'professor') {
+    header('location: login.html');
+    exit;
+}
+
+// Dados do Professor logado
+$professor_id = $_SESSION['id'];
+$professor_nome = isset($_SESSION['nome']) ? $_SESSION['nome'] : 'Professor';
+$id_inst = isset($_SESSION['id_inst']) ? $_SESSION['id_inst'] : '';
+
+// Debug - pode ser removido depois
+error_log("Professor logado - ID: $professor_id, Nome: $professor_nome, Inst: $id_inst");
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -5,6 +22,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema Educacional</title>
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="../css/MenuProfessor.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -34,12 +52,7 @@
                             <span>Home</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="#">
-                            <i class="fas fa-user"></i>
-                            <span>Perfil</span>
-                        </a>
-                    </li>
+                    
                     <li>
                         <a href="#">
                             <i class="fas fa-book"></i>
@@ -59,7 +72,7 @@
                         </a>
                     </li>
                     <li class="logout">
-                        <a href="#">
+                        <a href="../../controller/logout.php">
                             <i class="fas fa-sign-out-alt"></i>
                             <span>Sair da conta</span>
                         </a>
@@ -76,54 +89,32 @@
         <!-- Conteúdo principal -->
         <div class="main-content">
             <!-- Cabeçalho -->
-            <header>
-                <div class="header-content">
-                    <div class="menu-toggle">
-                        <i class="fas fa-bars"></i>
-                    </div>
-                    <div class="turma-selector">
-                        <h2>Turmas</h2>
-                        <div class="custom-select">
-                            <div class="select-selected">1°b</div>
-                            <div class="select-items select-hide">
-                                <div>1°a</div>
-                                <div>1°b</div>
-                                <div>2°a</div>
-                                <div>2°b</div>
-                                <div>3°a</div>
-                            </div>
-                        </div>
-                    </div>
+            
+                <div class="top-bar">
+                <div class="greeting">
+                    <h2 id="greeting-name">Olá, <?php echo explode(' ', $professor_nome)[0]; ?>!</h2>
+                    <p>Bem-vindo de volta</p>
                 </div>
-                <div class="header-tools">
-                    <div class="search-box">
-                        <input type="text" placeholder="Pesquisar...">
-                        <i class="fas fa-search"></i>
-                    </div>
+                <div class="search-container">
+                    <input type="text" placeholder="Pesquisar..." class="search-input">
+                    <button class="search-btn"><i class="fas fa-search"></i></button>
+                </div>
+                <div class="user-info">
                     <div class="notifications">
                         <i class="fas fa-bell"></i>
-                        <span class="badge">3</span>
+                        <span class="notification-badge">3</span>
                     </div>
-                    <div class="profile">
-                        <div class="profile-image">
-                            <img src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.2.0/img/user2-160x160.jpg"
-                                alt="Perfil">
-                        </div>
-                        <div class="profile-info">
-                            <span class="profile-name">Aluno</span>
-                            <span class="profile-role">Estudante</span>
-                        </div>
-                    </div>
+    <div class="user-profile profile" id="user-profile">
+        <div class="user-avatar" id="user-avatar"><?php echo strtoupper($professor_nome[0]); ?></div>
+        <div class="user-name" id="user-name"><?php echo explode(' ', $professor_nome)[0]; ?></div>
+    </div>
                 </div>
-            </header>
+            </div>
+            
 
             <!-- Conteúdo da página -->
             <div class="page-content">
-                <!-- Seção de boas-vindas -->
-                <div class="welcome-section">
-                    <h1>Olá, Aluno!</h1>
-                    <p>Bem-vindo ao seu painel de aprendizado.</p>
-                </div>
+               
 
                 <!-- Dropdown de atividades -->
                 <div class="section-container">
@@ -372,6 +363,82 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <!-- Profile Modal -->
+    <div class="modal-overlay" id="profile-modal">
+        <div class="profile-modal">
+            <div class="modal-header">
+                <button class="modal-close" id="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            <div class="profile-avatar-large" id="modal-avatar"><?php echo strtoupper($professor_nome[0]); ?></div>
+            <div class="modal-title" id="modal-name"><?php echo $professor_nome; ?></div>
+            <div class="modal-subtitle">Perfil do Professor</div>
+            </div>
+            
+            <div class="modal-body">
+                <div class="loading-spinner" id="loading-spinner">
+                    <div class="spinner"></div>
+                    <p>Carregando dados do perfil...</p>
+                </div>
+                
+                
+
+                    <div class="info-group">
+                        <div class="info-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">E-mail</div>
+                            <div class="info-value" id="professor-email">-</div>
+                        </div>
+                    </div>
+
+                    <div class="info-group">
+                        <div class="info-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">Telefone</div>
+                            <div class="info-value" id="professor-phone">-</div>
+                        </div>
+                    </div>
+
+                    <div class="info-group">
+                        <div class="info-icon">
+                            <i class="fas fa-birthday-cake"></i>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">Data de Nascimento</div>
+                            <div class="info-value" id="professor-birth">-</div>
+                        </div>
+                    </div>
+
+                    <div class="info-group">
+                        <div class="info-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">Matéria</div>
+                            <div class="info-value" id="professor-materia">-</div>
+                        </div>
+                    </div>
+
+                    <div class="info-group">
+                        <div class="info-icon">
+                            <i class="fas fa-id-card"></i>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">CPF</div>
+                            <div class="info-value" id="professor-cpf">-</div>
+                        </div>
+                    </div>
+
+                   
                 </div>
             </div>
         </div>

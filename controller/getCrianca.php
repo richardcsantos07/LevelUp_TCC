@@ -1,51 +1,45 @@
 <?php
 session_start();
 
-// Verificar se o usuário está logado
-if (!isset($_SESSION['id'])) {
+// Configurar headers para resposta JSON
+header('Content-Type: application/json');
+header('Cache-Control: no-cache, must-revalidate');
+
+// Verificar se o usuário está logado como criança
+if (!isset($_SESSION['id']) || $_SESSION['tipo_usuario'] !== 'crianca') {
     http_response_code(401);
-    echo json_encode(['success' => false, 'message' => 'Usuário não autenticado']);
+    echo json_encode(['success' => false, 'message' => 'Acesso não autorizado']);
     exit;
 }
 
 require '../model/Crianca.class.php';
 
-// Verificar se o ID foi fornecido
-if (!isset($_GET['id']) || empty($_GET['id'])) {
-    http_response_code(400);
-    echo json_encode(['success' => false, 'message' => 'ID da criança não fornecido']);
-    exit;
-}
-
-$id_crianca = $_GET['id'];
-$id_resp = $_SESSION['id'];
-
 try {
     $criancaObj = new Crianca();
     
-    // Buscar a criança específica e verificar se pertence ao responsável logado
-    $crianca = $criancaObj->buscarCriancaPorId($id_crianca, $id_resp);
+    // Buscar os dados da criança logada
+    $crianca = $criancaObj->buscarCriancaPorId($_SESSION['id'], $_SESSION['id_resp']);
     
     if ($crianca) {
-        // Retornar os dados da criança
         echo json_encode([
             'success' => true,
             'crianca' => [
                 'id' => $crianca['id'],
                 'nome' => $crianca['nome'],
                 'email' => $crianca['email'],
-                'telefone' => $crianca['telefone'],
-                'dataNasc' => $crianca['dataNasc']
+                'telefone' => $crianca['telefone'] ?? '-',
+                'dataNasc' => $crianca['dataNasc'] ?? '-',
+                'nomeResponsavel' => $crianca['nome_responsavel'] ?? '-',
+                'telefoneResponsavel' => $crianca['telefone_responsavel'] ?? '-'
             ]
         ]);
     } else {
         http_response_code(404);
-        echo json_encode(['success' => false, 'message' => 'Criança não encontrada ou não pertence a este responsável']);
+        echo json_encode(['success' => false, 'message' => 'Dados da criança não encontrados']);
     }
     
 } catch (Exception $e) {
     http_response_code(500);
-    error_log("Erro ao buscar criança: " . $e->getMessage());
     echo json_encode(['success' => false, 'message' => 'Erro interno do servidor']);
 }
 ?>

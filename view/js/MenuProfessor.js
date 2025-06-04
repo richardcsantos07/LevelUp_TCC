@@ -1,4 +1,4 @@
-// Versão atualizada do MenuProfessor.js
+// Versão corrigida do MenuProfessor.js
 
 document.addEventListener('DOMContentLoaded', function() {
     // Inicializar componentes
@@ -40,6 +40,8 @@ function initializeDropdowns() {
 // Função para inicializar o select customizado
 function initializeCustomSelect() {
     const selectBox = document.querySelector('.custom-select');
+    if (!selectBox) return;
+    
     const selected = selectBox.querySelector('.select-selected');
     const optionsContainer = selectBox.querySelector('.select-items');
     const options = optionsContainer.querySelectorAll('div');
@@ -73,9 +75,11 @@ function initializeSidebar() {
     const menuToggle = document.querySelector('.menu-toggle');
     const container = document.querySelector('.container');
     
-    menuToggle.addEventListener('click', function() {
-        container.classList.toggle('sidebar-collapsed');
-    });
+    if (menuToggle) {
+        menuToggle.addEventListener('click', function() {
+            container.classList.toggle('sidebar-collapsed');
+        });
+    }
     
     // Adicionar funcionalidade aos itens do menu
     const menuItems = document.querySelectorAll('.nav-menu a');
@@ -109,8 +113,10 @@ function showSections() {
         
         // Alterar o ícone
         const icon = firstSection.querySelector('.section-toggle i');
-        icon.classList.remove('fa-chevron-down');
-        icon.classList.add('fa-chevron-up');
+        if (icon) {
+            icon.classList.remove('fa-chevron-down');
+            icon.classList.add('fa-chevron-up');
+        }
     }
     
     // Adicionar animações de entrada para os cards
@@ -180,18 +186,174 @@ if (notificationIcon) {
 
 // Adicionar funcionalidade ao perfil
 const profileElement = document.querySelector('.profile');
-if (profileElement) {
-    profileElement.addEventListener('click', function() {
-        alert('Perfil do Aluno');
+const profileModal = document.getElementById('profile-modal');
+const closeModal = document.getElementById('close-modal');
+const loadingSpinner = document.getElementById('loading-spinner');
+const profileInfo = document.getElementById('profile-info');
+
+function openProfileModal() {
+    if (profileModal) {
+        profileModal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+        loadProfessorProfile();
+    }
+}
+
+function closeProfileModal() {
+    if (profileModal) {
+        profileModal.classList.remove('show');
+        document.body.style.overflow = 'auto';
+    }
+}
+
+function loadProfessorProfile() {
+    if (loadingSpinner) {
+        loadingSpinner.style.display = 'block';
+    }
+    if (profileInfo) {
+        profileInfo.style.display = 'none';
+    }
+
+    // Fazemos a requisição sem ID, pois o PHP vai usar o ID da sessão
+    fetch('../../controller/getProfessor.php', {
+        method: 'GET',
+        credentials: 'same-origin' // Importante para manter a sessão
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            populateProfileData(data.professor);
+        } else {
+            showError('Erro ao carregar dados do perfil: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        showError('Erro de conexão ao carregar dados do perfil');
+    })
+    .finally(() => {
+        if (loadingSpinner) {
+            loadingSpinner.style.display = 'none';
+        }
+        if (profileInfo) {
+            profileInfo.style.display = 'grid';
+        }
     });
 }
 
-// Controle do menu hambúrguer - VERSÃO MODIFICADA
+function populateProfileData(professor) {
+    if (!professor || !professor.nome) {
+        showError('Dados do professor não encontrados');
+        return;
+    }
+
+    const firstLetter = professor.nome.charAt(0).toUpperCase();
+    
+    // Atualizar modal
+    const modalAvatar = document.getElementById('modal-avatar');
+    const modalName = document.getElementById('modal-name');
+    if (modalAvatar) modalAvatar.textContent = firstLetter;
+    if (modalName) modalName.textContent = professor.nome;
+
+    // Atualizar interface principal se necessário
+    const userAvatar = document.getElementById('user-avatar');
+    const userName = document.getElementById('user-name');
+    const greetingName = document.getElementById('greeting-name');
+    
+    if (userAvatar && !userAvatar.textContent) {
+        userAvatar.textContent = firstLetter;
+    }
+    if (userName && !userName.textContent) {
+        userName.textContent = professor.nome.split(' ')[0];
+    }
+    if (greetingName && greetingName.textContent === 'Olá, !') {
+        greetingName.textContent = `Olá, ${professor.nome.split(' ')[0]}!`;
+    }
+
+    // Preencher dados do perfil
+    const fields = [
+        { id: 'professor-email', value: professor.email },
+        { id: 'professor-phone', value: professor.telefone },
+        { id: 'professor-birth', value: formatDate(professor.dataNasc) },
+        { id: 'professor-materia', value: professor.materia },
+        { id: 'professor-cpf', value: professor.cpf }
+    ];
+
+    fields.forEach(field => {
+        const element = document.getElementById(field.id);
+        if (element) {
+            element.textContent = field.value || '-';
+        }
+    });
+}
+
+function showError(message) {
+    if (profileInfo) {
+        profileInfo.innerHTML = `
+            <div style="text-align: center; padding: 20px; color: #d9534f;">
+                <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 15px;"></i>
+                <p>${message}</p>
+                <button id="retry-btn" style="margin-top: 15px; padding: 8px 16px; background: var(--primary-color); color: white; border: none; border-radius: 5px; cursor: pointer;">
+                    Tentar novamente
+                </button>
+            </div>
+        `;
+
+        const retryBtn = document.getElementById('retry-btn');
+        if (retryBtn) {
+            retryBtn.addEventListener('click', function() {
+                loadProfessorProfile();
+            });
+        }
+    }
+}
+
+function formatDate(dateString) {
+    if (!dateString) return '-';
+    try {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('pt-BR');
+    } catch (error) {
+        return '-';
+    }
+}
+
+// Event listeners para o modal de perfil
+if (profileElement) {
+    profileElement.addEventListener('click', openProfileModal);
+}
+
+if (closeModal) {
+    closeModal.addEventListener('click', closeProfileModal);
+}
+
+if (profileModal) {
+    profileModal.addEventListener('click', function(e) {
+        if (e.target === profileModal) {
+            closeProfileModal();
+        }
+    });
+}
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && profileModal && profileModal.classList.contains('show')) {
+        closeProfileModal();
+    }
+});
+
+// Controle do menu hambúrguer
 document.addEventListener('DOMContentLoaded', function() {
     const menuToggleBtn = document.getElementById('menuToggleBtn');
     const container = document.querySelector('.container');
     
-    // Estado inicial (você pode definir como preferir)
+    if (!menuToggleBtn || !container) return;
+    
+    // Estado inicial
     let isMenuCollapsed = false;
     
     // Função para alternar o estado do menu
@@ -201,9 +363,6 @@ document.addEventListener('DOMContentLoaded', function() {
         // Alternar classes para controlar a exibição
         if (isMenuCollapsed) {
             container.classList.add('sidebar-collapsed');
-            
-            // Não adicionamos mais a classe 'active' ao botão
-            // para que ele não se transforme em X
             
             // Para dispositivos móveis
             if (window.innerWidth <= 768) {

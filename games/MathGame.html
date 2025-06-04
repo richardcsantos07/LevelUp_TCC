@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+
+        body{
+            font-family: 'Nunito', sans-serif;
+            background-color: #f0f9ff;
+            overflow-y: hidden;
+        }
+
+        .character {
+            transition: transform 0.3s ease;
+        }
+
+        .character:hover {
+            transform: scale(1.1);
+        }
+
+        .btn-phase {
+            transition: all 0.3s ease;
+        }
+
+        .btn-phase:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+        }
+
+        .question-container {
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+
+        .star {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {transform: scale(1);}
+            50% {transform: scale(1.2);}
+            100% {transform: scale(1);}
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container" class="min-h" ></div>
+
+    
+</body>
+</html>

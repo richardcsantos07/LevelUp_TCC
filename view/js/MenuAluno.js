@@ -12,6 +12,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const moreActions = document.querySelector('.more-actions');
     const notifications = document.querySelector('.notifications');
     const userProfile = document.querySelector('.user-profile');
+    const profileModal = document.getElementById('profile-modal');
+    const closeModal = document.getElementById('close-modal');
+    const loadingSpinner = document.getElementById('loading-spinner');
+    const profileInfo = document.getElementById('profile-info');
+
+    // Inicializar o controle do menu colapsável
+    initializeMenuToggle();
 
     // Set active link in sidebar
     function setActiveLink() {
@@ -26,50 +33,16 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
-    document.addEventListener('DOMContentLoaded', function () {
-        // Criar o botão de toggle do menu
-        const toggleBtn = document.createElement('div');
-        toggleBtn.className = 'menu-toggle-btn';
-        toggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
 
-        // Inserir o botão depois da sidebar
-        const sidebar = document.querySelector('.sidebar');
-        sidebar.parentNode.insertBefore(toggleBtn, sidebar.nextSibling);
-
-        // Adicionar classe CSS inicial no corpo do documento
-        document.body.classList.add('menu-expanded');
-
-        // Adicionar evento de clique para alternar o menu
-        toggleBtn.addEventListener('click', function () {
-            document.body.classList.toggle('menu-expanded');
-            document.body.classList.toggle('menu-collapsed');
-
-            // Alternar o ícone do botão
-            if (document.body.classList.contains('menu-expanded')) {
-                toggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
-            } else {
-                toggleBtn.innerHTML = '<i class="fas fa-expand"></i>';
-            }
-        });
-    });
-
-    // Initialize active link
     setActiveLink();
 
     // Add click event for sidebar links
     sidebarLinks.forEach(link => {
         link.addEventListener('click', function (e) {
-            // Only prevent default for anchor tags that point to #
             if (this.getAttribute('href') === '#') {
                 e.preventDefault();
-
-                // Remove active class from all links
                 sidebarLinks.forEach(l => l.classList.remove('active'));
-
-                // Add active class to clicked link
                 this.classList.add('active');
-
-                // You could add custom navigation logic here
                 const linkText = this.textContent.trim();
                 console.log(`Navegando para: ${linkText}`);
             }
@@ -83,14 +56,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const gameDifficulty = this.querySelector('.game-difficulty').textContent;
 
             console.log(`Jogo selecionado: ${gameTitle} (${gameDifficulty})`);
-            // You can add navigation to the specific game here
-            // window.location.href = `game.html?title=${encodeURIComponent(gameTitle)}`;
-
-            // For now, just show an alert
             alert(`Iniciando jogo: ${gameTitle}`);
         });
 
-        // Add hover effects
         card.addEventListener('mouseenter', function () {
             this.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.2)';
         });
@@ -105,78 +73,208 @@ document.addEventListener('DOMContentLoaded', function () {
         const searchTerm = searchInput.value.trim();
         if (searchTerm !== '') {
             console.log(`Pesquisando por: ${searchTerm}`);
-            // Here you would typically call a search API or filter content
-
-            // For demonstration, just alert
             alert(`Pesquisando por: ${searchTerm}`);
         }
     }
 
-    searchBtn.addEventListener('click', performSearch);
+    if (searchBtn) {
+        searchBtn.addEventListener('click', performSearch);
+    }
 
-    searchInput.addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') {
-            performSearch();
-        }
-    });
+    if (searchInput) {
+        searchInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+    }
 
     // Notifications interaction
-    notifications.addEventListener('click', function () {
-        alert('Você tem 3 notificações não lidas');
-        // Here you could open a notifications panel
-    });
+    if (notifications) {
+        notifications.addEventListener('click', function () {
+            alert('Você tem 3 notificações não lidas');
+        });
+    }
 
-    // User profile interaction
-    userProfile.addEventListener('click', function () {
-        window.location.href = '#'; // Navigate to profile page
-    });
-
-    // Mobile sidebar toggle (for responsive design)
-    if (window.innerWidth <= 576) {
-        // Create mobile toggle button if it doesn't exist
-        if (!document.querySelector('.mobile-toggle')) {
-            const mobileToggle = document.createElement('div');
-            mobileToggle.className = 'mobile-toggle';
-            mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
-            document.body.appendChild(mobileToggle);
-
-            mobileToggle.addEventListener('click', function () {
-                const sidebar = document.querySelector('.sidebar');
-                sidebar.classList.toggle('active');
-
-                // Change icon based on sidebar state
-                if (sidebar.classList.contains('active')) {
-                    this.innerHTML = '<i class="fas fa-times"></i>';
-                } else {
-                    this.innerHTML = '<i class="fas fa-bars"></i>';
-                }
-            });
+    // Profile Modal Functions
+    function openProfileModal() {
+        if (profileModal) {
+            profileModal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+            loadStudentProfile();
         }
     }
 
-    // Window resize handling
-    window.addEventListener('resize', function () {
-        if (window.innerWidth <= 576) {
-            if (!document.querySelector('.mobile-toggle')) {
-                const mobileToggle = document.createElement('div');
-                mobileToggle.className = 'mobile-toggle';
-                mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
-                document.body.appendChild(mobileToggle);
+    function closeProfileModal() {
+        if (profileModal) {
+            profileModal.classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+    }
 
-                mobileToggle.addEventListener('click', function () {
-                    document.querySelector('.sidebar').classList.toggle('active');
+    function loadStudentProfile() {
+        // Show loading spinner
+        if (loadingSpinner) {
+            loadingSpinner.style.display = 'block';
+        }
+        if (profileInfo) {
+            profileInfo.style.display = 'none';
+        }
+
+        // Get student ID from global variable passed by PHP
+        const studentId = getStudentId();
+
+        if (studentId) {
+            // Make AJAX request to get student data
+            fetch(`../../controller/getAluno.php?id=${studentId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        populateProfileData(data.aluno);
+                    } else {
+                        showError('Erro ao carregar dados do perfil: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    showError('Erro de conexão ao carregar dados do perfil');
+                })
+                .finally(() => {
+                    if (loadingSpinner) {
+                        loadingSpinner.style.display = 'none';
+                    }
+                    if (profileInfo) {
+                        profileInfo.style.display = 'grid';
+                    }
+                });
+        } else {
+            showError('ID do aluno não encontrado');
+            if (loadingSpinner) {
+                loadingSpinner.style.display = 'none';
+            }
+            if (profileInfo) {
+                profileInfo.style.display = 'grid';
+            }
+        }
+    }
+
+    function populateProfileData(aluno) {
+        // Update modal header
+        const firstLetter = aluno.nome.charAt(0).toUpperCase();
+        const modalAvatar = document.getElementById('modal-avatar');
+        const modalName = document.getElementById('modal-name');
+        
+        if (modalAvatar) modalAvatar.textContent = firstLetter;
+        if (modalName) modalName.textContent = aluno.nome;
+
+        // Update top bar user info (se não estiver já definido pelo PHP)
+        const userAvatar = document.getElementById('user-avatar');
+        const userName = document.getElementById('user-name');
+        const greetingName = document.getElementById('greeting-name');
+        
+        if (userAvatar && !userAvatar.textContent) {
+            userAvatar.textContent = firstLetter;
+        }
+        if (userName && !userName.textContent) {
+            userName.textContent = aluno.nome.split(' ')[0];
+        }
+        if (greetingName && greetingName.textContent.includes('Olá, !')) {
+            greetingName.textContent = `Olá, ${aluno.nome.split(' ')[0]}!`;
+        }
+
+        // Update profile info fields
+        const fields = [
+            { id: 'student-id', value: aluno.id },
+            { id: 'student-email', value: aluno.email },
+            { id: 'student-phone', value: aluno.telefone },
+            { id: 'student-birth', value: formatDate(aluno.dataNasc) },
+            { id: 'student-class', value: aluno.turma },
+            { id: 'responsible-name', value: aluno.nomeResponsavel },
+            { id: 'responsible-phone', value: aluno.telefoneResponsavel }
+        ];
+
+        fields.forEach(field => {
+            const element = document.getElementById(field.id);
+            if (element) {
+                element.textContent = field.value || '-';
+            }
+        });
+    }
+
+    function showError(message) {
+        if (profileInfo) {
+            profileInfo.innerHTML = `
+                <div style="text-align: center; padding: 20px; color: #d9534f;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 15px;"></i>
+                    <p>${message}</p>
+                    <button id="retry-btn" style="margin-top: 15px; padding: 8px 16px; background: var(--primary-color); color: white; border: none; border-radius: 5px; cursor: pointer;">
+                        Tentar novamente
+                    </button>
+                </div>
+            `;
+
+            const retryBtn = document.getElementById('retry-btn');
+            if (retryBtn) {
+                retryBtn.addEventListener('click', function() {
+                    loadStudentProfile();
                 });
             }
-        } else {
-            const mobileToggle = document.querySelector('.mobile-toggle');
-            if (mobileToggle) {
-                mobileToggle.remove();
+        }
+    }
+
+    function formatDate(dateString) {
+        if (!dateString) return '-';
+        try {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('pt-BR');
+        } catch (error) {
+            return '-';
+        }
+    }
+
+    function getStudentId() {
+        // Get student ID from global variable passed by PHP
+        if (window.STUDENT_DATA && window.STUDENT_DATA.id) {
+            return window.STUDENT_DATA.id;
+        }
+        
+        // Fallback: Try to get from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const studentId = urlParams.get('id');
+        
+        return studentId || null;
+    }
+
+    // Event listeners for modal
+    if (userProfile) {
+        userProfile.addEventListener('click', openProfileModal);
+    }
+    if (closeModal) {
+        closeModal.addEventListener('click', closeProfileModal);
+    }
+
+    // Close modal when clicking outside
+    if (profileModal) {
+        profileModal.addEventListener('click', function(e) {
+            if (e.target === profileModal) {
+                closeProfileModal();
             }
-            document.querySelector('.sidebar').classList.remove('active');
+        });
+    }
+
+    // Close modal with ESC key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && profileModal && profileModal.classList.contains('show')) {
+            closeProfileModal();
         }
     });
 
-    // Progress bar animation (optional)
+    // Progress bar animation
     const progressBars = document.querySelectorAll('.progress');
     progressBars.forEach(bar => {
         const width = bar.style.width;
@@ -186,31 +284,121 @@ document.addEventListener('DOMContentLoaded', function () {
             bar.style.width = width;
         }, 300);
     });
-});
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Criar o botão de toggle do menu
-    const toggleBtn = document.createElement('div');
-    toggleBtn.className = 'menu-toggle-btn';
-    toggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
+    // Log do ID do aluno para debug
+    console.log('ID do aluno logado:', getStudentId());
     
-    // Inserir o botão depois da sidebar
-    const sidebar = document.querySelector('.sidebar');
-    sidebar.parentNode.insertBefore(toggleBtn, sidebar.nextSibling);
+    // Initialize profile data on page load if needed
+    setTimeout(() => {
+        const studentId = getStudentId();
+        if (studentId && window.STUDENT_DATA) {
+            console.log('Dados do aluno disponíveis:', window.STUDENT_DATA);
+        }
+    }, 500);
+
+   // Substitua a função initializeMenuToggle() no seu MenuAluno.js por esta versão melhorada:
+
+function initializeMenuToggle() {
+    const container = document.querySelector('.container');
+    const menuToggleBtn = document.getElementById('menuToggleBtn');
     
-    // Adicionar classe CSS inicial no corpo do documento
-    document.body.classList.add('menu-expanded');
+    if (!container || !menuToggleBtn) return;
     
-    // Adicionar evento de clique para alternar o menu
-    toggleBtn.addEventListener('click', function() {
-        document.body.classList.toggle('menu-expanded');
-        document.body.classList.toggle('menu-collapsed');
+    let isMenuCollapsed = false;
+    
+    function toggleMenu() {
+        isMenuCollapsed = !isMenuCollapsed;
         
-        // Alternar o ícone do botão
-        if (document.body.classList.contains('menu-expanded')) {
-            toggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
+        if (isMenuCollapsed) {
+            container.classList.add('sidebar-collapsed');
+            if (window.innerWidth <= 768) {
+                container.classList.add('sidebar-open');
+            }
         } else {
-            toggleBtn.innerHTML = '<i class="fas fa-expand"></i>';
+            container.classList.remove('sidebar-collapsed');
+            if (window.innerWidth <= 768) {
+                container.classList.remove('sidebar-open');
+            }
+        }
+    }
+    
+    menuToggleBtn.addEventListener('click', toggleMenu);
+    
+    // Ajuste inicial para telas pequenas
+    if (window.innerWidth <= 768) {
+        toggleMenu(); // Fecha o menu em mobile
+    }
+}
+
+// Alternativa: Função para criar botão no top-bar (opcional)
+function createTopBarToggle() {
+    const topBar = document.querySelector('.top-bar');
+    const greeting = document.querySelector('.greeting');
+    
+    if (!topBar || !greeting) return;
+    
+    // Verificar se já existe
+    if (topBar.querySelector('.menu-toggle-btn')) return;
+    
+    const toggleBtn = document.createElement('button');
+    toggleBtn.className = 'menu-toggle-btn';
+    toggleBtn.innerHTML = `
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    `;
+    
+    // Inserir antes do greeting
+    topBar.insertBefore(toggleBtn, greeting);
+    
+    // Adicionar funcionalidade
+    const container = document.querySelector('.container');
+    let isCollapsed = false;
+    
+    toggleBtn.addEventListener('click', function() {
+        isCollapsed = !isCollapsed;
+        
+        if (isCollapsed) {
+            container.classList.add('sidebar-collapsed');
+        } else {
+            container.classList.remove('sidebar-collapsed');
         }
     });
+    
+    return toggleBtn;
+}
+
+// CSS para animação adicional (pode ser adicionado via JavaScript)
+function addToggleStyles() {
+    const style = document.createElement('style');
+    style.textContent = `
+        .menu-toggle-btn.animating {
+            transform: scale(0.9);
+        }
+        
+        .hamburger span {
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        .sidebar-collapsed .menu-toggle-btn .hamburger span:nth-child(1) {
+            transform: rotate(45deg) translate(3px, 3px);
+        }
+        
+        .sidebar-collapsed .menu-toggle-btn .hamburger span:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+        
+        .sidebar-collapsed .menu-toggle-btn .hamburger span:nth-child(3) {
+            transform: rotate(-45deg) translate(3px, -3px);
+        }
+    `;
+    
+    document.head.appendChild(style);
+}
+
+
 });
+

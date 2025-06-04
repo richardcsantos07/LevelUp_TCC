@@ -1,378 +1,359 @@
-// Controle do menu lateral com colapso/expansão e navegação entre seções
+/**
+ * LevelUp Student Interface JavaScript
+ * Provides interactive functionality for the student dashboard
+ */
 
 document.addEventListener('DOMContentLoaded', function () {
-    const menuItems = document.querySelectorAll('.menu-item[data-section]');
-    const submenuToggles = document.querySelectorAll('.menu-item.has-submenu');
-    const submenus = document.querySelectorAll('.submenu');
-    const menuSections = document.querySelectorAll('.menu-section');
+    // Variables
+    const sidebarLinks = document.querySelectorAll('.sidebar a');
+    const gameCards = document.querySelectorAll('.game-card');
+    const searchInput = document.querySelector('.search-input');
+    const searchBtn = document.querySelector('.search-btn');
+    const moreActions = document.querySelector('.more-actions');
+    const notifications = document.querySelector('.notifications');
+    const userProfile = document.querySelector('.user-profile');
+    const profileModal = document.getElementById('profile-modal');
+    const closeModal = document.getElementById('close-modal');
+    const loadingSpinner = document.getElementById('loading-spinner');
+    const profileInfo = document.getElementById('profile-info');
 
-    // Inicialmente esconder todos os itens do menu (exceto submenu items)
-    function hideAllMenuItems() {
-        menuItems.forEach(item => {
-            // Só esconder se não for submenu item
-            if (!item.closest('.submenu')) {
-                item.style.display = 'none';
-            }
-        });
+    // Inicializar o controle do menu colapsável
+    initializeMenuToggle();
 
-        submenuToggles.forEach(toggle => {
-            toggle.style.display = 'none';
-        });
+    // Set active link in sidebar
+    function setActiveLink() {
+        const currentPage = window.location.pathname.split('/').pop();
 
-        submenus.forEach(submenu => {
-            submenu.style.display = 'none';
-        });
-    }
-
-    // Função para esconder todas as seções de conteúdo
-    function hideAllSections() {
-        const sections = document.querySelectorAll('.content-section');
-        sections.forEach(section => {
-            section.classList.remove('active');
-        });
-    }
-
-    // Função para remover active dos itens do menu
-    function deactivateAllMenuItems() {
-        menuItems.forEach(item => {
-            item.classList.remove('active');
-        });
-    }
-
-    // Controle de clique nas seções do menu (Principal, Cadastros, etc.)
-    menuSections.forEach(section => {
-        section.addEventListener('click', function () {
-            // Encontrar os itens que pertencem a esta seção
-            let currentElement = this.nextElementSibling;
-            const itemsToToggle = [];
-
-            // Coletar todos os itens até a próxima seção
-            while (currentElement && !currentElement.classList.contains('menu-section')) {
-                if (currentElement.classList.contains('menu-item') && currentElement.hasAttribute('data-section')) {
-                    itemsToToggle.push(currentElement);
-                } else if (currentElement.classList.contains('menu-item') && currentElement.classList.contains('has-submenu')) {
-                    itemsToToggle.push(currentElement);
-                } else if (currentElement.classList.contains('submenu')) {
-                    // Não adicionar submenu aos itens para toggle, será controlado separadamente
-                }
-                currentElement = currentElement.nextElementSibling;
-            }
-
-            // Verificar se os itens estão visíveis
-            const isVisible = itemsToToggle.length > 0 &&
-                itemsToToggle.some(item => item.style.display !== 'none');
-
-            if (isVisible) {
-                // Esconder itens desta seção
-                itemsToToggle.forEach(item => {
-                    item.style.display = 'none';
-                    // Se for um item com submenu, esconder o submenu também
-                    if (item.classList.contains('has-submenu')) {
-                        const submenuId = item.getAttribute('data-toggle');
-                        const submenu = document.getElementById(submenuId);
-                        if (submenu) {
-                            submenu.style.display = 'none';
-                        }
-                    }
-                });
-
-                // Esconder todas as seções de conteúdo quando o menu for fechado
-                hideAllSections();
-                deactivateAllMenuItems();
-
+        sidebarLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            if (href === currentPage || (currentPage === '' && href === 'Home.html')) {
+                link.classList.add('active');
             } else {
-                // Esconder outros grupos de menu primeiro
-                menuItems.forEach(item => {
-                    if (!itemsToToggle.includes(item) && !item.closest('.submenu')) {
-                        item.style.display = 'none';
-                    }
-                });
-
-                // Esconder outros submenus
-                submenuToggles.forEach(toggle => {
-                    if (!itemsToToggle.includes(toggle)) {
-                        toggle.style.display = 'none';
-                        const submenuId = toggle.getAttribute('data-toggle');
-                        const submenu = document.getElementById(submenuId);
-                        if (submenu) {
-                            submenu.style.display = 'none';
-                        }
-                    }
-                });
-
-                // Mostrar itens desta seção
-                itemsToToggle.forEach(item => {
-                    item.style.display = 'flex';
-                });
-
-                // Esconder conteúdo quando trocar de seção do menu
-                hideAllSections();
-                deactivateAllMenuItems();
+                link.classList.remove('active');
             }
         });
+    }
 
-        // Adicionar estilo visual para indicar que é clicável
-        section.style.cursor = 'pointer';
-        section.style.userSelect = 'none';
-        section.style.transition = 'color 0.2s ease';
+    setActiveLink();
 
-        // Efeito hover nas seções
-        section.addEventListener('mouseenter', function () {
-            this.style.color = '#3498db';
-        });
-
-        section.addEventListener('mouseleave', function () {
-            this.style.color = '#95a5a6';
-        });
-    });
-
-    // Clique nos itens do menu que possuem data-section
-    menuItems.forEach(item => {
-        item.addEventListener('click', (e) => {
-            e.stopPropagation(); // Evitar propagação para a seção pai
-            const sectionId = item.getAttribute('data-section');
-            if (sectionId) {
-                // Verificar se a seção já está ativa
-                const targetSection = document.getElementById(sectionId);
-                if (targetSection) {
-                    const isCurrentlyActive = targetSection.classList.contains('active');
-
-                    // Sempre esconder todas as seções primeiro
-                    hideAllSections();
-                    deactivateAllMenuItems();
-
-                    // Se não estava ativa, mostrar. Se estava ativa, deixar escondida (toggle)
-                    if (!isCurrentlyActive) {
-                        targetSection.classList.add('active');
-                        item.classList.add('active');
-                    }
-                }
+    // Add click event for sidebar links
+    sidebarLinks.forEach(link => {
+        link.addEventListener('click', function (e) {
+            if (this.getAttribute('href') === '#') {
+                e.preventDefault();
+                sidebarLinks.forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                const linkText = this.textContent.trim();
+                console.log(`Navegando para: ${linkText}`);
             }
         });
     });
 
-    // Controle dos submenus
-    submenuToggles.forEach(toggle => {
-        toggle.addEventListener('click', (e) => {
-            e.stopPropagation(); // Evitar propagação para a seção pai
-            const submenuId = toggle.getAttribute('data-toggle');
-            const submenu = document.getElementById(submenuId);
+    // Game card interactions
+    gameCards.forEach(card => {
+        card.addEventListener('click', function () {
+            const gameTitle = this.querySelector('.game-title').textContent;
+            const gameDifficulty = this.querySelector('.game-difficulty').textContent;
 
-            if (submenu) {
-                const isVisible = submenu.style.display === 'flex';
-
-                if (isVisible) {
-                    submenu.style.display = 'none';
-                    toggle.style.transform = 'rotate(0deg)';
-                } else {
-                    // Fechar outros submenus
-                    submenus.forEach(sm => {
-                        if (sm !== submenu) {
-                            sm.style.display = 'none';
-                        }
-                    });
-
-                    // Resetar rotação de outros toggles
-                    submenuToggles.forEach(t => {
-                        if (t !== toggle) {
-                            t.style.transform = 'rotate(0deg)';
-                        }
-                    });
-
-                    submenu.style.display = 'flex';
-
-                }
-            }
+            console.log(`Jogo selecionado: ${gameTitle} (${gameDifficulty})`);
+            alert(`Iniciando jogo: ${gameTitle}`);
         });
 
-        // Adicionar transição suave para a rotação do ícone
-        toggle.style.transition = 'transform 0.2s ease';
+        card.addEventListener('mouseenter', function () {
+            this.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.2)';
+        });
+
+        card.addEventListener('mouseleave', function () {
+            this.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+        });
     });
 
-    // Controle do formulário de cancelar criança
-    const btnCancelarCrianca = document.getElementById('btn-cancelar-crianca');
-    if (btnCancelarCrianca) {
-        btnCancelarCrianca.addEventListener('click', function () {
-            const form = document.getElementById('form-crianca');
-            if (form) {
-                form.reset();
-            }
-            // Voltar para o dashboard
-            hideAllSections();
-            deactivateAllMenuItems();
-            const dashboard = document.getElementById('dashboard');
-            if (dashboard) {
-                dashboard.classList.add('active');
-            }
-        });
-    }
-
-    // Controle da busca de crianças
-    const searchCriancas = document.getElementById('search-criancas');
-    if (searchCriancas) {
-        searchCriancas.addEventListener('input', function () {
-            const searchTerm = this.value.toLowerCase();
-            const table = document.getElementById('criancas-table');
-            if (table) {
-                const rows = table.querySelectorAll('tbody tr');
-                rows.forEach(row => {
-                    const text = row.textContent.toLowerCase();
-                    row.style.display = text.includes(searchTerm) ? '' : 'none';
-                });
-            }
-        });
-    }
-
-    // Inicializar com todos os itens escondidos
-    hideAllMenuItems();
-
-    // Esconder todas as seções de conteúdo inicialmente
-    hideAllSections();
-
-    // Mostrar dashboard por padrão
-    const dashboard = document.getElementById('dashboard');
-    if (dashboard) {
-        dashboard.classList.add('active');
-    }
-});
-
-// Script para controlar o modal de exclusão de conta
-document.addEventListener('DOMContentLoaded', function () {
-    const btnDeleteAccount = document.getElementById('btn-delete-account');
-    const modalDeleteAccount = document.getElementById('modal-delete-account');
-    const btnCancelDelete = document.getElementById('btn-cancel-delete');
-    const btnConfirmDelete = document.getElementById('btn-confirm-delete');
-
-    if (btnDeleteAccount && modalDeleteAccount) {
-        btnDeleteAccount.addEventListener('click', function () {
-            modalDeleteAccount.style.display = 'block';
-        });
-    }
-
-    if (btnCancelDelete && modalDeleteAccount) {
-        btnCancelDelete.addEventListener('click', function () {
-            modalDeleteAccount.style.display = 'none';
-        });
-    }
-
-    if (btnConfirmDelete) {
-        btnConfirmDelete.addEventListener('click', function () {
-            // Obter o ID do responsável de forma mais segura
-            const idResp = document.getElementById('id_resp');
-            const id = idResp ? idResp.value : '';
-            if (id) {
-                window.location.href = '../controller/deleteResp.php?id=' + id;
-            } else {
-                alert('Erro: ID do responsável não encontrado.');
-            }
-        });
-    }
-
-    // Fechar modal ao clicar fora dele
-    if (modalDeleteAccount) {
-        modalDeleteAccount.addEventListener('click', function (e) {
-            if (e.target === modalDeleteAccount) {
-                modalDeleteAccount.style.display = 'none';
-            }
-        });
-    }
-
-    // Fechar modal com ESC
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && modalDeleteAccount && modalDeleteAccount.style.display === 'block') {
-            modalDeleteAccount.style.display = 'none';
+    // Search functionality
+    function performSearch() {
+        const searchTerm = searchInput.value.trim();
+        if (searchTerm !== '') {
+            console.log(`Pesquisando por: ${searchTerm}`);
+            alert(`Pesquisando por: ${searchTerm}`);
         }
-    });
-});
-
-// Modal de Edição de Perfil do Responsável
-document.addEventListener('DOMContentLoaded', function () {
-    const btnEditProfile = document.getElementById('btn-edit-profile');
-    const modalEditProfile = document.getElementById('modal-edit-profile');
-    const btnCancelEdit = document.getElementById('btn-cancel-edit');
-
-    // Abrir modal de edição
-    if (btnEditProfile && modalEditProfile) {
-        btnEditProfile.addEventListener('click', function () {
-            modalEditProfile.style.display = 'block';
-        });
     }
 
-    // Fechar modal ao clicar no botão cancelar
-    if (btnCancelEdit && modalEditProfile) {
-        btnCancelEdit.addEventListener('click', function () {
-            modalEditProfile.style.display = 'none';
-        });
+    if (searchBtn) {
+        searchBtn.addEventListener('click', performSearch);
     }
 
-    // Fechar modal ao clicar fora dele
-    if (modalEditProfile) {
-        modalEditProfile.addEventListener('click', function (e) {
-            if (e.target === modalEditProfile) {
-                modalEditProfile.style.display = 'none';
+    if (searchInput) {
+        searchInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                performSearch();
             }
         });
     }
 
-    // Fechar modal com ESC
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && modalEditProfile && modalEditProfile.style.display === 'block') {
-            modalEditProfile.style.display = 'none';
-        }
-    });
-});
-
-// Modal de Edição de Criança - CORRIGIDO
-document.addEventListener('DOMContentLoaded', function () {
-    const modalEditCrianca = document.getElementById('modal-edit-crianca');
-    const btnCancelEditCrianca = document.getElementById('btn-cancel-edit-crianca');
-
-    // Fechar modal ao clicar no botão cancelar
-    if (btnCancelEditCrianca && modalEditCrianca) {
-        btnCancelEditCrianca.addEventListener('click', function () {
-            modalEditCrianca.style.display = 'none';
+    // Notifications interaction
+    if (notifications) {
+        notifications.addEventListener('click', function () {
+            alert('Você tem 3 notificações não lidas');
         });
     }
 
-    // Fechar modal ao clicar fora dele
-    if (modalEditCrianca) {
-        modalEditCrianca.addEventListener('click', function (e) {
-            if (e.target === modalEditCrianca) {
-                modalEditCrianca.style.display = 'none';
-            }
-        });
+    // Profile Modal Functions
+    function openProfileModal() {
+        if (profileModal) {
+            profileModal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+            loadStudentProfile();
+        }
     }
 
-    // Fechar modal com ESC
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && modalEditCrianca && modalEditCrianca.style.display === 'block') {
-            modalEditCrianca.style.display = 'none';
+    function closeProfileModal() {
+        if (profileModal) {
+            profileModal.classList.remove('show');
+            document.body.style.overflow = 'auto';
         }
-    });
-});
+    }
 
-// Função para editar criança - CORRIGIDA
-function editarCrianca(id) {
-    // Fazer requisição AJAX para buscar os dados da criança
-    fetch('../controller/getCrianca.php?id=' + id)
-        .then(response => response.json())
+function loadStudentProfile() {
+    if (loadingSpinner) loadingSpinner.style.display = 'block';
+    if (profileInfo) profileInfo.style.display = 'none';
+
+    fetch(`../controller/getCrianca.php?id=${window.STUDENT_DATA.id}`)
+        .then(response => {
+            if (!response.ok) throw new Error('Erro na requisição');
+            return response.json();
+        })
         .then(data => {
             if (data.success) {
-                // Preencher o formulário com os dados da criança
-                document.getElementById('edit-nome').value = data.crianca.nome;
-                document.getElementById('edit-email').value = data.crianca.email;
-                document.getElementById('edit-telefone').value = data.crianca.telefone;
-                document.getElementById('edit-data-nasc').value = data.crianca.dataNasc;
-                document.getElementById('edit-id').value = data.crianca.id;
-                
-                // Mostrar o modal
-                document.getElementById('modal-edit-crianca').style.display = 'block';
+                populateProfileData(data.crianca);
             } else {
-                alert('Erro ao carregar dados da criança: ' + data.message);
+                showError(data.message || 'Erro ao carregar perfil');
             }
         })
         .catch(error => {
             console.error('Erro:', error);
-            alert('Erro ao carregar dados da criança');
+            showError('Erro de conexão');
+        })
+        .finally(() => {
+            if (loadingSpinner) loadingSpinner.style.display = 'none';
+            if (profileInfo) profileInfo.style.display = 'grid';
         });
 }
+
+function populateProfileData(crianca) {
+    // Atualizar avatar e nome
+    const firstLetter = crianca.nome.charAt(0).toUpperCase();
+    document.getElementById('modal-avatar').textContent = firstLetter;
+    document.getElementById('modal-name').textContent = crianca.nome;
+
+    // Mapear campos do perfil
+    const fields = {
+        'student-id': crianca.id,
+        'student-email': crianca.email,
+        'student-phone': crianca.telefone,
+        'student-birth': formatDate(crianca.dataNasc),
+        'responsible-name': crianca.nomeResponsavel,
+        'responsible-phone': crianca.telefoneResponsavel
+    };
+
+    // Atualizar cada campo
+    Object.entries(fields).forEach(([id, value]) => {
+        const element = document.getElementById(id);
+        if (element) element.textContent = value || '-';
+    });
+}
+
+    function showError(message) {
+        if (profileInfo) {
+            profileInfo.innerHTML = `
+                <div style="text-align: center; padding: 20px; color: #d9534f;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 15px;"></i>
+                    <p>${message}</p>
+                    <button id="retry-btn" style="margin-top: 15px; padding: 8px 16px; background: var(--primary-color); color: white; border: none; border-radius: 5px; cursor: pointer;">
+                        Tentar novamente
+                    </button>
+                </div>
+            `;
+
+            const retryBtn = document.getElementById('retry-btn');
+            if (retryBtn) {
+                retryBtn.addEventListener('click', function() {
+                    loadStudentProfile();
+                });
+            }
+        }
+    }
+
+    function formatDate(dateString) {
+        if (!dateString) return '-';
+        try {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('pt-BR');
+        } catch (error) {
+            return '-';
+        }
+    }
+
+    function getStudentId() {
+        // Get student ID from global variable passed by PHP
+        if (window.STUDENT_DATA && window.STUDENT_DATA.id) {
+            return window.STUDENT_DATA.id;
+        }
+        
+        // Fallback: Try to get from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const studentId = urlParams.get('id');
+        
+        return studentId || null;
+    }
+
+    // Event listeners for modal
+    if (userProfile) {
+        userProfile.addEventListener('click', openProfileModal);
+    }
+    if (closeModal) {
+        closeModal.addEventListener('click', closeProfileModal);
+    }
+
+    // Close modal when clicking outside
+    if (profileModal) {
+        profileModal.addEventListener('click', function(e) {
+            if (e.target === profileModal) {
+                closeProfileModal();
+            }
+        });
+    }
+
+    // Close modal with ESC key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && profileModal && profileModal.classList.contains('show')) {
+            closeProfileModal();
+        }
+    });
+
+    // Progress bar animation
+    const progressBars = document.querySelectorAll('.progress');
+    progressBars.forEach(bar => {
+        const width = bar.style.width;
+        bar.style.width = '0';
+        setTimeout(() => {
+            bar.style.transition = 'width 1s ease';
+            bar.style.width = width;
+        }, 300);
+    });
+
+    // Log do ID do aluno para debug
+    console.log('ID do aluno logado:', getStudentId());
+    
+    // Initialize profile data on page load if needed
+    setTimeout(() => {
+        const studentId = getStudentId();
+        if (studentId && window.STUDENT_DATA) {
+            console.log('Dados do aluno disponíveis:', window.STUDENT_DATA);
+        }
+    }, 500);
+
+   // Substitua a função initializeMenuToggle() no seu MenuAluno.js por esta versão melhorada:
+
+function initializeMenuToggle() {
+    const container = document.querySelector('.container');
+    const menuToggleBtn = document.getElementById('menuToggleBtn');
+    
+    if (!container || !menuToggleBtn) return;
+    
+    let isMenuCollapsed = false;
+    
+    function toggleMenu() {
+        isMenuCollapsed = !isMenuCollapsed;
+        
+        if (isMenuCollapsed) {
+            container.classList.add('sidebar-collapsed');
+            if (window.innerWidth <= 768) {
+                container.classList.add('sidebar-open');
+            }
+        } else {
+            container.classList.remove('sidebar-collapsed');
+            if (window.innerWidth <= 768) {
+                container.classList.remove('sidebar-open');
+            }
+        }
+    }
+    
+    menuToggleBtn.addEventListener('click', toggleMenu);
+    
+    // Ajuste inicial para telas pequenas
+    if (window.innerWidth <= 768) {
+        toggleMenu(); // Fecha o menu em mobile
+    }
+}
+
+// Alternativa: Função para criar botão no top-bar (opcional)
+function createTopBarToggle() {
+    const topBar = document.querySelector('.top-bar');
+    const greeting = document.querySelector('.greeting');
+    
+    if (!topBar || !greeting) return;
+    
+    // Verificar se já existe
+    if (topBar.querySelector('.menu-toggle-btn')) return;
+    
+    const toggleBtn = document.createElement('button');
+    toggleBtn.className = 'menu-toggle-btn';
+    toggleBtn.innerHTML = `
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    `;
+    
+    // Inserir antes do greeting
+    topBar.insertBefore(toggleBtn, greeting);
+    
+    // Adicionar funcionalidade
+    const container = document.querySelector('.container');
+    let isCollapsed = false;
+    
+    toggleBtn.addEventListener('click', function() {
+        isCollapsed = !isCollapsed;
+        
+        if (isCollapsed) {
+            container.classList.add('sidebar-collapsed');
+        } else {
+            container.classList.remove('sidebar-collapsed');
+        }
+    });
+    
+    return toggleBtn;
+}
+
+// CSS para animação adicional (pode ser adicionado via JavaScript)
+function addToggleStyles() {
+    const style = document.createElement('style');
+    style.textContent = `
+        .menu-toggle-btn.animating {
+            transform: scale(0.9);
+        }
+        
+        .hamburger span {
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        .sidebar-collapsed .menu-toggle-btn .hamburger span:nth-child(1) {
+            transform: rotate(45deg) translate(3px, 3px);
+        }
+        
+        .sidebar-collapsed .menu-toggle-btn .hamburger span:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+        
+        .sidebar-collapsed .menu-toggle-btn .hamburger span:nth-child(3) {
+            transform: rotate(-45deg) translate(3px, -3px);
+        }
+    `;
+    
+    document.head.appendChild(style);
+}
+
+
+});
+

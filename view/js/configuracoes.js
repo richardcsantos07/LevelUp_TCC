@@ -71,34 +71,3 @@ document.querySelectorAll('.toggle-switch input').forEach(toggle => {
     });
 });
 
-// Função para carregar o perfil do usuário (simulação)
-function loadUserProfile() {
-    // Esta função seria substituída pela lógica real para carregar dados do aluno
-    console.log('Carregando dados do aluno...');
-    
-    // Simulação de dados para exibição - você substituirá isso pela sua lógica real
-    setTimeout(() => {
-        // Dados de exemplo - aqui você faria uma chamada para seu backend
-        const dadosAluno = {
-            nome: "Maria Silva",
-            email: "maria.silva@aluno.escolaexemplo.com.br",
-            dataNascimento: "15/04/2012",
-            ra: "20230147",
-            serie: "5º Ano",
-            turma: "Turma B"
-        };
-        
-        // Atualiza os campos na interface
-        document.getElementById('user-name').textContent = dadosAluno.nome;
-        document.getElementById('user-email').textContent = dadosAluno.email;
-        document.getElementById('user-birth').textContent = dadosAluno.dataNascimento;
-        document.getElementById('user-ra').textContent = dadosAluno.ra;
-        document.getElementById('user-serie').textContent = dadosAluno.serie;
-        document.getElementById('user-turma').textContent = dadosAluno.turma;
-        
-        // Aqui você também pode atualizar a imagem de perfil
-        // document.getElementById('profile-image').src = dadosAluno.fotoUrl;
-        
-        console.log('Dados do aluno carregados com sucesso');
-    }, 500); // Simulação de tempo de carregamento
-}

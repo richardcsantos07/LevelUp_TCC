@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendário Escolar - Comunicados</title>
+    <style>
+        /* Reset apenas para o calendário */
+        .calendar-container {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .calendar-container *,
+        .calendar-container *::before,
+        .calendar-container *::after {
+            box-sizing: border-box;
+        }
+
+        /* Estilos do calendário */
+        .calendar-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            max-width: 500px;
+            width: 100%;
+            margin: 20px auto;
+        }
+
+        .calendar-header {
+            background: linear-gradient(135deg, #6b46c1, #9333ea);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .month-navigation {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .month-navigation h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            background: #f8fafc;
+            padding: 15px 20px;
+            font-weight: 600;
+            color: #6b46c1;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            padding: 0 20px 20px;
+        }
+
+        .day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            margin: 2px;
+            position: relative;
+            font-weight: 500;
+        }
+
+        .day:hover {
+            background: #e0e7ff;
+            transform: scale(1.05);
+        }
+
+        .day.current-day {
+            background: linear-gradient(135deg, #6b46c1, #9333ea);
+            color: white;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(107, 70, 193, 0.4);
+        }
+
+        .day.has-event {
+            background: #fef3c7;
+            color: #92400e;
+            border: 2px solid #f59e0b;
+        }
+
+        .day.has-event:hover {
+            background: #fed7aa;
+        }
+
+        .event-marker {
+            position: absolute;
+            bottom: 3px;
+            right: 3px;
+            width: 8px;
+            height: 8px;
+            background: #ef4444;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        .multiple-events {
+            position: absolute;
+            bottom: 3px;
+            left: 3px;
+            font-size: 10px;
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .calendar-actions {
+            padding: 20px;
+            display: flex;
+            gap: 10px;
+            background: #f8fafc;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .refresh-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
+        }
+
+        .view-all {
+            background: linear-gradient(135deg, #6b46c1, #9333ea);
+            color: white;
+        }
+
+        .view-all:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(107, 70, 193, 0.4);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #6b46c1, #9333ea);
+            color: white;
+            padding: 20px;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.3s ease;
+        }
+
+        .close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .modal-body {
+            padding: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .comunicado-item {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            border-left: 5px solid #6b46c1;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease;
+        }
+
+        .comunicado-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .comunicado-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .comunicado-titulo {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #1e293b;
+            margin: 0;
+        }
+
+        .comunicado-destinatario {
+            background: #6b46c1;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .comunicado-descricao {
+            color: #475569;
+            line-height: 1.5;
+            margin: 10px 0;
+        }
+
+        .comunicado-arquivo {
+            margin-top: 10px;
+        }
+
+        .arquivo-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #10b981;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: background 0.3s ease;
+        }
+
+        .arquivo-link:hover {
+            background: #059669;
+        }
+
+        .no-events {
+            text-align: center;
+            padding: 40px 20px;
+            color: #64748b;
+        }
+
+        .no-events-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            opacity: 0.5;
+        }
+
+        .date-display {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .date-number {
+            font-size: 2rem;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.2);
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .date-info h3 {
+            font-size: 1.2rem;
+            margin: 0 0 5px 0;
+        }
+
+        .date-info p {
+            opacity: 0.8;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #6b46c1;
+        }
+
+        .error {
+            text-align: center;
+            padding: 20px;
+            color: #ef4444;
+            background: #fef2f2;
+            border-radius: 10px;
+            margin: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Calendário Escolar -->
+    <div class="calendar-container">
+        <div id="calendar-container"></div>
+    </div>
+
+    <!-- Modal para exibir comunicados do dia -->
+    <div id="dayModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="date-display">
+                    <div class="date-number" id="modalDay"></div>
+                    <div class="date-info">
+                        <h3 id="modalDate"></h3>
+                        <p id="modalWeekday"></p>
+                    </div>
+                </div>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body" id="modalEvents"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Estado atual do calendário
+            let currentMonth = new Date().getMonth() + 1;
+            let currentYear = new Date().getFullYear();
+            let comunicadosData = {};
+
+            // Elementos do DOM
+            const calendarContainer = document.getElementById('calendar-container');
+            const modal = document.getElementById('dayModal');
+            const closeBtn = document.querySelector('.close');
+
+            // Inicialização
+            loadComunicados();
+
+            // Event listeners do modal
+            closeBtn.onclick = function () {
+                modal.style.display = "none";
+            };
+
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            };
+
+            async function loadComunicados() {
+                try {
+                    const response = await fetch('api_comunicados.php');
+                    const data = await response.json();
+                    
+                    if (data.error) {
+                        console.error('Erro ao carregar comunicados:', data.error);
+                        comunicadosData = {};
+                    } else {
+                        comunicadosData = data;
+                    }
+                    
+                    renderCalendar(currentMonth, currentYear);
+                } catch (error) {
+                    console.error('Erro na requisição:', error);
+                    comunicadosData = {};
+                    renderCalendar(currentMonth, currentYear);
+                }
+            }
+
+            function renderCalendar(month, year) {
+                const monthNames = [
+                    'Janeiro', 'Fevereiro', 'Março', 'Abril',
+                    'Maio', 'Junho', 'Julho', 'Agosto',
+                    'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+                ];
+
+                const daysInMonth = new Date(year, month, 0).getDate();
+                const firstDayOfMonth = new Date(year, month - 1, 1).getDay();
+
+                let calendarHTML = `
+                    <div class="calendar-content">
+                        <div class="calendar-header">
+                            <div class="month-navigation">
+                                <button class="nav-btn prev-month">&#8249;</button>
+                                <h2>${monthNames[month - 1]} ${year}</h2>
+                                <button class="nav-btn next-month">&#8250;</button>
+                            </div>
+                        </div>
+                        <div class="weekdays">
+                            <div>Dom</div><div>Seg</div><div>Ter</div><div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div>
+                        </div>
+                        <div class="days-grid">
+                `;
+
+                // Espaços em branco antes do primeiro dia
+                for (let i = 0; i < firstDayOfMonth; i++) {
+                    calendarHTML += `<div class="day other-month"></div>`;
+                }
+
+                // Dias do mês
+                const today = new Date();
+                const isCurrentMonth = (today.getMonth() + 1 === month && today.getFullYear() === year);
+
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const isToday = isCurrentMonth && today.getDate() === day;
+                    const dateStr = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+                    const comunicados = comunicadosData[dateStr];
+
+                    let dayClass = 'day';
+                    if (isToday) dayClass += ' current-day';
+                    if (comunicados && comunicados.length > 0) dayClass += ' has-event';
+
+                    let eventMarkers = '';
+                    if (comunicados && comunicados.length > 0) {
+                        if (comunicados.length === 1) {
+                            eventMarkers = '<div class="event-marker"></div>';
+                        } else {
+                            eventMarkers = `<div class="multiple-events">${comunicados.length}</div>`;
+                        }
+                    }
+
+                    calendarHTML += `<div class="${dayClass}" data-date="${dateStr}">
+                        ${day}
+                        ${eventMarkers}
+                    </div>`;
+                }
+
+                calendarHTML += `
+                        </div>
+                        <div class="calendar-actions">
+                            <button class="btn refresh-btn">Atualizar</button>
+                            <button class="btn view-all">Ver Todos</button>
+                        </div>
+                    </div>
+                `;
+
+                calendarContainer.innerHTML = calendarHTML;
+
+                // Event listeners
+                document.querySelector('.prev-month').addEventListener('click', function () {
+                    navigateMonth(-1);
+                });
+
+                document.querySelector('.next-month').addEventListener('click', function () {
+                    navigateMonth(1);
+                });
+
+                document.querySelector('.refresh-btn').addEventListener('click', function () {
+                    loadComunicados();
+                });
+
+                document.querySelector('.view-all').addEventListener('click', function () {
+                    showAllComunicados();
+                });
+
+                // Event listeners para os dias
+                document.querySelectorAll('.day').forEach(day => {
+                    day.addEventListener('click', function () {
+                        const dateStr = this.getAttribute('data-date');
+                        if (dateStr) {
+                            showDayComunicados(dateStr);
+                        }
+                    });
+                });
+            }
+
+            function navigateMonth(direction) {
+                currentMonth += direction;
+
+                if (currentMonth < 1) {
+                    currentMonth = 12;
+                    currentYear--;
+                } else if (currentMonth > 12) {
+                    currentMonth = 1;
+                    currentYear++;
+                }
+
+                renderCalendar(currentMonth, currentYear);
+            }
+
+            function showDayComunicados(dateStr) {
+                const date = new Date(dateStr);
+                const day = date.getDate();
+                const monthNames = [
+                    'Janeiro', 'Fevereiro', 'Março', 'Abril',
+                    'Maio', 'Junho', 'Julho', 'Agosto',
+                    'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+                ];
+                const weekdays = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+
+                // Atualizar header do modal
+                document.getElementById('modalDay').textContent = day;
+                document.getElementById('modalDate').textContent = `${day} de ${monthNames[date.getMonth()]} ${date.getFullYear()}`;
+                document.getElementById('modalWeekday').textContent = weekdays[date.getDay()];
+
+                // Buscar comunicados do dia
+                const dayComunicados = comunicadosData[dateStr];
+                const modalEventsContainer = document.getElementById('modalEvents');
+
+                if (dayComunicados && dayComunicados.length > 0) {
+                    let comunicadosHTML = '';
+                    dayComunicados.forEach(comunicado => {
+                        comunicadosHTML += `
+                            <div class="comunicado-item">
+                                <div class="comunicado-header">
+                                    <h4 class="comunicado-titulo">${comunicado.titulo}</h4>
+                                    <span class="comunicado-destinatario">${comunicado.destinatario}</span>
+                                </div>
+                                <div class="comunicado-descricao">${comunicado.descricao}</div>
+                                ${comunicado.arquivo ? `
+                                    <div class="comunicado-arquivo">
+                                        <a href="uploads/${comunicado.arquivo}" class="arquivo-link" target="_blank">
+                                            📎 Ver Arquivo
+                                        </a>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `;
+                    });
+                    modalEventsContainer.innerHTML = comunicadosHTML;
+                } else {
+                    modalEventsContainer.innerHTML = `
+                        <div class="no-events">
+                            <div class="no-events-icon">📅</div>
+                            <p>Nenhum comunicado programado para este dia.</p>
+                        </div>
+                    `;
+                }
+
+                // Mostrar modal
+                modal.style.display = "block";
+            }
+
+            function showAllComunicados() {
+                let allComunicadosHTML = 'Todos os Comunicados:\n\n';
+                let hasComunicados = false;
+
+                Object.keys(comunicadosData).sort().forEach(dateStr => {
+                    const date = new Date(dateStr);
+                    const comunicados = comunicadosData[dateStr];
+
+                    if (comunicados && comunicados.length > 0) {
+                        hasComunicados = true;
+                        allComunicadosHTML += `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}:\n`;
+                        comunicados.forEach(comunicado => {
+                            allComunicadosHTML += `• ${comunicado.titulo} (${comunicado.destinatario})\n`;
+                        });
+                        allComunicadosHTML += '\n';
+                    }
+                });
+
+                if (!hasComunicados) {
+                    allComunicadosHTML = 'Nenhum comunicado encontrado.';
+                }
+
+                alert(allComunicadosHTML);
+            }
+        });
+    </script>
+</body>
+
+</html>
