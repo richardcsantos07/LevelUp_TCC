@@ -42,7 +42,7 @@ error_log("Professor logado - ID: $professor_id, Nome: $professor_nome, Inst: $i
                 </div>
             </div>
             <div class="logo">
-                <h2>Levelup</h2>
+                <img src="../img/logo2.jpg" alt="">
             </div>
             <div class="menu-container">
                 <ul class="nav-menu">

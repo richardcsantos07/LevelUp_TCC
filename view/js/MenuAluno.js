@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Inicializar o controle do menu colapsável
     initializeMenuToggle();
+    initializeTasksMenu();
 
     // Set active link in sidebar
     function setActiveLink() {
@@ -328,6 +329,45 @@ function initializeMenuToggle() {
     if (window.innerWidth <= 768) {
         toggleMenu(); // Fecha o menu em mobile
     }
+}
+
+function initializeTasksMenu() {
+    const tasksLink = document.querySelector('.sidebar a[href="#"]'); // Ou selecione pelo texto "Tarefas"
+    const activitiesOverlay = document.getElementById('activities-overlay');
+    const closeActivities = document.getElementById('close-activities');
+    
+    if (!tasksLink || !activitiesOverlay) return;
+
+    // Evento para abrir as atividades
+    tasksLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        activitiesOverlay.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    });
+
+    // Evento para fechar as atividades
+    if (closeActivities) {
+        closeActivities.addEventListener('click', function() {
+            activitiesOverlay.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+    }
+
+    // Fechar ao clicar fora do conteúdo
+    activitiesOverlay.addEventListener('click', function(e) {
+        if (e.target === activitiesOverlay) {
+            activitiesOverlay.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+    });
+
+    // Fechar com ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && activitiesOverlay.style.display === 'flex') {
+            activitiesOverlay.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+    });
 }
 
 // Alternativa: Função para criar botão no top-bar (opcional)
