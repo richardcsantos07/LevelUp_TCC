@@ -364,6 +364,14 @@ h1, h2, h3, h4, h5, h6 {
 
 .sidebar-collapsed .menu-container {
    margin-top: -95px;
+   
+   
+}
+
+.sidebar-collapsed .menu-container ul li a i {
+   margin-left: -5px;
+   
+   
 }
 
 .nav-menu {

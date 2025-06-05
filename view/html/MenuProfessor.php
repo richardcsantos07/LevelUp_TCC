@@ -46,17 +46,12 @@ error_log("Professor logado - ID: $professor_id, Nome: $professor_nome, Inst: $i
             </div>
             <div class="menu-container">
                 <ul class="nav-menu">
-                    <li>
-                        <a href="#" class="active">
-                            <i class="fas fa-home"></i>
-                            <span>Home</span>
-                        </a>
-                    </li>
+                    
                     
                     <li>
-                        <a href="#">
-                            <i class="fas fa-book"></i>
-                            <span>Matérias</span>
+                        <a href="Home.html">
+                            <i class="fas fa-gamepad"></i>
+                            <span>Jogos</span>
                         </a>
                     </li>
                     <li>
@@ -66,7 +61,7 @@ error_log("Professor logado - ID: $professor_id, Nome: $professor_nome, Inst: $i
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="configuracoes.html">
                             <i class="fas fa-cog"></i>
                             <span>Configurações</span>
                         </a>
