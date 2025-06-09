@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genius</title>
+    <meta name="author" content="Júlia e Viana">
+    
+    <!-- Link para a fonte -->
+    <link href="https://fonts.googleapis.com/css2?family=Original+Surfer&display=swap" rel="stylesheet">
+    
+    <!-- Estilos CSS -->
+    <link rel="stylesheet" href="CSS/style.css">
+    <link rel="shortcut icon" href="IMG/icon.ico" type="image/x-icon">
+
+    <!-- Áudios para o jogo -->
+    <audio id="clip1" src="https://s3.amazonaws.com/freecodecamp/simonSound1.mp3"></audio>
+    <audio id="clip2" src="https://s3.amazonaws.com/freecodecamp/simonSound2.mp3"></audio>
+    <audio id="clip3" src="https://s3.amazonaws.com/freecodecamp/simonSound3.mp3"></audio>
+    <audio id="clip4" src="https://s3.amazonaws.com/freecodecamp/simonSound4.mp3"></audio>
+</head>
+
+<body>
+    <div id="outer-circle">
+        <div id="topleft"></div>
+        <div id="topright"></div>
+        <div id="bottomleft"></div>
+        <div id="bottomright"></div>
+        
+        <div id="inner-circle">
+            <!-- Título do jogo -->
+            <div id="title" class="font-effect-emboss">GENIUS</div>
+
+            <!-- Controles do jogo -->
+            <div id="switches">
+                <label for="on">Ligar</label>
+                <input type="checkbox" class="toggle" id="on" aria-label="Ligar">
+                
+                <button class="button" id="start" aria-label="Iniciar o jogo">INÍCIO</button>
+                
+                <label for="strict">Difícil</label>
+                <input type="checkbox" class="toggle" id="strict" aria-label="Modo difícil">
+            </div>
+            
+            <!-- Indicação de status -->
+            <div id="turn" aria-live="polite"></div>
+            <div class="text2">CONTAGEM</div>
+        </div>
+    </div>
+
+    <!-- Script JS -->
+    <script src="JS/script.js"></script>
+</body>
+
+</html>

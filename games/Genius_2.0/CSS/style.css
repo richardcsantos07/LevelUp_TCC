@@ -1,0 +1,167 @@
+/* Reset básico para box-sizing */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: rgba(174, 91, 149, 0.806);
+    font-family: Arial, sans-serif;
+}
+
+.toggle {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+.button {
+    border-radius: 45%;
+    font-size: 1em;
+    background-color: lightgray;
+    transition: background-color 0.3s ease; /* Efeito de transição */
+    font-family: 'Original Surfer', cursive;
+}
+
+.button:hover {
+    background-color: rgb(197, 107, 191);
+}
+
+/* Configuração dos switches e textos */
+#switches {
+    position: absolute;
+    font-family: 'Original Surfer', cursive;
+    margin-left: 26px;
+    margin-top: 110px;
+}
+
+.text1,
+.text2 {
+    position: absolute;
+    font-family: 'Original Surfer', cursive;
+}
+
+.text1 {
+    margin-left: 29px;
+    margin-top: 142px;
+}
+
+.text1 span:last-child {
+    padding-left: 70px;
+}
+
+.text2 {
+    margin-left: 70px;
+    margin-top: 197px;
+}
+
+#title {
+    font-family: 'Original Surfer', cursive;
+    position: absolute;
+    font-size: 40px;
+    margin-left: 35px;
+    margin-top: 40px;
+    color: white;
+    text-align: center;
+}
+
+#turn {
+    position: absolute;
+    background: #520000;
+    color: red;
+    font-family: Courier, monospace;
+    font-size: 20px;
+    height: 30px;
+    width: 50px;
+    margin-left: 90px;
+    margin-top: 170px;
+    text-align: center;
+    line-height: 30px;
+    border-radius: 5px;
+}
+
+/* Estrutura do círculo externo */
+#outer-circle {
+    background: #385a94;
+    border-radius: 50%;
+    height: 500px;
+    width: 500px;
+    position: relative;
+    border: 10px solid #222;
+    margin: 60px auto;
+    box-shadow: 8px 8px 15px 5px #888888;
+}
+
+/* Configuração de cada quadrante */
+#topleft,
+#topright,
+#bottomleft,
+#bottomright {
+    position: absolute;
+    height: 250px;
+    width: 250px;
+    border: 5px solid #222;
+    transition: background-color 0.3s ease; /* Efeito de transição no hover */
+}
+
+#topleft {
+    border-radius: 250px 0 0 0;
+    background: darkgreen;
+    top: 50%;
+    left: 50%;
+    margin: -250px 0 0 -250px;
+}
+
+#topright {
+    border-radius: 0 250px 0 0;
+    background: darkred;
+    top: 50%;
+    left: 50%;
+    margin: -250px 0 0 0;
+}
+
+#bottomleft {
+    border-radius: 0 0 0 250px;
+    background: rgb(194, 144, 17);
+    top: 50%;
+    left: 50%;
+    margin: 0 -250px 0 -250px;
+}
+
+#bottomright {
+    border-radius: 0 0 250px 0;
+    background: darkblue;
+    top: 50%;
+    left: 50%;
+    margin: 0 0 -250px 0;
+}
+
+/* Efeito de hover nos quadrantes */
+#topleft:hover {
+    background-color: rgb(2, 174, 2);
+}
+
+#topright:hover {
+    background-color: red;
+}
+
+#bottomleft:hover {
+    background-color: rgb(230, 211, 0);
+}
+
+#bottomright:hover {
+    background-color: rgb(0, 81, 255);
+}
+
+/* Círculo interno */
+#inner-circle {
+    position: absolute;
+    background: grey;
+    border-radius: 50%;
+    height: 250px;
+    width: 250px;
+    border: 10px solid #222;
+    top: 50%;
+    left: 50%;
+    margin: -125px 0 0 -125px;
+}

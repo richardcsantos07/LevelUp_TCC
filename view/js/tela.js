@@ -41,16 +41,29 @@ const games = [
 ];
 
 // Função para carregar os jogos
+// Função para carregar os jogos
 function loadGames(filter = "") {
     const gameList = document.getElementById("game-list");
     gameList.innerHTML = "";
     games.filter(game => game.title.toLowerCase().includes(filter.toLowerCase())).forEach(game => {
         const card = document.createElement("div");
         card.className = "game-card";
-        card.innerHTML = `
-            <img src="${game.image}" alt="${game.title}">
-            <h3>${game.title}</h3>
-        `;
+        
+        // Verifica se é o jogo Genius para adicionar o link
+        if (game.title === "Genius") {
+            card.innerHTML = `
+                <a href="../../games/Genius_2.0/index.html" class="game-link">
+                    <img src="${game.image}" alt="${game.title}">
+                    <h3>${game.title}</h3>
+                </a>
+            `;
+        } else {
+            card.innerHTML = `
+                <img src="${game.image}" alt="${game.title}">
+                <h3>${game.title}</h3>
+            `;
+        }
+        
         gameList.appendChild(card);
     });
 }
@@ -66,3 +79,4 @@ document.getElementById("search").addEventListener("input", e => loadGames(e.tar
 
 // Carregar os jogos ao iniciar
 window.onload = () => loadGames();
+
