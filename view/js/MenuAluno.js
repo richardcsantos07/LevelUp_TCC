@@ -21,6 +21,16 @@ document.addEventListener('DOMContentLoaded', function () {
     initializeMenuToggle();
     initializeTasksMenu();
 
+     // Carregar progresso após um pequeno delay para garantir que os elementos estejam prontos
+    setTimeout(() => {
+        loadGameProgress();
+        // Opcional: iniciar polling para atualizações automáticas
+        // startProgressPolling();
+    }, 1000);
+    
+    // Log do ID do aluno para debug
+    console.log('ID do aluno logado:', window.STUDENT_DATA?.id);
+
     // Set active link in sidebar
     function setActiveLink() {
         const currentPage = window.location.pathname.split('/').pop();
@@ -440,33 +450,99 @@ function addToggleStyles() {
 }
 
 // Adicione esta função no final do arquivo, dentro do DOMContentLoaded
-function loadGameProgress() {
-    const studentId = window.STUDENT_DATA?.id;
-    if (!studentId) return;
+// Modifique a função loadGameProgress no MenuAluno.js
+// Adicione estas funções corrigidas ao seu MenuAluno.js
 
+// Função para carregar o progresso do jogo
+function loadGameProgress() {
+    console.log('Carregando progresso do jogo...');
+    
+    // Usar o ID do aluno da sessão
+    const studentId = window.STUDENT_DATA?.id;
+    
+    if (!studentId) {
+        console.error('ID do aluno não encontrado');
+        return;
+    }
+
+    console.log('Student ID:', studentId);
+
+    // Fazer requisição para buscar o progresso
     fetch(`../../controller/getGameProgress.php?studentId=${studentId}&game=genius`)
-    .then(response => response.json())
-    .then(data => {
-        if (data.success && data.progress) {
-            updateGeniusProgress(data.progress.level, data.progress.maxLevels);
-        }
-    })
-    .catch(error => {
-        console.error('Erro ao carregar progresso do jogo:', error);
-    });
+        .then(response => {
+            console.log('Response status:', response.status);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.text(); // Primeiro como texto para debug
+        })
+        .then(text => {
+            console.log('Response text:', text);
+            try {
+                const data = JSON.parse(text);
+                console.log('Response data:', data);
+                
+                if (data.success && data.progress) {
+                    updateGeniusProgress(data.progress.level, data.progress.maxLevels);
+                } else {
+                    console.error('Erro ao carregar progresso:', data.message);
+                    // Mesmo com erro, atualizar com valores padrão
+                    updateGeniusProgress(0, 10);
+                }
+            } catch (e) {
+                console.error('Erro ao fazer parse do JSON:', e);
+                console.error('Response não é JSON válido:', text);
+                updateGeniusProgress(0, 10);
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao carregar progresso do jogo:', error);
+            // Em caso de erro, mostrar progresso zerado
+            updateGeniusProgress(0, 10);
+        });
 }
 
+// Função para atualizar a exibição do progresso do Genius
 function updateGeniusProgress(currentLevel, maxLevels) {
+    console.log(`Atualizando progresso: ${currentLevel}/${maxLevels}`);
+    
     const progressElement = document.getElementById('genius-progress');
+    
     if (progressElement && maxLevels > 0) {
         const percentage = Math.round((currentLevel / maxLevels) * 100);
-        progressElement.querySelector('.progress').style.width = `${percentage}%`;
-        progressElement.querySelector('.progress-info').textContent = `${percentage}% Completo (Nível ${currentLevel}/${maxLevels})`;
+        const progressBar = progressElement.querySelector('.progress');
+        const progressInfo = progressElement.querySelector('.progress-info');
+        
+        if (progressBar) {
+            progressBar.style.width = `${percentage}%`;
+            console.log(`Progress bar width set to: ${percentage}%`);
+        }
+        
+        if (progressInfo) {
+            const infoText = currentLevel > 0 
+                ? `${percentage}% Completo (Nível ${currentLevel}/${maxLevels})`
+                : '0% Completo';
+            progressInfo.textContent = infoText;
+            console.log(`Progress info updated: ${infoText}`);
+        }
+        
+        // Adicionar classe de destaque se o jogo estiver completo
+        if (percentage === 100) {
+            progressElement.classList.add('completed-game');
+        } else {
+            progressElement.classList.remove('completed-game');
+        }
+    } else {
+        console.error('Elemento genius-progress não encontrado ou maxLevels inválido');
     }
 }
 
-// Chame esta função quando a página carregar
-loadGameProgress();
+// Função para atualizar o progresso periodicamente (opcional)
+function startProgressPolling() {
+    // Atualizar a cada 30 segundos
+    setInterval(loadGameProgress, 30000);
+}
+
 
 
 });

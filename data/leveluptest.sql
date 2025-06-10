@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 02/06/2025 às 00:55
+-- Tempo de geração: 10/06/2025 às 14:46
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -125,7 +125,23 @@ CREATE TABLE `crianca` (
 --
 
 INSERT INTO `crianca` (`id`, `nome`, `email`, `senha`, `idResponsavel`, `dataNasc`, `nivelAcesso`, `telefone`) VALUES
-(4, 'Richard Camargo', 'richardcamargodosantos@gmail.com', '', 3, '2005-11-07', 'user', '11930248633');
+(4, 'Richard Camargo', 'richardcamargodosantos@gmail.com', 'rcds2005', 3, '2005-11-07', 'user', '11930248633');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `game_progress`
+--
+
+CREATE TABLE `game_progress` (
+  `id` int(11) NOT NULL,
+  `id_aluno` int(11) NOT NULL,
+  `game_name` varchar(50) NOT NULL,
+  `current_level` int(11) NOT NULL,
+  `max_levels` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -155,7 +171,7 @@ CREATE TABLE `instituicao` (
 --
 
 INSERT INTO `instituicao` (`id`, `nome`, `email`, `senha`, `nivelAcesso`, `cnpj`, `tipoInstituicao`, `dataCriacaoInst`, `estado`, `bairro`, `rua`, `num`, `cep`, `telefone`) VALUES
-(3, 'Etec Uirapuru', 'uirapuru@etec.sp.gov.br', 'uirapuru1234', 'admin', '55555555555555', 'pública', '2025-04-22', 'SÃO PAULO', 'Jardim Cláudia', 'Rua General Teixeira de Campos', 233, '05546-000', '11930248633');
+(3, 'Etec Uirapuru CPS', 'uirapuru@etec.sp.gov.br', 'uirapuru1234', 'admin', '55555555555555', 'pública', '2025-04-22', 'SÃO PAULO', 'Jardim Cláudia', 'Rua General Teixeira de Campos', 233, '05546-000', '11930248633');
 
 -- --------------------------------------------------------
 
@@ -220,7 +236,7 @@ CREATE TABLE `responsavel` (
 --
 
 INSERT INTO `responsavel` (`id`, `nome`, `email`, `senha`, `dataNasc`, `nivelAcesso`, `telefone`, `cpf`) VALUES
-(3, 'Silvio Donizete dos Santos', 'silshe@globomail.com', 'silvio123', '1982-06-15', 'admin', '(11) 974633374', '521.313.828-47');
+(3, 'Silvio Donizete dos Santos', 'silshe@globomail.com', 'silvio1234', '1982-06-15', 'admin', '(11) 974633374', '521.313.828-47');
 
 -- --------------------------------------------------------
 
@@ -282,6 +298,13 @@ ALTER TABLE `crianca`
   ADD KEY `idResponsavel` (`idResponsavel`);
 
 --
+-- Índices de tabela `game_progress`
+--
+ALTER TABLE `game_progress`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id_aluno` (`id_aluno`,`game_name`);
+
+--
 -- Índices de tabela `instituicao`
 --
 ALTER TABLE `instituicao`
@@ -334,6 +357,12 @@ ALTER TABLE `comunicado`
 --
 ALTER TABLE `crianca`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT de tabela `game_progress`
+--
+ALTER TABLE `game_progress`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `instituicao`
@@ -393,6 +422,12 @@ ALTER TABLE `comunicado`
 --
 ALTER TABLE `crianca`
   ADD CONSTRAINT `crianca_ibfk_1` FOREIGN KEY (`idResponsavel`) REFERENCES `responsavel` (`id`) ON DELETE SET NULL;
+
+--
+-- Restrições para tabelas `game_progress`
+--
+ALTER TABLE `game_progress`
+  ADD CONSTRAINT `game_progress_ibfk_1` FOREIGN KEY (`id_aluno`) REFERENCES `aluno` (`ra`);
 
 --
 -- Restrições para tabelas `professor`

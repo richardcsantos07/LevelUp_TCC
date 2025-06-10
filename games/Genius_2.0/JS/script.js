@@ -10,6 +10,9 @@ let noise = true;
 let on = false;
 let win;
 
+const TOTAL_LEVELS = 10; // Total de fases no jogo
+let currentLevel = 0; // Fase atual do jogador
+
 const turnCounter = document.querySelector("#turn");
 const topLeft = document.querySelector("#topleft");
 const topRight = document.querySelector("#topright");
@@ -43,6 +46,7 @@ function play() {
     flash = 0;
     intervalId = 0;
     turn = 1;
+    currentLevel = 1; // Começar do nível 1
     turnCounter.innerHTML = "1";
     good = true;
     compTurn = true;
@@ -132,26 +136,29 @@ function check() {
         good = false;
     }
 
-    if (playerOrder.length === 20 && good) {
-        winGame();
-    }
-
     if (!good) {
+        console.log(`Usuário perdeu no nível ${turn}`);
+        on = false;
+        clearInterval(intervalId);
         flashColor();
         turnCounter.innerHTML = "ERRO";
-        setTimeout(() => {
-            turnCounter.innerHTML = turn;
-            clearColor();
-            if (strict) {
-                play();
-            } else {
-                resetTurn();
-            }
-        }, 800);
-        noise = false;
-    } else if (turn === playerOrder.length && good && !win) {
+        return;
+    }
+
+    if (turn === playerOrder.length && good && !win) {
+        currentLevel = turn; // Sincronizar nível com o contador
+        
+        // Salvar progresso a cada nível completado
+        saveProgress();
+        
         turn++;
-        resetTurn();
+        
+        if (turn > TOTAL_LEVELS) {
+            winGame();
+        } else {
+            showLevelUp();
+            resetTurn();
+        }
     }
 }
 
@@ -160,7 +167,7 @@ function resetTurn() {
     compTurn = true;
     flash = 0;
     turnCounter.innerHTML = turn;
-    intervalId = setInterval(gameTurn, 800);
+    intervalId = setInterval(gameTurn, getSpeedForLevel(currentLevel));
 }
 
 function winGame() {
@@ -168,4 +175,80 @@ function winGame() {
     turnCounter.innerHTML = "WIN!";
     on = false;
     win = true;
+    console.log("Usuário ganhou o jogo!");
+    // Progresso já foi salvo na função check()
+}
+
+function saveProgress() {
+    console.log(`Salvando progresso: Nível ${currentLevel}`);
+    
+    fetch('../../controller/saveGameProgress.php', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            game: 'genius',
+            level: currentLevel,
+            maxLevels: TOTAL_LEVELS
+        })
+    })
+    .then(response => {
+        console.log('Response status:', response.status);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.text(); // Primeiro como texto para debug
+    })
+    .then(text => {
+        console.log('Response text:', text);
+        try {
+            const data = JSON.parse(text);
+            console.log('Response data:', data);
+            if (data.success) {
+                console.log('Progresso salvo com sucesso!');
+            } else {
+                console.error('Erro ao salvar progresso:', data.message);
+            }
+        } catch (e) {
+            console.error('Erro ao fazer parse do JSON:', e);
+            console.error('Response não é JSON válido:', text);
+        }
+    })
+    .catch(error => {
+        console.error('Erro na requisição:', error);
+    });
+}
+
+function getSpeedForLevel(level) {
+    // Velocidades em milissegundos - diminui conforme avança
+    const speeds = [1000, 900, 800, 700, 600, 500, 450, 400, 350, 300];
+    return speeds[Math.min(level - 1, speeds.length - 1)];
+}
+
+function showLevelUp() {
+    const levelDisplay = document.createElement('div');
+    levelDisplay.id = 'level-display';
+    levelDisplay.textContent = `Fase ${currentLevel} Completa!`;
+    levelDisplay.style.position = 'absolute';
+    levelDisplay.style.top = '50%';
+    levelDisplay.style.left = '50%';
+    levelDisplay.style.transform = 'translate(-50%, -50%)';
+    levelDisplay.style.color = 'white';
+    levelDisplay.style.fontSize = '24px';
+    levelDisplay.style.fontFamily = '"Original Surfer", cursive';
+    levelDisplay.style.zIndex = '1000';
+    levelDisplay.style.textShadow = '2px 2px 4px rgba(0,0,0,0.8)';
+    levelDisplay.style.background = 'rgba(0,0,0,0.7)';
+    levelDisplay.style.padding = '10px 20px';
+    levelDisplay.style.borderRadius = '10px';
+    
+    document.getElementById('inner-circle').appendChild(levelDisplay);
+    
+    setTimeout(() => {
+        if (levelDisplay.parentNode) {
+            levelDisplay.remove();
+        }
+    }, 2000);
 }

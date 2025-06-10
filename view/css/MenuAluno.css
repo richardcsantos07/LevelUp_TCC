@@ -920,10 +920,25 @@ body {
 
 /* Adicione ao seu MenuAluno.css */
 #genius-progress .progress {
-    background-color: #4caf50; /* Verde para combinar com o Genius */
+    background-color: var(--primary-color); /* Verde para combinar com o Genius */
 }
 
 #genius-progress:hover {
     transform: translateY(-3px);
     box-shadow: 0 4px 8px rgba(76, 175, 80, 0.2);
+}
+
+.completed-game {
+    border: 2px solid #4caf50 !important;
+    background: linear-gradient(135deg, #e8f5e9, #f1f8e9) !important;
+}
+
+.completed-game .progress-title {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.completed-game .progress {
+    background: linear-gradient(90deg, #4caf50, #66bb6a) !important;
+    box-shadow: 0 2px 4px rgba(76, 175, 80, 0.3);
 }

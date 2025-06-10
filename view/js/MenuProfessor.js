@@ -70,13 +70,13 @@ function initializeCustomSelect() {
     });
 }
 
-// Função para inicializar o sidebar
 function initializeSidebar() {
-    const menuToggle = document.querySelector('.menu-toggle');
+    const menuToggleBtn = document.getElementById('menuToggleBtn');
     const container = document.querySelector('.container');
     
-    if (menuToggle) {
-        menuToggle.addEventListener('click', function() {
+    // Controle do menu hambúrguer
+    if (menuToggleBtn) {
+        menuToggleBtn.addEventListener('click', function() {
             container.classList.toggle('sidebar-collapsed');
         });
     }
@@ -85,17 +85,26 @@ function initializeSidebar() {
     const menuItems = document.querySelectorAll('.nav-menu a');
     menuItems.forEach(item => {
         item.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Remove classe ativa de todos os itens
-            menuItems.forEach(mi => mi.classList.remove('active'));
-            
-            // Adiciona classe ativa ao item clicado
-            this.classList.add('active');
-            
-            // Adicionar navegação aqui se necessário
-            const linkText = this.querySelector('span').textContent;
-            console.log("Menu clicado: " + linkText);
+            // Se for um link de âncora (#), prevenir comportamento padrão
+            if (this.getAttribute('href') === '#') {
+                e.preventDefault();
+                
+                // Remove classe ativa de todos os itens
+                menuItems.forEach(mi => mi.classList.remove('active'));
+                
+                // Adiciona classe ativa ao item clicado
+                this.classList.add('active');
+                
+                const linkText = this.querySelector('span').textContent;
+                console.log("Menu clicado: " + linkText);
+                
+                // Adicionar lógica específica para cada item aqui
+                if (linkText === 'Tarefas') {
+                    // Lógica para abrir a seção de tarefas
+                    console.log("Abrir seção de tarefas");
+                }
+            }
+            // Links com href válido seguirão normalmente
         });
     });
 }
