@@ -439,6 +439,35 @@ function addToggleStyles() {
     document.head.appendChild(style);
 }
 
+// Adicione esta função no final do arquivo, dentro do DOMContentLoaded
+function loadGameProgress() {
+    const studentId = window.STUDENT_DATA?.id;
+    if (!studentId) return;
+
+    fetch(`../../controller/getGameProgress.php?studentId=${studentId}&game=genius`)
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.progress) {
+            updateGeniusProgress(data.progress.level, data.progress.maxLevels);
+        }
+    })
+    .catch(error => {
+        console.error('Erro ao carregar progresso do jogo:', error);
+    });
+}
+
+function updateGeniusProgress(currentLevel, maxLevels) {
+    const progressElement = document.getElementById('genius-progress');
+    if (progressElement && maxLevels > 0) {
+        const percentage = Math.round((currentLevel / maxLevels) * 100);
+        progressElement.querySelector('.progress').style.width = `${percentage}%`;
+        progressElement.querySelector('.progress-info').textContent = `${percentage}% Completo (Nível ${currentLevel}/${maxLevels})`;
+    }
+}
+
+// Chame esta função quando a página carregar
+loadGameProgress();
+
 
 });
 

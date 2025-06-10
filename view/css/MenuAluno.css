@@ -917,3 +917,13 @@ body {
         width: 95%;
     }
 }
+
+/* Adicione ao seu MenuAluno.css */
+#genius-progress .progress {
+    background-color: #4caf50; /* Verde para combinar com o Genius */
+}
+
+#genius-progress:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.2);
+}
