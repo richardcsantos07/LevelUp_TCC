@@ -200,14 +200,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Update profile info fields
         const fields = [
-            { id: 'student-id', value: aluno.id },
-            { id: 'student-email', value: aluno.email },
-            { id: 'student-phone', value: aluno.telefone },
-            { id: 'student-birth', value: formatDate(aluno.dataNasc) },
-            { id: 'student-class', value: aluno.turma },
-            { id: 'responsible-name', value: aluno.nomeResponsavel },
-            { id: 'responsible-phone', value: aluno.telefoneResponsavel }
-        ];
+        { id: 'student-id', value: aluno.ra || aluno.id },
+        { id: 'student-email', value: aluno.email },
+        { id: 'student-phone', value: aluno.telefone || aluno.tell },
+        { id: 'student-birth', value: formatDate(aluno.dataNasc) },
+        { id: 'student-class', value: aluno.turma },
+        { id: 'responsible-name', value: aluno.nomeResponsavel || aluno.nome_responsavel },
+        { id: 'responsible-phone', value: aluno.telefoneResponsavel || aluno.tell_responsavel }
+    ];
 
         fields.forEach(field => {
             const element = document.getElementById(field.id);

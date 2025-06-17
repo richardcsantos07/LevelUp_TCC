@@ -105,7 +105,7 @@ $instObj = new Instituicao();
                     <span class="menu-icon">⚙️</span>
                     Configurações
                 </a>
-                <a href="#sair" class="menu-item">
+                <a href="../controller/logout.php" class="menu-item">
                     <span class="menu-icon">🚪</span>
                     Sair
                 </a>
