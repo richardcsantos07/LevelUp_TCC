@@ -236,7 +236,7 @@ class Aluno
         if ($stmt->rowCount() > 0) {
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } else {
-            return array(); // Retorna array vazio em vez de null para facilitar o loop
+            return array(); 
         }
     }
 
