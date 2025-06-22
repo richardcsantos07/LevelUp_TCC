@@ -1,632 +1,705 @@
-document.addEventListener('DOMContentLoaded', function () {
-    console.log('Script carregado'); 
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("Menu Instituição carregado")
 
-    // Mostrar/esconder submenus
-    const toggleItems = document.querySelectorAll('.menu-item.has-submenu');
-    toggleItems.forEach(item => {
-        item.addEventListener('click', function () {
-            const submenuId = this.getAttribute('data-toggle');
-            const submenu = document.getElementById(submenuId);
-            submenu.classList.toggle('open');
-        });
-    });
+  // Initialize all components
+  initializeMenuToggle()
+  initializeNavigation()
+  initializeSubmenus()
+  initializeQuickActions()
+  initializeModals()
+  initializeFormHandlers()
+  initializeSearch()
 
-    // Navegação entre as seções
-    const menuItems = document.querySelectorAll('.menu-item');
-    menuItems.forEach(item => {
-        item.addEventListener('click', function (e) {
-            // Ignorar para items com submenu
-            if (this.classList.contains('has-submenu')) return;
+  // Load initial data if needed
+  loadDashboardData()
+})
 
-            //Bloqueia apenas links inválidis como '#'
-            if (!this.href || this.href === '#') {
-                e.preventDefault(); 
-            }
+// ==================== MENU TOGGLE ====================
+function initializeMenuToggle() {
+  const menuToggleBtn = document.getElementById("menuToggleBtn")
+  const container = document.querySelector(".container")
 
-            // Remover classe active de todos os items
-            menuItems.forEach(menuItem => {
-                if (!menuItem.classList.contains('has-submenu')) {
-                    menuItem.classList.remove('active');
-                }
-            });
+  if (!menuToggleBtn || !container) return
 
-            // Adicionar classe active ao item clicado
-            this.classList.add('active');
+  let isCollapsed = false
 
-            // Mostrar a seção correspondente
-            const sectionId = this.getAttribute('data-section');
-            if (sectionId) {
-                const sections = document.querySelectorAll('.content-section');
-                sections.forEach(section => {
-                    section.classList.remove('active');
-                });
+  menuToggleBtn.addEventListener("click", () => {
+    isCollapsed = !isCollapsed
 
-                const activeSection = document.getElementById(sectionId);
-                if (activeSection) {
-                    activeSection.classList.add('active');
-                }
-
-                // Se a seção for "configuracoes", carregar dados da instituição
-                if (sectionId === 'configuracoes') {
-                    carregarDadosInstituicao();
-                }
-            }
-        });
-    });
-
-    // Inicializar eventos de edição de aluno após o DOM estar carregado
-    inicializarEventosEdicaoAluno();
-
-    // Inicializar eventos de edição de professor após o DOM estar carregado
-    inicializarEventosEdicaoProfessor();
-
-    // Inicializar eventos dos formulários de edição
-    inicializarFormularioEdicaoAluno();
-    inicializarFormularioEdicaoProfessor();
-
-    // Carregar dados da instituição ao carregar a página, se a seção "configuracoes" estiver ativa
-    if (document.getElementById('configuracoes').classList.contains('active')) {
-        carregarDadosInstituicao();
+    if (isCollapsed) {
+      container.classList.add("sidebar-collapsed")
+    } else {
+      container.classList.remove("sidebar-collapsed")
     }
 
-    // Inicializar formulário de configurações
-    inicializarFormularioConfiguracoes();
-});
+    // Store state in localStorage
+    localStorage.setItem("sidebarCollapsed", isCollapsed)
+  })
 
-// ==================== FUNÇÕES PARA ALUNOS ====================
+  // Restore state from localStorage
+  const savedState = localStorage.getItem("sidebarCollapsed")
+  if (savedState === "true") {
+    container.classList.add("sidebar-collapsed")
+    isCollapsed = true
+  }
 
-// Função para inicializar eventos de edição de aluno
-function inicializarEventosEdicaoAluno() {
-    const botoesEditar = document.querySelectorAll('.btn-editar-aluno');
-    botoesEditar.forEach(botao => {
-        botao.addEventListener('click', function () {
-            const alunoId = this.getAttribute('data-id');
-            abrirModalEditarAluno(alunoId);
-        });
-    });
+  // Auto-collapse on mobile
+  if (window.innerWidth <= 768) {
+    container.classList.add("sidebar-collapsed")
+  }
 }
 
-// ==================== FUNÇÕES PARA INSTITUIÇÃO ====================
+// ==================== NAVIGATION ====================
+function initializeNavigation() {
+  const menuItems = document.querySelectorAll(".menu-item[data-section]")
+  const pageTitle = document.getElementById("pageTitle")
 
-// Função para carregar dados da instituição e preencher o formulário de configurações
-function carregarDadosInstituicao() {
-    fetch('../controller/getInst.php')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Erro ao buscar dados da instituição: ' + response.status);
-            }
-            return response.json();
+  menuItems.forEach((item) => {
+    item.addEventListener("click", function (e) {
+      e.preventDefault()
+
+      const sectionId = this.getAttribute("data-section")
+      if (!sectionId) return
+
+      // Update active menu item
+      menuItems.forEach((menuItem) => {
+        menuItem.classList.remove("active")
+      })
+      this.classList.add("active")
+
+      // Show corresponding section
+      showSection(sectionId)
+
+      // Update page title
+      updatePageTitle(sectionId)
+    })
+  })
+}
+
+function showSection(sectionId) {
+  // Hide all sections
+  const sections = document.querySelectorAll(".content-section")
+  sections.forEach((section) => {
+    section.classList.remove("active")
+  })
+
+  // Show target section
+  const targetSection = document.getElementById(sectionId)
+  if (targetSection) {
+    targetSection.classList.add("active")
+
+    // Load section-specific data
+    loadSectionData(sectionId)
+  }
+}
+
+function updatePageTitle(sectionId) {
+  const pageTitle = document.getElementById("pageTitle")
+  if (!pageTitle) return
+
+  const titles = {
+    dashboard: "Dashboard",
+    "cadastrar-aluno": "Cadastrar Aluno",
+    "listar-alunos": "Alunos Cadastrados",
+    "cadastrar-professor": "Cadastrar Professor",
+    "listar-professores": "Professores Cadastrados",
+    "cadastrar-turma": "Criar Turma",
+    "listar-turmas": "Gerenciar Turmas",
+    comunicados: "Comunicados",
+    configuracoes: "Configurações",
+  }
+
+  pageTitle.textContent = titles[sectionId] || "LevelUP Admin"
+}
+
+// ==================== SUBMENUS ====================
+function initializeSubmenus() {
+  const submenuToggles = document.querySelectorAll(".menu-item.has-submenu")
+
+  submenuToggles.forEach((toggle) => {
+    toggle.addEventListener("click", function (e) {
+      e.preventDefault()
+
+      const submenuId = this.getAttribute("data-toggle")
+      const submenu = document.getElementById(submenuId)
+
+      if (submenu) {
+        const isOpen = submenu.classList.contains("open")
+
+        // Close all other submenus
+        document.querySelectorAll(".submenu.open").forEach((openSubmenu) => {
+          if (openSubmenu !== submenu) {
+            openSubmenu.classList.remove("open")
+            openSubmenu.previousElementSibling.classList.remove("open")
+          }
         })
-        .then(data => {
-            if (data.success) {
-                preencherFormularioConfiguracoes(data.instituicao);
-            } else {
-                alert('Erro: ' + data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Erro ao carregar dados da instituição:', error);
-            alert('Erro ao carregar dados da instituição.');
-        });
-}
 
-// Função para preencher o formulário de configurações com os dados da instituição
-function preencherFormularioConfiguracoes(instituicao) {
-    document.getElementById('nome-instituicao').value = instituicao.nome || '';
-    document.getElementById('email-contato').value = instituicao.email || '';
-    document.getElementById('telefone-contato').value = instituicao.telefone || '';
-    document.getElementById('cep').value = instituicao.cep || '';
-    document.getElementById('estado').value = instituicao.estado || '';
-    document.getElementById('bairro').value = instituicao.bairro || '';
-    document.getElementById('rua').value = instituicao.rua || '';
-    document.getElementById('num').value = instituicao.num || '';
-    document.getElementById('senha-instituicao').value = '';
-}
-
-// Função para inicializar o formulário de configurações
-function inicializarFormularioConfiguracoes() {
-    const formConfiguracoes = document.getElementById('form-configuracoes');
-    if (formConfiguracoes) {
-        formConfiguracoes.addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            // Validação básica
-            const nome = document.getElementById('nome-instituicao').value.trim();
-            const email = document.getElementById('email-contato').value.trim();
-
-            if (!nome || !email) {
-                alert('Por favor, preencha os campos obrigatórios: Nome da Instituição e E-mail.');
-                return;
-            }
-
-            // Mostrar indicador de carregamento
-            const btnSubmit = this.querySelector('button[type="submit"]');
-            const textoOriginal = btnSubmit.textContent;
-            btnSubmit.textContent = 'Atualizando...';
-            btnSubmit.disabled = true;
-
-            // Criar FormData com os dados do formulário
-            const formData = new FormData();
-            formData.append('nome-instituicao', nome);
-            formData.append('email-contato', email);
-            formData.append('telefone-contato', document.getElementById('telefone-contato').value.trim());
-            formData.append('cep', document.getElementById('cep').value.trim());
-            formData.append('estado', document.getElementById('estado').value.trim());
-            formData.append('bairro', document.getElementById('bairro').value.trim());
-            formData.append('rua', document.getElementById('rua').value.trim());
-            formData.append('num', document.getElementById('num').value.trim());
-            formData.append('senha-instituicao', document.getElementById('senha-instituicao').value);
-
-            fetch('../controller/updateInst.php', {
-                method: 'POST',
-                body: formData
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Erro na resposta do servidor: ' + response.status);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        alert('Configurações atualizadas com sucesso!');
-                        // Recarregar dados para garantir atualização
-                        carregarDadosInstituicao();
-                    } else {
-                        alert('Erro ao atualizar configurações: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro ao atualizar configurações:', error);
-                    alert('Erro ao atualizar configurações.');
-                })
-                .finally(() => {
-                    btnSubmit.textContent = textoOriginal;
-                    btnSubmit.disabled = false;
-                });
-        });
-    }
-}
-
-function abrirModalEditarAluno(alunoId) {
-    console.log('Abrindo modal para aluno ID:', alunoId);
-
-    fetch(`../controller/getAluno.php?id=${alunoId}`)
-        .then(response => {
-            if (response.status === 404) {
-                throw new Error('Aluno não encontrado');
-            }
-            if (!response.ok) {
-                throw new Error('Erro na resposta do servidor: ' + response.status);
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                preencherFormularioEdicaoAluno(data.aluno);
-                document.getElementById('modal-editar-aluno').classList.add('show');
-            } else {
-                throw new Error(data.message || 'Erro ao carregar dados do aluno');
-            }
-        })
-        .catch(error => {
-            console.error('Erro:', error);
-            alert(error.message);
-        });
-}
-
-// Função para preencher formulário de edição de aluno
-function preencherFormularioEdicaoAluno(aluno) {
-    console.log('Preenchendo formulário de aluno com:', aluno);
-
-    try {
-        document.getElementById('edit-ra-aluno').value = aluno.id || aluno.ra || '';
-        document.getElementById('edit-nome-aluno').value = aluno.nome || '';
-        document.getElementById('edit-email-aluno').value = aluno.email || '';
-        document.getElementById('edit-telefone-aluno').value = aluno.telefone || aluno.tell || '';
-        document.getElementById('edit-data-nascimento').value = aluno.dataNasc || '';
-        document.getElementById('edit-responsavel-aluno').value = aluno.nomeResponsavel || aluno.nome_responsavel || '';
-        document.getElementById('edit-telefone-responsavel').value = aluno.telefoneResponsavel || aluno.tell_responsavel || '';
-
-        // Selecionar a turma correta
-        const selectTurma = document.getElementById('edit-turma-aluno');
-        if (selectTurma && aluno.turma) {
-            selectTurma.value = aluno.turma;
+        // Toggle current submenu
+        if (isOpen) {
+          submenu.classList.remove("open")
+          this.classList.remove("open")
+        } else {
+          submenu.classList.add("open")
+          this.classList.add("open")
         }
-
-        console.log('Formulário de aluno preenchido com sucesso');
-    } catch (error) {
-        console.error('Erro ao preencher formulário de aluno:', error);
-        alert('Erro ao preencher formulário. Verifique o console.');
-    }
+      }
+    })
+  })
 }
 
-// Função para fechar modal de edição de aluno
+// ==================== QUICK ACTIONS ====================
+function initializeQuickActions() {
+  const actionBtns = document.querySelectorAll(".action-btn[data-section]")
+
+  actionBtns.forEach((btn) => {
+    btn.addEventListener("click", function () {
+      const sectionId = this.getAttribute("data-section")
+      if (sectionId) {
+        // Find and click the corresponding menu item
+        const menuItem = document.querySelector(`.menu-item[data-section="${sectionId}"]`)
+        if (menuItem) {
+          menuItem.click()
+        }
+      }
+    })
+  })
+}
+
+// ==================== MODALS ====================
+function initializeModals() {
+  // Close modals when clicking outside
+  document.addEventListener("click", (e) => {
+    if (e.target.classList.contains("modal-backdrop")) {
+      closeAllModals()
+    }
+  })
+
+  // Close modals with ESC key
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      closeAllModals()
+    }
+  })
+
+  // Initialize edit buttons
+  initializeEditButtons()
+}
+
+function closeAllModals() {
+  const modals = document.querySelectorAll(".modal-backdrop")
+  modals.forEach((modal) => {
+    modal.classList.remove("show")
+    document.body.style.overflow = "auto"
+  })
+}
+
+function initializeEditButtons() {
+  // Student edit buttons
+  const editStudentBtns = document.querySelectorAll(".btn-editar-aluno")
+  editStudentBtns.forEach((btn) => {
+    btn.addEventListener("click", function () {
+      const studentId = this.getAttribute("data-id")
+      openEditStudentModal(studentId)
+    })
+  })
+
+  // Teacher edit buttons
+  const editTeacherBtns = document.querySelectorAll(".btn-editar-professor")
+  editTeacherBtns.forEach((btn) => {
+    btn.addEventListener("click", function () {
+      const teacherId = this.getAttribute("data-id")
+      openEditTeacherModal(teacherId)
+    })
+  })
+}
+
+// ==================== STUDENT FUNCTIONS ====================
+function openEditStudentModal(studentId) {
+  console.log("Opening edit modal for student:", studentId)
+
+  showLoadingState("Carregando dados do aluno...")
+
+  fetch(`../controller/getAluno.php?id=${studentId}`)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      return response.json()
+    })
+    .then((data) => {
+      hideLoadingState()
+
+      if (data.success) {
+        populateStudentForm(data.aluno)
+        showModal("modal-editar-aluno")
+      } else {
+        showNotification("Erro ao carregar dados do aluno: " + data.message, "error")
+      }
+    })
+    .catch((error) => {
+      hideLoadingState()
+      console.error("Error:", error)
+      showNotification("Erro ao carregar dados do aluno", "error")
+    })
+}
+
+function populateStudentForm(student) {
+  try {
+    document.getElementById("edit-ra-aluno").value = student.id || student.ra || ""
+    document.getElementById("edit-nome-aluno").value = student.nome || ""
+    document.getElementById("edit-email-aluno").value = student.email || ""
+    document.getElementById("edit-telefone-aluno").value = student.telefone || student.tell || ""
+    document.getElementById("edit-data-nascimento").value = student.dataNasc || ""
+    document.getElementById("edit-responsavel-aluno").value = student.nomeResponsavel || student.nome_responsavel || ""
+    document.getElementById("edit-telefone-responsavel").value =
+      student.telefoneResponsavel || student.tell_responsavel || ""
+
+    const selectTurma = document.getElementById("edit-turma-aluno")
+    if (selectTurma && student.turma) {
+      selectTurma.value = student.turma
+    }
+  } catch (error) {
+    console.error("Error populating student form:", error)
+    showNotification("Erro ao preencher formulário", "error")
+  }
+}
+
 function fecharModalEditarAluno() {
-    const modal = document.getElementById('modal-editar-aluno');
-    modal.classList.remove('show');
-    document.body.style.overflow = 'auto'; // Restaura scroll da página
-
-    // Limpar formulário
-    document.getElementById('form-editar-aluno').reset();
+  closeModal("modal-editar-aluno")
+  document.getElementById("form-editar-aluno").reset()
 }
 
-// Função para inicializar o formulário de edição de aluno
-function inicializarFormularioEdicaoAluno() {
-    const formEditarAluno = document.getElementById('form-editar-aluno');
-    if (formEditarAluno) {
-        formEditarAluno.addEventListener('submit', function (e) {
-            e.preventDefault();
+// ==================== TEACHER FUNCTIONS ====================
+function openEditTeacherModal(teacherId) {
+  console.log("Opening edit modal for teacher:", teacherId)
 
-            console.log('=== INÍCIO SUBMISSÃO FORMULÁRIO ALUNO ===');
+  showLoadingState("Carregando dados do professor...")
 
-            // Validação básica antes de enviar
-            const ra = document.getElementById('edit-ra-aluno').value.trim();
-            const nome = document.getElementById('edit-nome-aluno').value.trim();
-            const email = document.getElementById('edit-email-aluno').value.trim();
-            const telefone = document.getElementById('edit-telefone-aluno').value.trim();
-            const dataNasc = document.getElementById('edit-data-nascimento').value;
+  fetch(`../controller/getProfessor.php?id=${teacherId}`)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      return response.json()
+    })
+    .then((data) => {
+      hideLoadingState()
 
-            console.log('Dados do formulário de aluno:');
-            console.log('RA:', ra);
-            console.log('Nome:', nome);
-            console.log('Email:', email);
-            console.log('Telefone:', telefone);
-            console.log('Data Nasc:', dataNasc);
-
-            if (!nome || !email || !ra || !dataNasc) {
-                alert('Por favor, preencha todos os campos obrigatórios.');
-                return;
-            }
-
-            // Mostrar indicador de carregamento
-            const btnSubmit = this.querySelector('button[type="submit"]');
-            const textoOriginal = btnSubmit.textContent;
-            btnSubmit.textContent = 'Atualizando...';
-            btnSubmit.disabled = true;
-
-            // Criar FormData manualmente com os nomes corretos
-            const formData = new FormData();
-            formData.append('ra-aluno', document.getElementById('edit-ra-aluno').value);
-            formData.append('nome-aluno', document.getElementById('edit-nome-aluno').value);
-            formData.append('email-aluno', document.getElementById('edit-email-aluno').value);
-            formData.append('telefone-aluno', document.getElementById('edit-telefone-aluno').value);
-            formData.append('data-nascimento', document.getElementById('edit-data-nascimento').value);
-            formData.append('responsavel-aluno', document.getElementById('edit-responsavel-aluno').value);
-            formData.append('telefone-responsavel', document.getElementById('edit-telefone-responsavel').value);
-
-            // Adicionar turma se existir
-            const selectTurma = document.getElementById('edit-turma-aluno');
-            if (selectTurma) {
-                formData.append('turma-aluno', selectTurma.value);
-            }
-
-            // Adicionar senha se fornecida
-            const senhaField = document.getElementById('edit-senha-aluno');
-            if (senhaField && senhaField.value.trim()) {
-                formData.append('senha-aluno', senhaField.value);
-            }
-
-            // Debug: Mostrar todos os dados do FormData
-            console.log('FormData de aluno enviado:');
-            for (let [key, value] of formData.entries()) {
-                console.log(key + ':', value);
-            }
-
-            fetch('../controller/updateAluno.php', {
-                method: 'POST',
-                body: formData
-            })
-                .then(response => {
-                    console.log('Response status:', response.status);
-
-                    const contentType = response.headers.get('content-type');
-                    console.log('Content-Type:', contentType);
-
-                    if (contentType && contentType.includes('application/json')) {
-                        return response.json();
-                    } else {
-                        return response.text().then(text => {
-                            console.log('Resposta não-JSON recebida:', text);
-
-                            if (response.ok) {
-                                return { success: true };
-                            } else {
-                                throw new Error('Resposta não-JSON e não bem-sucedida: ' + text);
-                            }
-                        });
-                    }
-                })
-                .then(data => {
-                    console.log('Dados recebidos:', data);
-
-                    if (data.success !== false) {
-                        alert('Aluno atualizado com sucesso!');
-                        fecharModalEditarAluno();
-                        window.location.reload();
-                    } else {
-                        alert('Erro ao atualizar aluno: ' + (data.message || 'Erro desconhecido'));
-                        console.error('Erro na atualização:', data);
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro completo:', error);
-                    alert('Erro ao atualizar aluno. Verifique o console para mais detalhes.');
-                })
-                .finally(() => {
-                    btnSubmit.textContent = textoOriginal;
-                    btnSubmit.disabled = false;
-                    console.log('=== FIM SUBMISSÃO FORMULÁRIO ALUNO ===');
-                });
-        });
-    }
+      if (data.success) {
+        populateTeacherForm(data.professor)
+        showModal("modal-editar-professor")
+      } else {
+        showNotification("Erro ao carregar dados do professor: " + data.message, "error")
+      }
+    })
+    .catch((error) => {
+      hideLoadingState()
+      console.error("Error:", error)
+      showNotification("Erro ao carregar dados do professor", "error")
+    })
 }
 
-// ==================== FUNÇÕES PARA PROFESSORES ====================
-
-// Função para inicializar eventos de edição de professor
-function inicializarEventosEdicaoProfessor() {
-    const botoesEditar = document.querySelectorAll('.btn-editar-professor');
-    botoesEditar.forEach(botao => {
-        botao.addEventListener('click', function () {
-            const professorId = this.getAttribute('data-id');
-            abrirModalEditarProfessor(professorId);
-        });
-    });
+function populateTeacherForm(teacher) {
+  try {
+    document.getElementById("edit-id-professor").value = teacher.id || ""
+    document.getElementById("edit-nome-professor").value = teacher.nome || ""
+    document.getElementById("edit-email-professor").value = teacher.email || ""
+    document.getElementById("edit-telefone-professor").value = teacher.telefone || teacher.tell || ""
+    document.getElementById("edit-data-nascimento-professor").value = teacher.dataNasc || ""
+    document.getElementById("edit-materia-professor").value = teacher.materia || ""
+    document.getElementById("edit-cpf-professor").value = teacher.cpf || ""
+  } catch (error) {
+    console.error("Error populating teacher form:", error)
+    showNotification("Erro ao preencher formulário", "error")
+  }
 }
 
-// Função para abrir modal de edição de professor
-function abrirModalEditarProfessor(professorId) {
-    console.log('Abrindo modal para professor ID:', professorId);
-
-    // Buscar dados do professor
-    fetch(`../controller/getProfessor.php?id=${professorId}`)
-        .then(response => {
-            console.log('Response getProfessor status:', response.status);
-            if (!response.ok) {
-                throw new Error('Erro na resposta do servidor: ' + response.status);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Dados do professor recebidos:', data);
-
-            if (data.success) {
-                // Preencher o formulário com os dados do professor
-                preencherFormularioEdicaoProfessor(data.professor);
-
-                // Mostrar o modal
-                const modal = document.getElementById('modal-editar-professor');
-                modal.classList.add('show');
-                document.body.style.overflow = 'hidden';
-            } else {
-                alert('Erro ao carregar dados do professor: ' + data.message);
-                console.error('Erro nos dados:', data);
-            }
-        })
-        .catch(error => {
-            console.error('Erro ao buscar professor:', error);
-            alert('Erro ao carregar dados do professor');
-        });
-}
-
-// Função para preencher formulário de edição de professor
-function preencherFormularioEdicaoProfessor(professor) {
-    console.log('Preenchendo formulário de professor com:', professor);
-
-    try {
-        document.getElementById('edit-id-professor').value = professor.id || '';
-        document.getElementById('edit-nome-professor').value = professor.nome || '';
-        document.getElementById('edit-email-professor').value = professor.email || '';
-        document.getElementById('edit-telefone-professor').value = professor.telefone || professor.tell || '';
-        document.getElementById('edit-data-nascimento-professor').value = professor.dataNasc || '';
-        document.getElementById('edit-materia-professor').value = professor.materia || '';
-        document.getElementById('edit-cpf-professor').value = professor.cpf || '';
-
-        console.log('Formulário de professor preenchido com sucesso');
-    } catch (error) {
-        console.error('Erro ao preencher formulário de professor:', error);
-        alert('Erro ao preencher formulário. Verifique o console.');
-    }
-}
-
-// Função para fechar modal de edição de professor
 function fecharModalEditarProfessor() {
-    const modal = document.getElementById('modal-editar-professor');
-    modal.classList.remove('show');
-    document.body.style.overflow = 'auto'; // Restaura scroll da página
-
-    // Limpar formulário
-    document.getElementById('form-editar-professor').reset();
+  closeModal("modal-editar-professor")
+  document.getElementById("form-editar-professor").reset()
 }
 
-// Função para inicializar o formulário de edição de professor
-function inicializarFormularioEdicaoProfessor() {
-    const formEditarProfessor = document.getElementById('form-editar-professor');
-    if (formEditarProfessor) {
-        formEditarProfessor.addEventListener('submit', function (e) {
-            e.preventDefault();
+// ==================== FORM HANDLERS ====================
+function initializeFormHandlers() {
+  // Student edit form
+  const studentEditForm = document.getElementById("form-editar-aluno")
+  if (studentEditForm) {
+    studentEditForm.addEventListener("submit", handleStudentUpdate)
+  }
 
-            console.log('=== INÍCIO SUBMISSÃO FORMULÁRIO PROFESSOR ===');
+  // Teacher edit form
+  const teacherEditForm = document.getElementById("form-editar-professor")
+  if (teacherEditForm) {
+    teacherEditForm.addEventListener("submit", handleTeacherUpdate)
+  }
 
-            // Validação básica antes de enviar
-            const id = document.getElementById('edit-id-professor').value.trim();
-            const nome = document.getElementById('edit-nome-professor').value.trim();
-            const email = document.getElementById('edit-email-professor').value.trim();
-            const telefone = document.getElementById('edit-telefone-professor').value.trim();
-            const dataNasc = document.getElementById('edit-data-nascimento-professor').value;
-            const materia = document.getElementById('edit-materia-professor').value.trim();
-            const cpf = document.getElementById('edit-cpf-professor').value.trim();
+  // Configuration form
+  const configForm = document.getElementById("form-configuracoes")
+  if (configForm) {
+    configForm.addEventListener("submit", handleConfigUpdate)
+  }
 
-            console.log('Dados do formulário de professor:');
-            console.log('ID:', id);
-            console.log('Nome:', nome);
-            console.log('Email:', email);
-            console.log('Telefone:', telefone);
-            console.log('Data Nasc:', dataNasc);
-            console.log('Materia:', materia);
-            console.log('CPF:', cpf);
-
-            if (!nome || !email || !id || !dataNasc) {
-                alert('Por favor, preencha todos os campos obrigatórios.');
-                return;
-            }
-
-            // Mostrar indicador de carregamento
-            const btnSubmit = this.querySelector('button[type="submit"]');
-            const textoOriginal = btnSubmit.textContent;
-            btnSubmit.textContent = 'Atualizando...';
-            btnSubmit.disabled = true;
-
-            // Criar FormData manualmente com os nomes corretos
-            const formData = new FormData();
-            formData.append('id-professor', document.getElementById('edit-id-professor').value);
-            formData.append('nome-professor', document.getElementById('edit-nome-professor').value);
-            formData.append('email-professor', document.getElementById('edit-email-professor').value);
-            formData.append('telefone-professor', document.getElementById('edit-telefone-professor').value);
-            formData.append('data-nascimento', document.getElementById('edit-data-nascimento-professor').value);
-            formData.append('materia-professor', document.getElementById('edit-materia-professor').value);
-            formData.append('cpf-professor', document.getElementById('edit-cpf-professor').value);
-
-            // Adicionar senha se fornecida
-            const senhaField = document.getElementById('edit-senha-professor');
-            if (senhaField && senhaField.value.trim()) {
-                formData.append('senha-professor', senhaField.value);
-            }
-
-            // Debug: Mostrar todos os dados do FormData
-            console.log('FormData de professor enviado:');
-            for (let [key, value] of formData.entries()) {
-                console.log(key + ':', value);
-            }
-
-            fetch('../controller/updateProf.php', {
-                method: 'POST',
-                body: formData
-            })
-                .then(response => {
-                    console.log('Response status:', response.status);
-
-                    const contentType = response.headers.get('content-type');
-                    console.log('Content-Type:', contentType);
-
-                    if (contentType && contentType.includes('application/json')) {
-                        return response.json();
-                    } else {
-                        return response.text().then(text => {
-                            console.log('Resposta não-JSON recebida:', text);
-
-                            if (response.ok) {
-                                return { success: true };
-                            } else {
-                                throw new Error('Resposta não-JSON e não bem-sucedida: ' + text);
-                            }
-                        });
-                    }
-                })
-                .then(data => {
-                    console.log('Dados recebidos:', data);
-
-                    if (data.success !== false) {
-                        alert('Professor atualizado com sucesso!');
-                        fecharModalEditarProfessor();
-                        window.location.reload();
-                    } else {
-                        alert('Erro ao atualizar professor: ' + (data.message || 'Erro desconhecido'));
-                        console.error('Erro na atualização:', data);
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro completo:', error);
-                    alert('Erro ao atualizar professor. Verifique o console para mais detalhes.');
-                })
-                .finally(() => {
-                    btnSubmit.textContent = textoOriginal;
-                    btnSubmit.disabled = false;
-                    console.log('=== FIM SUBMISSÃO FORMULÁRIO PROFESSOR ===');
-                });
-        });
-    }
+  // Cancel buttons
+  const cancelBtns = document.querySelectorAll(".btn-cancel")
+  cancelBtns.forEach((btn) => {
+    btn.addEventListener("click", function (e) {
+      e.preventDefault()
+      const form = this.closest("form")
+      if (form) {
+        form.reset()
+      }
+      closeAllModals()
+    })
+  })
 }
 
-// ==================== FUNÇÕES GERAIS ====================
+function handleStudentUpdate(e) {
+  e.preventDefault()
 
-// Fechar modais ao clicar fora deles
-document.addEventListener('click', function (e) {
-    // Modal de aluno
-    const modalAluno = document.getElementById('modal-editar-aluno');
-    if (e.target === modalAluno) {
-        fecharModalEditarAluno();
-    }
+  const formData = new FormData(e.target)
+  const submitBtn = e.target.querySelector('button[type="submit"]')
 
-    // Modal de professor
-    const modalProfessor = document.getElementById('modal-editar-professor');
-    if (e.target === modalProfessor) {
-        fecharModalEditarProfessor();
-    }
-});
+  setButtonLoading(submitBtn, true)
 
-// Fechar modais com ESC
-document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') {
-        const modalAluno = document.getElementById('modal-editar-aluno');
-        const modalProfessor = document.getElementById('modal-editar-professor');
+  fetch("../controller/updateAluno.php", {
+    method: "POST",
+    body: formData,
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      setButtonLoading(submitBtn, false)
 
-        if (modalAluno && modalAluno.classList.contains('show')) {
-            fecharModalEditarAluno();
-        }
-
-        if (modalProfessor && modalProfessor.classList.contains('show')) {
-            fecharModalEditarProfessor();
-        }
-    }
-});
-
-// Função para navegar entre seções (manter funcionalidade existente)
-function navigateToSection(sectionId) {
-    const sections = document.querySelectorAll('.content-section');
-    sections.forEach(section => {
-        section.classList.remove('active');
-    });
-
-    const activeSection = document.getElementById(sectionId);
-    if (activeSection) {
-        activeSection.classList.add('active');
-    }
-
-    const menuItems = document.querySelectorAll('.menu-item');
-    menuItems.forEach(item => {
-        item.classList.remove('active');
-        if (item.getAttribute('data-section') === sectionId) {
-            item.classList.add('active');
-
-            const parent = item.parentElement;
-            if (parent.classList.contains('submenu')) {
-                parent.classList.add('open');
-            }
-        }
-    });
+      if (data.success !== false) {
+        showNotification("Aluno atualizado com sucesso!", "success")
+        fecharModalEditarAluno()
+        setTimeout(() => window.location.reload(), 1000)
+      } else {
+        showNotification("Erro ao atualizar aluno: " + (data.message || "Erro desconhecido"), "error")
+      }
+    })
+    .catch((error) => {
+      setButtonLoading(submitBtn, false)
+      console.error("Error:", error)
+      showNotification("Erro ao atualizar aluno", "error")
+    })
 }
 
-// Gerenciamento de abas (manter funcionalidade existente)
-document.addEventListener('DOMContentLoaded', function () {
-    const tabItems = document.querySelectorAll('.tab-item');
-    tabItems.forEach(item => {
-        item.addEventListener('click', function () {
-            const tabId = this.getAttribute('data-tab');
+function handleTeacherUpdate(e) {
+  e.preventDefault()
 
-            document.querySelectorAll('.tab-item').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
+  const formData = new FormData(e.target)
+  const submitBtn = e.target.querySelector('button[type="submit"]')
 
-            this.classList.add('active');
-            const targetContent = document.getElementById(tabId);
-            if (targetContent) {
-                targetContent.classList.add('active');
-            }
-        });
-    });
-});
+  setButtonLoading(submitBtn, true)
+
+  fetch("../controller/updateProfessor.php", {
+    method: "POST",
+    body: formData,
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      setButtonLoading(submitBtn, false)
+
+      if (data.success !== false) {
+        showNotification("Professor atualizado com sucesso!", "success")
+        fecharModalEditarProfessor()
+        setTimeout(() => window.location.reload(), 1000)
+      } else {
+        showNotification("Erro ao atualizar professor: " + (data.message || "Erro desconhecido"), "error")
+      }
+    })
+    .catch((error) => {
+      setButtonLoading(submitBtn, false)
+      console.error("Error:", error)
+      showNotification("Erro ao atualizar professor", "error")
+    })
+}
+
+function handleConfigUpdate(e) {
+  e.preventDefault()
+
+  const formData = new FormData(e.target)
+  const submitBtn = e.target.querySelector('button[type="submit"]')
+
+  setButtonLoading(submitBtn, true)
+
+  fetch("../controller/updateInst.php", {
+    method: "POST",
+    body: formData,
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      setButtonLoading(submitBtn, false)
+
+      if (data.success) {
+        showNotification("Configurações atualizadas com sucesso!", "success")
+        loadInstitutionData()
+      } else {
+        showNotification("Erro ao atualizar configurações: " + data.message, "error")
+      }
+    })
+    .catch((error) => {
+      setButtonLoading(submitBtn, false)
+      console.error("Error:", error)
+      showNotification("Erro ao atualizar configurações", "error")
+    })
+}
+
+// ==================== SEARCH ====================
+function initializeSearch() {
+  const searchInputs = document.querySelectorAll(".search-input")
+
+  searchInputs.forEach((input) => {
+    input.addEventListener(
+      "input",
+      debounce(function () {
+        const searchTerm = this.value.toLowerCase()
+        const table = this.closest(".table-section")?.querySelector("table")
+
+        if (table) {
+          filterTable(table, searchTerm)
+        }
+      }, 300),
+    )
+  })
+}
+
+function filterTable(table, searchTerm) {
+  const rows = table.querySelectorAll("tbody tr")
+
+  rows.forEach((row) => {
+    const text = row.textContent.toLowerCase()
+    const shouldShow = text.includes(searchTerm)
+    row.style.display = shouldShow ? "" : "none"
+  })
+}
+
+// ==================== DATA LOADING ====================
+function loadDashboardData() {
+  // This would typically load real data from the server
+  console.log("Loading dashboard data...")
+}
+
+function loadSectionData(sectionId) {
+  switch (sectionId) {
+    case "configuracoes":
+      loadInstitutionData()
+      break
+    default:
+      break
+  }
+}
+
+function loadInstitutionData() {
+  fetch("../controller/getInst.php")
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        populateInstitutionForm(data.instituicao)
+      }
+    })
+    .catch((error) => {
+      console.error("Error loading institution data:", error)
+    })
+}
+
+function populateInstitutionForm(institution) {
+  const fields = ["nome-instituicao", "email-contato", "telefone-contato", "cep", "estado", "bairro", "rua", "num"]
+
+  fields.forEach((fieldId) => {
+    const field = document.getElementById(fieldId)
+    if (field && institution[fieldId.replace("-", "")]) {
+      field.value = institution[fieldId.replace("-", "")]
+    }
+  })
+}
+
+// ==================== UTILITY FUNCTIONS ====================
+function showModal(modalId) {
+  const modal = document.getElementById(modalId)
+  if (modal) {
+    modal.classList.add("show")
+    document.body.style.overflow = "hidden"
+  }
+}
+
+function closeModal(modalId) {
+  const modal = document.getElementById(modalId)
+  if (modal) {
+    modal.classList.remove("show")
+    document.body.style.overflow = "auto"
+  }
+}
+
+function showLoadingState(message = "Carregando...") {
+  // Create or update loading overlay
+  let overlay = document.getElementById("loading-overlay")
+  if (!overlay) {
+    overlay = document.createElement("div")
+    overlay.id = "loading-overlay"
+    overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            backdrop-filter: blur(4px);
+        `
+
+    const content = document.createElement("div")
+    content.style.cssText = `
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        `
+
+    content.innerHTML = `
+            <div style="width: 40px; height: 40px; border: 3px solid #f3f3f3; border-top: 3px solid #340069; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1rem;"></div>
+            <p style="color: #64748b; font-weight: 500;">${message}</p>
+        `
+
+    overlay.appendChild(content)
+    document.body.appendChild(overlay)
+  }
+}
+
+function hideLoadingState() {
+  const overlay = document.getElementById("loading-overlay")
+  if (overlay) {
+    overlay.remove()
+  }
+}
+
+function setButtonLoading(button, isLoading) {
+  if (!button) return
+
+  if (isLoading) {
+    button.disabled = true
+    button.dataset.originalText = button.textContent
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...'
+  } else {
+    button.disabled = false
+    button.textContent = button.dataset.originalText || "Salvar"
+  }
+}
+
+function showNotification(message, type = "info") {
+  // Remove existing notifications
+  const existingNotifications = document.querySelectorAll(".notification")
+  existingNotifications.forEach((notification) => notification.remove())
+
+  const notification = document.createElement("div")
+  notification.className = "notification"
+
+  const colors = {
+    success: "#10b981",
+    error: "#ef4444",
+    warning: "#f59e0b",
+    info: "#3b82f6",
+  }
+
+  const icons = {
+    success: "fas fa-check-circle",
+    error: "fas fa-exclamation-circle",
+    warning: "fas fa-exclamation-triangle",
+    info: "fas fa-info-circle",
+  }
+
+  notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: white;
+        color: ${colors[type]};
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        border-left: 4px solid ${colors[type]};
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        max-width: 400px;
+        animation: slideIn 0.3s ease;
+    `
+
+  notification.innerHTML = `
+        <i class="${icons[type]}"></i>
+        <span style="color: #1e293b; font-weight: 500;">${message}</span>
+        <button onclick="this.parentElement.remove()" style="
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            padding: 0;
+            margin-left: auto;
+            font-size: 1.2rem;
+        ">&times;</button>
+    `
+
+  document.body.appendChild(notification)
+
+  // Auto remove after 5 seconds
+  setTimeout(() => {
+    if (notification.parentElement) {
+      notification.remove()
+    }
+  }, 5000)
+}
+
+function debounce(func, wait) {
+  let timeout
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout)
+      func(...args)
+    }
+    clearTimeout(timeout)
+    timeout = setTimeout(later, wait)
+  }
+}
+
+// ==================== GLOBAL FUNCTIONS (for onclick handlers) ====================
+window.fecharModalEditarAluno = fecharModalEditarAluno
+window.fecharModalEditarProfessor = fecharModalEditarProfessor
+
+// ==================== RESPONSIVE HANDLING ====================
+window.addEventListener("resize", () => {
+  const container = document.querySelector(".container")
+  if (window.innerWidth <= 768) {
+    container.classList.add("sidebar-collapsed")
+  } else {
+    const savedState = localStorage.getItem("sidebarCollapsed")
+    if (savedState !== "true") {
+      container.classList.remove("sidebar-collapsed")
+    }
+  }
+})
+
+// Add CSS for animations
+const style = document.createElement("style")
+style.textContent = `
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+`
+document.head.appendChild(style)

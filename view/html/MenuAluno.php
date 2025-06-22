@@ -30,7 +30,6 @@ error_log("Aluno logado - ID: $aluno_id, Nome: $aluno_nome, Inst: $id_inst");
 <body>
     <div class="container">
         <!-- Sidebar Navigation -->
-        <!-- Menu lateral -->
         <div class="sidebar">
             <div class="menu-toggle-btn" id="menuToggleBtn">
                 <div class="hamburger">
@@ -40,31 +39,31 @@ error_log("Aluno logado - ID: $aluno_id, Nome: $aluno_nome, Inst: $id_inst");
                 </div>
             </div>
             <div class="logo">
-                <img src="../img/logo2.jpg" alt="">
+                 <img src="../img/logo2.jpg" alt="">
+
             </div>
             <div class="menu-container">
                 <ul class="nav-menu">
                     <li>
-                        <a href="Home.html" class="active">
+                        <a href="Home.html" class="active" data-tooltip="Jogos">
                             <i class="fas fa-gamepad"></i>
                             <span>Jogos</span>
                         </a>
                     </li>
-
                     <li>
-                        <a href="#">
+                        <a href="#" data-tooltip="Tarefas">
                             <i class="fas fa-tasks"></i>
                             <span>Tarefas</span>
                         </a>
                     </li>
                     <li>
-                        <a href="configuracoes.html">
+                        <a href="configuracoes.html" data-tooltip="Configurações">
                             <i class="fas fa-cog"></i>
                             <span>Configurações</span>
                         </a>
                     </li>
                     <li class="logout">
-                        <a href="../../controller/logout.php">
+                        <a href="../../controller/logout.php" data-tooltip="Sair">
                             <i class="fas fa-sign-out-alt"></i>
                             <span>Sair da conta</span>
                         </a>
@@ -75,18 +74,20 @@ error_log("Aluno logado - ID: $aluno_id, Nome: $aluno_nome, Inst: $id_inst");
                 <p>&copy; 2025 LevelUp</p>
             </div>
         </div>
+
         <!-- Main Content Area -->
         <div class="main">
             <!-- Top Bar -->
             <div class="top-bar">
                 <div class="greeting">
                     <h2 id="greeting-name">Olá, <?php echo explode(' ', $aluno_nome)[0]; ?>!</h2>
-
                     <p>Bem-vindo de volta</p>
                 </div>
                 <div class="search-container">
-                    <input type="text" placeholder="Pesquisar..." class="search-input">
-                    <button class="search-btn"><i class="fas fa-search"></i></button>
+                    <div class="search-bar">
+                        <input type="text" placeholder="Pesquisar..." class="search-input">
+                        <button class="search-btn"><i class="fas fa-search"></i></button>
+                    </div>
                 </div>
                 <div class="user-info">
                     <div class="notifications">
@@ -105,10 +106,12 @@ error_log("Aluno logado - ID: $aluno_id, Nome: $aluno_nome, Inst: $id_inst");
                 <div class="section-header">
                     <h3>Jogos Disponíveis</h3>
                     <div class="more-actions">
-                        <span class="dots">•••</span>
+                        <button class="more-options-btn">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </button>
                         <div class="dropdown-content">
                             <a href="#">Ver todos</a>
-                            <a href="#">Ordernar por</a>
+                            <a href="#">Ordenar por</a>
                             <a href="#">Filtrar</a>
                         </div>
                     </div>
@@ -116,20 +119,48 @@ error_log("Aluno logado - ID: $aluno_id, Nome: $aluno_nome, Inst: $id_inst");
 
                 <div class="games-container">
                     <div class="games-grid">
-                        <div class="game-card">
-                            <div class="game-icon"><i class="fas fa-gamepad"></i></div>
-                            <div class="game-title">Matemática Divertida</div>
-                            <div class="game-difficulty">Fácil</div>
+                        <div class="game-card math-game">
+                            <div class="game-icon">
+                                <i class="fas fa-calculator"></i>
+                            </div>
+                            <div class="game-content">
+                                <div class="game-title">Matemática Divertida</div>
+                                <div class="game-description">Resolva problemas matemáticos</div>
+                                <div class="game-difficulty easy">Fácil</div>
+                            </div>
                         </div>
-                        <div class="game-card">
-                            <div class="game-icon"><i class="fas fa-puzzle-piece"></i></div>
-                            <div class="game-title">Desafio de Lógica</div>
-                            <div class="game-difficulty">Médio</div>
+                        
+                        <div class="game-card logic-game">
+                            <div class="game-icon">
+                                <i class="fas fa-puzzle-piece"></i>
+                            </div>
+                            <div class="game-content">
+                                <div class="game-title">Desafio de Lógica</div>
+                                <div class="game-description">Teste seu raciocínio lógico</div>
+                                <div class="game-difficulty medium">Médio</div>
+                            </div>
                         </div>
-                        <div class="game-card">
-                            <div class="game-icon"><i class="fas fa-brain"></i></div>
-                            <div class="game-title">Quiz de Ciências</div>
-                            <div class="game-difficulty">Difícil</div>
+                        
+                        <div class="game-card science-game">
+                            <div class="game-icon">
+                                <i class="fas fa-flask"></i>
+                            </div>
+                            <div class="game-content">
+                                <div class="game-title">Quiz de Ciências</div>
+                                <div class="game-description">Explore o mundo da ciência</div>
+                                <div class="game-difficulty hard">Difícil</div>
+                            </div>
+                        </div>
+
+                        <div class="game-card genius-game">
+                            <div class="game-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <div class="game-content">
+                                <div class="game-title">Genius</div>
+                                <div class="game-description">Jogo de memória e sequência</div>
+                                <div class="game-difficulty medium">Médio</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -138,35 +169,69 @@ error_log("Aluno logado - ID: $aluno_id, Nome: $aluno_nome, Inst: $id_inst");
                     <h3>Progresso</h3>
                 </div>
                 <div class="progress-container">
-                    <div class="progress-card">
-                        <div class="progress-title">Matemática</div>
+                    <div class="progress-card math-progress">
+                        <div class="progress-header">
+                            <div class="progress-icon">
+                                <i class="fas fa-calculator"></i>
+                            </div>
+                            <div class="progress-info">
+                                <div class="progress-title">Matemática</div>
+                                <div class="progress-percentage">75%</div>
+                            </div>
+                        </div>
                         <div class="progress-bar">
                             <div class="progress" style="width: 75%"></div>
                         </div>
-                        <div class="progress-info">75% Completo</div>
+                        <div class="progress-text">Completo</div>
                     </div>
-                    <div class="progress-card">
-                        <div class="progress-title">Português</div>
+                    
+                    <div class="progress-card portuguese-progress">
+                        <div class="progress-header">
+                            <div class="progress-icon">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div class="progress-info">
+                                <div class="progress-title">Português</div>
+                                <div class="progress-percentage">45%</div>
+                            </div>
+                        </div>
                         <div class="progress-bar">
                             <div class="progress" style="width: 45%"></div>
                         </div>
-                        <div class="progress-info">45% Completo</div>
+                        <div class="progress-text">Completo</div>
                     </div>
-                    <div class="progress-card">
-                        <div class="progress-title">Ciências</div>
+                    
+                    <div class="progress-card science-progress">
+                        <div class="progress-header">
+                            <div class="progress-icon">
+                                <i class="fas fa-flask"></i>
+                            </div>
+                            <div class="progress-info">
+                                <div class="progress-title">Ciências</div>
+                                <div class="progress-percentage">60%</div>
+                            </div>
+                        </div>
                         <div class="progress-bar">
                             <div class="progress" style="width: 60%"></div>
                         </div>
-                        <div class="progress-info">60% Completo</div>
+                        <div class="progress-text">Completo</div>
                     </div>
-                    <div class="progress-card" id="genius-progress">
-                        <div class="progress-title">Genius</div>
+                    
+                    <div class="progress-card genius-progress" id="genius-progress">
+                        <div class="progress-header">
+                            <div class="progress-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <div class="progress-info">
+                                <div class="progress-title">Genius</div>
+                                <div class="progress-percentage">0%</div>
+                            </div>
+                        </div>
                         <div class="progress-bar">
                             <div class="progress" style="width: 0%"></div>
                         </div>
-                        <div class="progress-info">0% Completo</div>
+                        <div class="progress-text">Completo</div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -265,111 +330,84 @@ error_log("Aluno logado - ID: $aluno_id, Nome: $aluno_nome, Inst: $id_inst");
         </div>
     </div>
 
+    <!-- Activities Overlay -->
     <div class="activities-overlay" id="activities-overlay" style="display: none;">
-        <div class="section-container"
-            style="background: white; border-radius: 8px; box-shadow: 0 8px 16px rgba(0,0,0,0.14); width: 90%; max-width: 800px; max-height: 90vh; overflow-y: auto;">
-            <div class="section-header"
-                style="display: flex; justify-content: space-between; align-items: center; padding: 20px; background: #340069; color: white; position: sticky; top: 0; z-index: 10;">
-                <div class="section-title" style="display: flex; align-items: center; gap: 12px;">
-                    <i class="fas fa-clipboard-list" style="font-size: 20px;"></i>
-                    <h2 style="font-size: 18px; font-weight: 600;">Atividades</h2>
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-title">
+                    <i class="fas fa-clipboard-list"></i>
+                    <h2>Atividades</h2>
                 </div>
-                <button class="modal-close" id="close-activities"
-                    style="background: none; border: none; color: white; font-size: 20px; cursor: pointer;">
+                <button class="modal-close" id="close-activities">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
 
-            <div class="section-content" style="padding: 20px;">
-                <div class="cards-container"
-                    style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
+            <div class="section-content">
+                <div class="cards-container">
                     <!-- Card 1 -->
-                    <div class="activity-card"
-                        style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 1px solid #e0e0e0; transition: all 0.3s ease;">
-                        <div class="card-header"
-                            style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #f5f5f5;">
-                            <div class="card-icon math"
-                                style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; background: #2196f3;">
+                    <div class="activity-card math-activity">
+                        <div class="card-header">
+                            <div class="card-icon">
                                 <i class="fas fa-calculator"></i>
                             </div>
-                            <div class="card-deadline" style="font-size: 12px; color: #666;">
+                            <div class="card-deadline">
                                 <span>Prazo: 12/05/2025</span>
                             </div>
                         </div>
-                        <div class="card-body" style="padding: 15px;">
-                            <h3 style="font-size: 16px; margin-bottom: 8px;">Exercícios de Álgebra</h3>
-                            <p style="color: #666; font-size: 14px;">Resolução de equações do 2º grau</p>
+                        <div class="card-body">
+                            <h3>Exercícios de Álgebra</h3>
+                            <p>Resolução de equações do 2º grau</p>
                         </div>
-                        <div class="card-footer"
-                            style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border-top: 1px solid #e0e0e0;">
-                            <div class="status pending"
-                                style="font-size: 12px; font-weight: 600; padding: 4px 8px; border-radius: 12px; background: #fff3e0; color: #e65100;">
+                        <div class="card-footer">
+                            <div class="status pending">
                                 <span>Pendente</span>
                             </div>
-                            <button class="btn-action"
-                                style="background: #340069; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
-                                Iniciar
-                            </button>
+                            <button class="btn-action">Iniciar</button>
                         </div>
                     </div>
 
                     <!-- Card 2 -->
-                    <div class="activity-card"
-                        style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 1px solid #e0e0e0; transition: all 0.3s ease;">
-                        <div class="card-header"
-                            style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #f5f5f5;">
-                            <div class="card-icon portuguese"
-                                style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; background: #ff5722;">
+                    <div class="activity-card portuguese-activity">
+                        <div class="card-header">
+                            <div class="card-icon">
                                 <i class="fas fa-book"></i>
                             </div>
-                            <div class="card-deadline" style="font-size: 12px; color: #666;">
+                            <div class="card-deadline">
                                 <span>Prazo: 10/05/2025</span>
                             </div>
                         </div>
-                        <div class="card-body" style="padding: 15px;">
-                            <h3 style="font-size: 16px; margin-bottom: 8px;">Redação Argumentativa</h3>
-                            <p style="color: #666; font-size: 14px;">Tema: Meio ambiente e sustentabilidade</p>
+                        <div class="card-body">
+                            <h3>Redação Argumentativa</h3>
+                            <p>Tema: Meio ambiente e sustentabilidade</p>
                         </div>
-                        <div class="card-footer"
-                            style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border-top: 1px solid #e0e0e0;">
-                            <div class="status in-progress"
-                                style="font-size: 12px; font-weight: 600; padding: 4px 8px; border-radius: 12px; background: #e3f2fd; color: #0d47a1;">
+                        <div class="card-footer">
+                            <div class="status in-progress">
                                 <span>Em progresso</span>
                             </div>
-                            <button class="btn-action"
-                                style="background: #340069; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
-                                Continuar
-                            </button>
+                            <button class="btn-action">Continuar</button>
                         </div>
                     </div>
 
                     <!-- Card 3 -->
-                    <div class="activity-card"
-                        style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 1px solid #e0e0e0; transition: all 0.3s ease;">
-                        <div class="card-header"
-                            style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #f5f5f5;">
-                            <div class="card-icon science"
-                                style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; background: #4caf50;">
+                    <div class="activity-card science-activity">
+                        <div class="card-header">
+                            <div class="card-icon">
                                 <i class="fas fa-flask"></i>
                             </div>
-                            <div class="card-deadline" style="font-size: 12px; color: #666;">
+                            <div class="card-deadline">
                                 <span>Prazo: 08/05/2025</span>
                             </div>
                         </div>
-                        <div class="card-body" style="padding: 15px;">
-                            <h3 style="font-size: 16px; margin-bottom: 8px;">Relatório de Experimento</h3>
-                            <p style="color: #666; font-size: 14px;">Reações químicas em laboratório</p>
+                        <div class="card-body">
+                            <h3>Relatório de Experimento</h3>
+                            <p>Reações químicas em laboratório</p>
                         </div>
-                        <div class="card-footer"
-                            style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border-top: 1px solid #e0e0e0;">
-                            <div class="status completed"
-                                style="font-size: 12px; font-weight: 600; padding: 4px 8px; border-radius: 12px; background: #e8f5e9; color: #1b5e20;">
+                        <div class="card-footer">
+                            <div class="status completed">
                                 <span>Concluído</span>
                             </div>
-                            <button class="btn-action"
-                                style="background: #340069; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
-                                Ver nota
-                            </button>
+                            <button class="btn-action">Ver nota</button>
                         </div>
                     </div>
                 </div>
@@ -387,7 +425,6 @@ error_log("Aluno logado - ID: $aluno_id, Nome: $aluno_nome, Inst: $id_inst");
             id_inst: '<?php echo $id_inst; ?>'
         };
     </script>
-
 
     <script src="../js/MenuAluno.js"></script>
 </body>

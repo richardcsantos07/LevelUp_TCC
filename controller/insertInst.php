@@ -36,30 +36,17 @@ if (!$conecta) {
         $destinatario = $_POST['destinatarios'];
         $descricao = $_POST['conteudo-comunicado'];
         $data_comunicado = $_POST['data-comunicado'];
-        $arquivo = $_POST['anexo'];
 
-        // Processa o upload do arquivo
-    if(isset($_FILES['anexo']) && $_FILES['anexo']['error'] == 0) {
-        $pasta_upload = "../uploads/comunicados/";
-        if (!file_exists($pasta_upload)) {
-            mkdir($pasta_upload, 0777, true);
-        }
-        
-        $nome_arquivo = time() . '_' . $_FILES['anexo']['name'];
-        $caminho_arquivo = $pasta_upload . $nome_arquivo;
-        
-        if(move_uploaded_file($_FILES['anexo']['tmp_name'], $caminho_arquivo)) {
-            // Arquivo foi enviado com sucesso
-            // Salva no banco o caminho do arquivo
-            $inst->inserirCadComunicado($titulo, $destinatario, $descricao, data_comunicado: $data_comunicado, arquivo: $caminho_arquivo, idInstituicao: $id_inst);
-        } else {
-            echo "Erro ao fazer upload do arquivo";
-        }
-    } else {
-        // Sem arquivo anexo
+
         $inst->inserirCadComunicado(
-            $titulo, $destinatario, $descricao, data_comunicado: $data_comunicado, arquivo: null, idInstituicao: $id_inst
+            $titulo,
+            $destinatario,
+            $descricao,
+            data_comunicado: $data_comunicado,
+            arquivo: null,
+            idInstituicao: $id_inst
         );
-    }
+
+        header("Location: ../view/MenuInstituicao.php");
     }
 }

@@ -4,73 +4,247 @@
     <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LevelUP</title>
+    <title>LevelUP - Biblioteca de Jogos</title>
     <link rel="stylesheet" href="../css/tela.css">
     <script src="https://kit.fontawesome.com/dfc8dc048e.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <!-- Cabeçalho -->
-    <header class="header">
-        <h1>LevelUP</h1>
-        <div class="profile-settings">
-            <a href="#perfil" class="menu-link"> <i class="fa-solid fa-user"></i> </a>
-            <a href="#configuracoes" class="menu-link"> <i class="fa-solid fa-gear"></i> </a>
-        </div>
-    </header>
-
-    <!-- Conteúdo Principal -->
-
-    <div class="container">
-        <!-- Menu Lateral Esquerdo -->
-        <aside class="menu-left">
-            
-            <nav>
-                <ul class="menu">
-                    <li>
-                        <button class="dropdown-btn">Matérias </button>
-                        <ul class="dropdown-content">
-                            <li><a href="#matematica">Matemática</a></li>
-                            <li><a href="#portugues">Português</a></li>
-                            <li><a href="#geografia">Geografia</a></li>
-                            <li><a href="#ciencias">Ciências</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </nav>
-        </aside>
-
-        <!-- Área Central -->
-        <main class="main-content">
-            <!-- Barra de Pesquisa -->
-            <div class="search-bar">
-                <input type="text" id="search" placeholder="Pesquise por um jogo...">
-                <button id="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="menu-toggle-btn" id="menuToggleBtn">
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
-
-            <div class="carousel-container">
-        <div class="carousel">
-            <img src="../img/Forca.png" alt="">
-            <img src="../img/genius.jpg" alt="">
-            <img src="../img/Matemática.jpeg" alt="">
         </div>
-        <div class="dots">
-            <span class="dot" data-index="0"></span>
-            <span class="dot" data-index="1"></span>
-            <span class="dot" data-index="2"></span>
+        
+        <div class="logo">
+             <img src="../img/logo2.jpg" alt="">
         </div>
-    </div>
+        
+        <nav class="nav-menu">
+            <div class="nav-item active">
+                <i class="fas fa-home"></i>
+                <span>Início</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-star"></i>
+                <span>Favoritos</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-history"></i>
+                <span>Recentes</span>
+            </div>
+        </nav>
 
-            <!-- Lista de Jogos -->
-            <section id="jogos" class="games">
-               
-                <div class="game-list" id="game-list">
-                    <!-- Os jogos serão carregados dinamicamente aqui -->
+        <div class="subjects-section">
+            <h3 class="subjects-title">
+                <i class="fas fa-book"></i>
+                <span>Matérias</span>
+            </h3>
+            <div class="subjects-list">
+                <div class="subject-item" data-subject="matematica">
+                    <div class="subject-icon math">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <span>Matemática</span>
+                    <div class="subject-count">12</div>
                 </div>
-            </section>
-        </main>
-    </div>
+                <div class="subject-item" data-subject="portugues">
+                    <div class="subject-icon portuguese">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <span>Português</span>
+                    <div class="subject-count">8</div>
+                </div>
+                <div class="subject-item" data-subject="ciencias">
+                    <div class="subject-icon science">
+                        <i class="fas fa-flask"></i>
+                    </div>
+                    <span>Ciências</span>
+                    <div class="subject-count">15</div>
+                </div>
+                <div class="subject-item" data-subject="geografia">
+                    <div class="subject-icon geography">
+                        <i class="fas fa-globe-americas"></i>
+                    </div>
+                    <span>Geografia</span>
+                    <div class="subject-count">6</div>
+                </div>
+                <div class="subject-item" data-subject="historia">
+                    <div class="subject-icon history">
+                        <i class="fas fa-landmark"></i>
+                    </div>
+                    <span>História</span>
+                    <div class="subject-count">9</div>
+                </div>
+                <div class="subject-item" data-subject="logica">
+                    <div class="subject-icon logic">
+                        <i class="fas fa-puzzle-piece"></i>
+                    </div>
+                    <span>Lógica</span>
+                    <div class="subject-count">11</div>
+                </div>
+            </div>
+        </div>
 
-    <!-- JavaScript -->
+        <div class="sidebar-footer">
+            <p>&copy; 2025 LevelUP</p>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="welcome-section">
+                <h1>Biblioteca de Jogos</h1>
+                <p>Explore e descubra jogos incríveis</p>
+            </div>
+            
+            <div class="search-container">
+                <div class="search-bar">
+                    <input type="text" id="search" placeholder="Pesquise por um jogo...">
+                    <button id="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="profile-section">
+                <div class="notification-icon">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </div>
+                <div class="profile-avatar">
+                    <span>R</span>
+                </div>
+                <span class="profile-name">Richard</span>
+            </div>
+        </header>
+
+        <!-- Featured Carousel -->
+        <section class="featured-section">
+            <div class="section-header">
+                <h2>Jogos em Destaque</h2>
+                <div class="carousel-controls">
+                    <button class="carousel-btn prev" id="prevBtn">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="carousel-btn next" id="nextBtn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="carousel-container">
+                <div class="carousel-track" id="carouselTrack">
+                    <div class="featured-game active" data-game="genius">
+                        <div class="game-image">
+                            <img src="../img/genius.jpg" alt="Genius - Jogo de Memória">
+                            <div class="game-overlay">
+                                <div class="play-button">
+                                    <i class="fas fa-play"></i>
+                                </div>
+                                <div class="game-info">
+                                    <h3>Genius</h3>
+                                    <p>Teste sua memória com sequências coloridas</p>
+                                    <div class="game-tags">
+                                        <span class="tag memory">Memória</span>
+                                        <span class="tag medium">Médio</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="featured-game" data-game="palavra">
+                        <div class="game-image">
+                            <img src="../img/guesstheword.png" alt="Adivinha a Palavra">
+                            <div class="game-overlay">
+                                <div class="play-button">
+                                    <i class="fas fa-play"></i>
+                                </div>
+                                <div class="game-info">
+                                    <h3>Adivinha a Palavra</h3>
+                                    <p>Descubra palavras ocultas e expanda seu vocabulário</p>
+                                    <div class="game-tags">
+                                        <span class="tag vocabulary">Vocabulário</span>
+                                        <span class="tag easy">Fácil</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="featured-game" data-game="matematica">
+                        <div class="game-image">
+                            <img src="../img/Matemática.jpeg" alt="Desafio Matemático">
+                            <div class="game-overlay">
+                                <div class="play-button">
+                                    <i class="fas fa-play"></i>
+                                </div>
+                                <div class="game-info">
+                                    <h3>Desafio Matemático</h3>
+                                    <p>Resolva problemas e torne-se um mestre dos números</p>
+                                    <div class="game-tags">
+                                        <span class="tag math">Matemática</span>
+                                        <span class="tag hard">Difícil</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="carousel-indicators">
+                    <div class="indicator active" data-slide="0"></div>
+                    <div class="indicator" data-slide="1"></div>
+                    <div class="indicator" data-slide="2"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Games Grid -->
+        <section class="games-section">
+            <div class="section-header">
+                <h2>Todos os Jogos</h2>
+                <div class="filter-controls">
+                    <select id="difficultyFilter" class="filter-select">
+                        <option value="">Todas as dificuldades</option>
+                        <option value="easy">Fácil</option>
+                        <option value="medium">Médio</option>
+                        <option value="hard">Difícil</option>
+                    </select>
+                    <select id="subjectFilter" class="filter-select">
+                        <option value="">Todas as matérias</option>
+                        <option value="matematica">Matemática</option>
+                        <option value="portugues">Português</option>
+                        <option value="ciencias">Ciências</option>
+                        <option value="geografia">Geografia</option>
+                        <option value="historia">História</option>
+                        <option value="logica">Lógica</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="games-grid" id="games-grid">
+                <!-- Games will be loaded here -->
+            </div>
+        </section>
+
+        <!-- Loading Animation -->
+        <div class="loading-container" id="loadingContainer" style="display: none;">
+            <div class="loading-spinner">
+                <div class="spinner-ring"></div>
+                <div class="spinner-ring"></div>
+                <div class="spinner-ring"></div>
+            </div>
+            <p>Carregando jogos incríveis...</p>
+        </div>
+    </main>
+
     <script src="../js/tela.js"></script>
 </body>
 </html>
