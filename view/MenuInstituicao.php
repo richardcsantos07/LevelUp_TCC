@@ -296,7 +296,7 @@ $instObj = new Instituicao();
                         </div>
                     </div>
 
-                    <form id="form-aluno" action="../controller/inserirAluno.php" method="POST" class="compact-form">
+                    <form id="form-aluno" action="../controller/inserirAluno.php" method="post" class="compact-form">
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="ra-aluno">
@@ -968,8 +968,6 @@ $instObj = new Instituicao();
                             <thead>
                                 <tr>
                                     <th>Turma</th>
-                                    <th>Série</th>
-                                    <th>Turno</th>
                                     <th>Alunos</th>
                                     <th>Ações</th>
                                 </tr>
@@ -989,12 +987,9 @@ $instObj = new Instituicao();
                                     echo "</div>";
                                     echo "</div>";
                                     echo "</td>";
-                                    echo "<td><span class='badge badge-info'>{$turma['serie']}</span></td>";
-                                    echo "<td><span class='badge badge-warning'>{$turma['turno']}</span></td>";
+                                    
                                     echo "<td><span class='student-count'>0 alunos</span></td>";
                                     echo "<td class='actions'>";
-                                    echo "<button class='btn-icon btn-edit btn-editar-turma' title='Editar' data-id='{$turma['id']}'>";
-                                    echo "<i class='fas fa-edit'></i>";
                                     echo "</button>";
                                     echo "<a class='btn-icon btn-delete' title='Excluir' href='../controller/deleteTurma.php?id={$turma['id']}'>";
                                     echo "<i class='fas fa-trash'></i>";

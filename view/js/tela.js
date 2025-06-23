@@ -12,16 +12,6 @@ const games = [
     tags: ["Memória", "Sequência", "Concentração"],
   },
   {
-    id: 2,
-    title: "Adivinha a Palavra",
-    description: "Descubra palavras ocultas e expanda seu vocabulário",
-    subject: "portugues",
-    difficulty: "easy",
-    image: "../img/guesstheword.png",
-    featured: true,
-    tags: ["Vocabulário", "Ortografia", "Raciocínio"],
-  },
-  {
     id: 3,
     title: "Desafio Matemático",
     description: "Resolva problemas e torne-se um mestre dos números",
