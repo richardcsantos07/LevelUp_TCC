@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 10/06/2025 às 14:46
+-- Tempo de geração: 25/06/2025 às 00:27
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -46,8 +46,11 @@ CREATE TABLE `aluno` (
 --
 
 INSERT INTO `aluno` (`ra`, `nome`, `email`, `senha`, `turma`, `dataNasc`, `nivelAcesso`, `id_inst`, `nome_responsavel`, `tell_responsavel`, `tell`) VALUES
-(4575, 'Richard Camargo dos Santos', 'richardcamargo@gmail.com', 'rcds2005', '1º A - Manhã', '2005-11-07', 'user', 3, 'PATRICIA LUCIANA CAMARGO', '11930248633', '11930248633'),
-(4576, 'Lucas Almeida Sporques', 'lucassporques@gmail.com', 'lucas1234', '3º B - Tarde', '2005-07-10', 'user', 3, 'Sr. Almeida ', '11930248633', '1194540577');
+(1, 'João P Souza', 'joaopedrosouza@gmail.com', 'joao1234', '1º A - Manhã', '2025-06-22', 'user', 3, 'Richard Camargo dos Santos', '11930248633', '11930248633'),
+(2, 'Lucas Almeida Sporques', 'lucassporques@gmail.com', 'lucas1234', '5º B - Manhã', '2025-06-22', 'user', 3, 'Richard Camargo dos Santos', '11930248633', '11930248633'),
+(3000, 'Richard Camargo dos Santos', 'richardcamargodosantos@gmail.com', 'rcds2005', '', '2025-07-09', 'user', 4, 'Richard Camargo dos Santos', '11930248633', '11930248633'),
+(4000, 'PATRICIA LUCIANA CAMARGO', 'tata@gmail.com', 'plc2404', '5º B - Manhã', '1982-04-24', 'user', 3, 'Richard Camargo dos Santos', '11930248633', '11930248633'),
+(4575, 'Richard Camargo dos Santos', 'richardcamargo@gmail.com', 'rcds2005', '5º B - Manhã', '2005-11-07', 'user', 3, 'PATRICIA L CAMARGO', '11930248633', '11930248633');
 
 -- --------------------------------------------------------
 
@@ -99,7 +102,6 @@ CREATE TABLE `comunicado` (
 --
 
 INSERT INTO `comunicado` (`id`, `titulo`, `destinatario`, `descricao`, `arquivo_upado`, `id_inst`, `data_comunicado`) VALUES
-(7, 'Semana da Tecnologia', '1a', 'semana de estudos intensivos', NULL, 3, NULL),
 (8, 'Semana da Tecnologia', '1a', 'semana de estudos intensivos', NULL, 3, '2025-06-17'),
 (9, 'Semana da Tecnologia', '1a', 'semana de estudos intensivos', NULL, 3, '2025-06-17');
 
@@ -143,6 +145,13 @@ CREATE TABLE `game_progress` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Despejando dados para a tabela `game_progress`
+--
+
+INSERT INTO `game_progress` (`id`, `id_aluno`, `game_name`, `current_level`, `max_levels`, `created_at`, `updated_at`) VALUES
+(1, 4575, 'genius', 6, 10, '2025-06-10 14:55:33', '2025-06-12 00:38:51');
+
 -- --------------------------------------------------------
 
 --
@@ -171,7 +180,8 @@ CREATE TABLE `instituicao` (
 --
 
 INSERT INTO `instituicao` (`id`, `nome`, `email`, `senha`, `nivelAcesso`, `cnpj`, `tipoInstituicao`, `dataCriacaoInst`, `estado`, `bairro`, `rua`, `num`, `cep`, `telefone`) VALUES
-(3, 'Etec Uirapuru CPS', 'uirapuru@etec.sp.gov.br', 'uirapuru1234', 'admin', '55555555555555', 'pública', '2025-04-22', 'SÃO PAULO', 'Jardim Cláudia', 'Rua General Teixeira de Campos', 233, '05546-000', '11930248633');
+(3, 'Etec Uirapuru CPS', 'uirapuru@etec.sp.gov.br', 'uirapuru1234', 'admin', '55555555555555', 'pública', '2025-04-22', 'SÃO PAULO', 'Jardim Cláudia', 'Rua General Teixeira de Campos', 233, '05546-000', '11930248633'),
+(4, 'VISSTAS PARTICIPACOES E ADMINISTRACAO DE BENS LTDA', 'visstas@gmail.com', 'visstas1234', 'admin', '55555555555555', 'privada', '2025-07-03', 'SP', 'Jardim Cláudia', 'Rua General Teixeira de Campos', 233, '05546-000', '11930248633');
 
 -- --------------------------------------------------------
 
@@ -212,7 +222,9 @@ CREATE TABLE `professor` (
 --
 
 INSERT INTO `professor` (`id`, `nome`, `email`, `senha`, `materia`, `dataNasc`, `nivelAcesso`, `telefone`, `id_inst`, `cpf`) VALUES
-(6, 'Davi Coelho Branco', 'davicoelhobranco@gmail.com', 'branco1234', 'Fisica', '1982-04-24', 'professor', '11984140536', 3, '30959593896');
+(6, 'Davi Coelho Branco', 'davicoelhobranco@gmail.com', 'branco1234', 'Fisica', '1982-04-24', 'professor', '11984140536', 3, '30959593896'),
+(7, 'PATRICIA LUCIANA CAMARGO', 'tata@gmail.com', 'plc!2404', 'Quimica', '1982-04-24', 'professor', '11930248633', 3, '30959593896'),
+(8, 'Richard Camargo dos Santos', 'richardcamargodosantos@gmail.com', 'rcds2005', 'Matemática', '2005-11-07', 'professor', '11930248633', 3, '52131382847');
 
 -- --------------------------------------------------------
 
@@ -256,8 +268,7 @@ CREATE TABLE `turma` (
 
 INSERT INTO `turma` (`id`, `turma`, `id_inst`) VALUES
 (1, '1º A - Manhã', 3),
-(2, '3º B - Tarde', 3),
-(5, '4º c - Manhã', 3);
+(7, '5º B - Manhã', 3);
 
 --
 -- Índices para tabelas despejadas
@@ -350,7 +361,7 @@ ALTER TABLE `atividade`
 -- AUTO_INCREMENT de tabela `comunicado`
 --
 ALTER TABLE `comunicado`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de tabela `crianca`
@@ -362,13 +373,13 @@ ALTER TABLE `crianca`
 -- AUTO_INCREMENT de tabela `game_progress`
 --
 ALTER TABLE `game_progress`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de tabela `instituicao`
 --
 ALTER TABLE `instituicao`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de tabela `jogo`
@@ -380,7 +391,7 @@ ALTER TABLE `jogo`
 -- AUTO_INCREMENT de tabela `professor`
 --
 ALTER TABLE `professor`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de tabela `responsavel`
@@ -392,7 +403,7 @@ ALTER TABLE `responsavel`
 -- AUTO_INCREMENT de tabela `turma`
 --
 ALTER TABLE `turma`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Restrições para tabelas despejadas
